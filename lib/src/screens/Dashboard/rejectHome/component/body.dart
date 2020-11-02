@@ -19,7 +19,6 @@ class _BodyState extends State<Body> {
               child: new InkWell(
                 onTap: () {},
                 child: Container(
-                  height: 100,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(6.0),

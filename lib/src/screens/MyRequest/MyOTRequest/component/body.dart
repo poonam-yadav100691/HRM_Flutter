@@ -15,10 +15,9 @@ class _BodyState extends State<Body> {
         child: Column(
       children: [
         new Container(
-            height: 100.0,
             margin: const EdgeInsets.symmetric(
               vertical: 15.0,
-              horizontal: 4.0,
+              horizontal: 10.0,
             ),
             child: new Stack(
               children: <Widget>[
@@ -31,20 +30,19 @@ class _BodyState extends State<Body> {
   }
 
   final planetThumbnail = new Container(
-    margin: new EdgeInsets.symmetric(vertical: 15.0),
+    // margin: new EdgeInsets.symmetric(vertical: double.maxFinite * 0.5),
     // color: Colors.pink,
-    alignment: FractionalOffset.centerLeft,
+    // alignment: FractionalOffset.centerLeft,
     child: new Image(
       image: new AssetImage("lib/assets/images/checked.png"),
-      height: 52.0,
-      width: 52.0,
+      height: 50.0,
+      width: 50.0,
     ),
   );
   Widget planetCard(BuildContext context) {
     return Container(
-      height: 100.0,
-      width: MediaQuery.of(context).size.width * 0.88,
-      margin: new EdgeInsets.only(left: 30.0),
+      // width: MediaQuery.of(context).size.width * 0.88,
+      margin: new EdgeInsets.only(left: 26.0),
       decoration: new BoxDecoration(
         color: kWhiteColor,
         shape: BoxShape.rectangle,
