@@ -111,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
             parallaxEnabled: true,
             parallaxOffset: .5,
             body: _body(),
-            panelBuilder: (sc) => _panel(sc),
+            panelBuilder: (sc) => _panel(sc, context),
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(18.0),
                 topRight: Radius.circular(18.0)),
@@ -125,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _panel(ScrollController sc) {
+  Widget _panel(ScrollController sc, BuildContext context) {
     var now = new DateTime.now();
     var formatter = new DateFormat('E, dd MMM yyyy');
     String formattedDate = formatter.format(now);
@@ -305,7 +305,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       "lib/assets/images/rules.png",
                       "Get list of all notes/rule of company",
                       Icons.arrow_forward_ios,
-                      ''),
+                      rulesRoute),
                 ],
               ),
             )

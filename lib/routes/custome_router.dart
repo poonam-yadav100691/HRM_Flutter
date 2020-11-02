@@ -15,6 +15,7 @@ import 'package:HRMNew/src/screens/Dashboard/approveHome/approve-home.dart';
 import 'package:HRMNew/src/screens/Dashboard/pendingHome/pending-home.dart';
 import 'package:HRMNew/src/screens/Dashboard/rejectHome/component/reject-home.dart';
 import 'package:HRMNew/src/screens/NotificationPage/notification-page.dart';
+import 'package:HRMNew/src/screens/RulesPage/rulesPage.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:HRMNew/src/screens/landing.dart';
 import 'package:HRMNew/src/screens/login.dart';
@@ -50,7 +51,6 @@ class CustomRouter {
         return MaterialPageRoute(builder: (_) => MyLeaveRequest());
       case myLeaveRequestRoute:
         return MaterialPageRoute(builder: (_) => MyOTRequest());
-
       case empRequestRoute:
         return MaterialPageRoute(builder: (_) => EmpRequest());
       case empOtRequestRoute:
@@ -61,6 +61,9 @@ class CustomRouter {
         return MaterialPageRoute(builder: (_) => RequestDetails());
       case calendarViewRoute:
         return MaterialPageRoute(builder: (_) => CalendarView());
+
+      case rulesRoute:
+        return MaterialPageRoute(builder: (_) => RulesPage());
     }
     return MaterialPageRoute(builder: (_) => Landing());
   }

@@ -19,3 +19,5 @@ const String empLeaveRequestRoute = '/empLeaveRequest';
 const String empRequestRoute = '/empRequestRoute';
 const String requestDetailsRoute = '/requestDetailsRoute';
 const String calendarViewRoute = '/calendarViewRoute';
+
+const String rulesRoute = '/rulesRoute';
