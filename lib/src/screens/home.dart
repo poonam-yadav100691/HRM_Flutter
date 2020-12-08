@@ -1,18 +1,19 @@
 import 'package:HRMNew/classes/language.dart';
 import 'package:HRMNew/components/LogoutOverlay.dart';
-import 'package:HRMNew/components/calendarView.dart';
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
+import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/colors.dart';
-import 'package:HRMNew/src/screens/Dashboard/approveHome/approve-home.dart';
-import 'package:HRMNew/src/screens/Dashboard/pendingHome/pending-home.dart';
-import 'package:HRMNew/src/screens/Dashboard/rejectHome/component/reject-home.dart';
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'dart:ui';
 import 'package:intl/intl.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'dart:typed_data';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -24,12 +25,34 @@ class _MyHomePageState extends State<MyHomePage> {
   double _fabHeight;
   double _panelHeightOpen;
   double _panelHeightClosed = 95.0;
+  SharedPreferences sharedPreferences;
 
+  String _username;
+  String firstName, lastName, username, department, image;
   @override
   void initState() {
     super.initState();
-
+    _register();
     _fabHeight = _initFabHeight;
+  }
+
+  Future _register() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      String accessToken =
+          sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+      print("token 1" + accessToken);
+      int userId = sharedPreferences.getInt(AppConstant.USER_ID.toString());
+      print("token2 $userId");
+      username = sharedPreferences.getString(AppConstant.USERNAME);
+      print("token3 $username");
+
+      department = sharedPreferences.getString(AppConstant.DEPARTMENT);
+      print("token5 $department");
+
+      image = sharedPreferences.getString(AppConstant.IMAGE);
+      print("token6 $image");
+    });
   }
 
   void _changeLanguage(Language language) async {
@@ -37,14 +60,9 @@ class _MyHomePageState extends State<MyHomePage> {
     MyApp.setLocale(context, _locale);
   }
 
-  // _loadUserInfo() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   _username = (prefs.getString('username') ?? "");
-  // }
-
   @override
   Widget build(BuildContext context) {
-    _panelHeightOpen = MediaQuery.of(context).size.height * .90;
+    _panelHeightOpen = MediaQuery.of(context).size.height * .65;
 
     return Scaffold(
       appBar: AppBar(
@@ -54,15 +72,15 @@ class _MyHomePageState extends State<MyHomePage> {
           style:
               TextStyle(fontFamily: "sf-ui-text", fontWeight: FontWeight.bold),
         ),
-        backgroundColor: leaveCardcolor,
+        backgroundColor: leaveCardcolor1,
         shadowColor: Colors.transparent,
         centerTitle: true,
-        leading: IconButton(
-            icon: Icon(Icons.notifications),
-            color: Colors.white,
-            onPressed: () {
-              Navigator.pushNamed(context, notificationRoute);
-            }),
+        // leading: IconButton(
+        //     icon: Icon(Icons.notifications),
+        //     color: Colors.white,
+        //     onPressed: () {
+        //       Navigator.pushNamed(context, notificationRoute);
+        //     }),
         actions: <Widget>[
           Padding(
             // margin: EdgeInsets.only(left: 0),
@@ -107,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
           SlidingUpPanel(
             backdropEnabled: true,
             maxHeight: _panelHeightOpen,
-            minHeight: _panelHeightClosed,
+            minHeight: 85,
             parallaxEnabled: true,
             parallaxOffset: .5,
             body: _body(),
@@ -129,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var now = new DateTime.now();
     var formatter = new DateFormat('E, dd MMM yyyy');
     String formattedDate = formatter.format(now);
-
+    Uint8List bytes = Base64Codec().decode(image);
     return MediaQuery.removePadding(
         context: context,
         removeTop: true,
@@ -149,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: Column(children: <Widget>[
                 SizedBox(
-                  height: 6.0,
+                  height: 3.0,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -165,23 +183,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 5.0,
-                ),
+                // SizedBox(
+                //   height: 1.0,
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     SizedBox(
-                      width: 10.0,
+                      width: 5.0,
                     ),
-                    // Icon(Icons.arrow_back_ios),
                     Container(
                       padding: const EdgeInsets.only(left: 15.0),
-                      child: ClipOval(
-                        child: Image.asset(
-                          "lib/assets/images/profile.jpg",
-                          height: 70,
-                          // width: 90,
+                      child: new CircleAvatar(
+                        radius: 35,
+                        child: ClipOval(
+                          child: new Image.memory(
+                            bytes,
+                            height: 75,
+                          ),
                         ),
                       ),
                     ),
@@ -192,12 +211,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Poonam Yadav",
+                            Text(username,
                                 style: TextStyle(
-                                    fontSize: 19.0,
+                                    fontSize: 16.0,
                                     fontWeight: FontWeight.bold)),
-                            Text("Mobile Developer",
-                                style: TextStyle(fontSize: 14.0)),
+                            Padding(padding: EdgeInsets.only(top: 6)),
+                            Text(department, style: TextStyle(fontSize: 14.0)),
                           ],
                         ),
                       ),
@@ -217,7 +236,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
                 SizedBox(
-                  height: 17.0,
+                  height: 7.0,
                 ),
               ]),
             ),
@@ -244,56 +263,58 @@ class _MyHomePageState extends State<MyHomePage> {
                       "View your profile details",
                       Icons.arrow_forward_ios,
                       accountRoute),
-                  _cardList(
-                      "ADD REQUEST",
-                      "lib/assets/images/calendar.png",
-                      "Allow to add new leave/OT application",
-                      Icons.arrow_forward_ios,
-                      addRequestRoute),
-                  _cardList(
-                      "VIEW REQUESTS",
-                      "lib/assets/images/weekly-calendar.png",
-                      "Check your application status",
-                      Icons.arrow_forward_ios,
-                      myRequestRoute),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          color: Colors.pink,
-                          width: MediaQuery.of(context).size.width * .35,
-                          height: 2,
-                          child: Text("")),
-                      Container(
-                          child: Text(
-                        "Official Stuff",
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      )),
-                      Container(
-                          color: Colors.pink,
-                          width: MediaQuery.of(context).size.width * .35,
-                          height: 2,
-                          child: Text("")),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _cardList(
-                      "ADD DELEGATES",
-                      "lib/assets/images/exchange.png",
-                      "Transfer your job to other person",
-                      Icons.arrow_forward_ios,
-                      addDelegatesRoute),
-                  _cardList(
-                      "EMP PENDING REQUEST",
-                      "lib/assets/images/email.png",
-                      "Get list of pending requests of your team",
-                      Icons.arrow_forward_ios,
-                      empRequestRoute),
+
+                  // _cardList(
+                  //     "ADD REQUEST",
+                  //     "lib/assets/images/calendar.png",
+                  //     "Allow to add new leave/OT application",
+                  //     Icons.arrow_forward_ios,
+                  //     addRequestRoute),
+                  // _cardList(
+                  //     "VIEW REQUESTS",
+                  //     "lib/assets/images/weekly-calendar.png",
+                  //     "Check your application status",
+                  //     Icons.arrow_forward_ios,
+                  //     myRequestRoute),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Container(
+                  //         color: Colors.pink,
+                  //         width: MediaQuery.of(context).size.width * .35,
+                  //         height: 2,
+                  //         child: Text("")),
+                  //     Container(
+                  //         child: Text(
+                  //       "Official Things",
+                  //       style: TextStyle(fontWeight: FontWeight.w500),
+                  //     )),
+                  //     Container(
+                  //         color: Colors.pink,
+                  //         width: MediaQuery.of(context).size.width * .35,
+                  //         height: 2,
+                  //         child: Text("")),
+                  //   ],
+                  // ),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+
+                  // _cardList(
+                  //     "ADD DELEGATES",
+                  //     "lib/assets/images/exchange.png",
+                  //     "Transfer your job to other person",
+                  //     Icons.arrow_forward_ios,
+                  //     addDelegatesRoute),
+                  // _cardList(
+                  //     "EMP PENDING REQUEST",
+                  //     "lib/assets/images/email.png",
+                  //     "Get list of pending requests of your team",
+                  //     Icons.arrow_forward_ios,
+                  //     empRequestRoute),
                   _cardList(
                       "FY 2020 Holiday Sheet",
                       "lib/assets/images/vector-holiday.jpg",
@@ -353,195 +374,196 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _body() {
-    Size size = MediaQuery.of(context).size;
-    return Column(children: [
-      Container(
-        height: 50,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            Container(
-              width: 120.0,
-              color: leaveCardcolor1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "SICK LEAVE",
-                      style: TextStyle(fontSize: 13, color: white),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        "3.0 / 5.0",
-                        style: TextStyle(fontSize: 13, color: white),
-                      ),
-                    ),
-                  ]),
-            ),
-            SizedBox(
-              width: 0.5,
-              child: Container(
-                color: Colors.grey,
-              ),
-            ),
-            Container(
-              width: 120.0,
-              color: leaveCardcolor1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "CASUAL LEAVE",
-                      style: TextStyle(fontSize: 13, color: white),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        "3.0 / 5.0",
-                        style: TextStyle(fontSize: 13, color: white),
-                      ),
-                    ),
-                  ]),
-            ),
-            SizedBox(
-              width: 0.5,
-              child: Container(
-                color: Colors.grey,
-              ),
-            ),
-            Container(
-              width: 120.0,
-              color: leaveCardcolor1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "PERSONAL LEAVE",
-                      style: TextStyle(fontSize: 13, color: white),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        "3.0 / 5.0",
-                        style: TextStyle(fontSize: 13, color: white),
-                      ),
-                    ),
-                  ]),
-            ),
-            SizedBox(
-              width: 0.5,
-              child: Container(
-                color: Colors.grey,
-              ),
-            ),
-            Container(
-              width: 120.0,
-              color: leaveCardcolor1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "ANNUAL LEAVE",
-                      style: TextStyle(fontSize: 13, color: white),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        "3.0 / 5.0",
-                        style: TextStyle(fontSize: 13, color: white),
-                      ),
-                    ),
-                  ]),
-            ),
-            SizedBox(
-              width: 0.5,
-              child: Container(
-                color: Colors.grey,
-              ),
-            ),
-            Container(
-              width: 120.0,
-              color: leaveCardcolor1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "SICK LEAVE",
-                      style: TextStyle(fontSize: 13, color: white),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        "3.0 / 5.0",
-                        style: TextStyle(fontSize: 13, color: white),
-                      ),
-                    ),
-                  ]),
+  Widget _homeGrid(String title, String img, String pagNav, String countTxt) {
+    return new GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, pagNav);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[800],
+              spreadRadius: 4,
+              blurRadius: 8,
+              offset: Offset(0, 2), // changes position of shadow
             ),
           ],
         ),
-      ),
-      Container(
-        height: size.height * 0.70,
-        // flex: 2,
-        child: DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            appBar: PreferredSize(
-              preferredSize: Size(double.infinity, 50),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, .15), blurRadius: 16.0)
-                  ],
-                ),
-                child: TabBar(
-                  indicatorColor: Colors.red,
-                  unselectedLabelColor: Colors.grey,
-                  labelColor: Colors.black,
-                  tabs: [
-                    Tab(
-                      icon: Text(
-                        "PENDING",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                    Tab(
-                      icon: Text(
-                        "APPROVED",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                    Tab(
-                      icon: Text(
-                        "REJECTED",
-                        style: TextStyle(fontSize: 14),
-                      ),
+        alignment: AlignmentDirectional(0.0, 0.0),
+        padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              // Container(
+              //     color: Colors.green,
+              //     constraints: BoxConstraints(
+              //         maxHeight: 30.0,
+              //         maxWidth: 30.0,
+              //         minWidth: 10.0,
+              //         minHeight: 10.0)),
+              countTxt == null
+                  ? Visibility(
+                      child: Text("Gone"),
+                      visible: false,
                     )
-                  ],
-                ),
+                  : Container(
+                      // margin: EdgeInsets.only(bottom: 20),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          child: Center(
+                              child: Text(countTxt,
+                                  style: TextStyle(color: Colors.white))),
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.red,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.red[400], spreadRadius: 1),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+              countTxt == null
+                  ? Padding(padding: EdgeInsets.only(top: 10))
+                  : Padding(padding: EdgeInsets.only(bottom: 0)),
+              Image.asset(img, fit: BoxFit.contain, width: 52, height: 50),
+
+              countTxt == null
+                  ? Padding(padding: EdgeInsets.only(top: 10))
+                  : Padding(padding: EdgeInsets.only(top: 3)),
+              Text(
+                title,
+                style: TextStyle(fontSize: 13, color: Colors.grey),
               ),
-            ),
-            body: DoubleBackToCloseApp(
-              snackBar: SnackBar(
-                content: Text(getTranslated(context, 'Tapbackagaintoleave')),
+              Padding(padding: EdgeInsets.only(top: 5))
+            ]),
+      ),
+    );
+  }
+
+  Widget _homeSlider(
+      String title, String leaveValues, String leaveTotal, Color bgColor) {
+    return Container(
+      decoration: BoxDecoration(
+        // shape: BoxShape.circle, // BoxShape.circle or BoxShape.retangle
+        color: leaveCardcolor1,
+      ),
+      padding: EdgeInsets.all(7),
+      child: Container(
+        width: 90,
+        height: 70,
+        padding: EdgeInsets.only(left: 10, right: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: bgColor,
+        ),
+
+        // decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(10),
+        //     gradient: LinearGradient(
+        //         begin: Alignment.topRight,
+        //         end: Alignment.bottomLeft,
+        //         stops: [0.2, 0.9],
+        //         colors: [white, bgColor])),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "$leaveValues / $leaveTotal",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.black),
               ),
-              child: TabBarView(
-                children: [PendingHome(), ApproveHome(), RejectHome()],
+              Padding(padding: EdgeInsets.only(top: 10)),
+              Text(
+                title,
+                style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey[800],
+                    fontWeight: FontWeight.bold),
               ),
-            ),
+            ]),
+      ),
+    );
+  }
+
+  Widget _body() {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      color: leaveCardcolor,
+      child: Column(children: [
+        Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          decoration: BoxDecoration(
+              // shape: BoxShape.circle, // BoxShape.circle or BoxShape.retangle
+              color: leaveCardcolor,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey[800], blurRadius: 4.0, spreadRadius: 1),
+              ]),
+          height: 70,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              // _homeSlider("TOTAL", "15", "25", Colors.pink[200]),
+              _homeSlider("SICK", "3", "7", Colors.green[100]),
+              _homeSlider("CASUAL", "2", "5", Colors.orange[100]),
+              _homeSlider("PERSONAL", "1", "5", Colors.purple[100]),
+              _homeSlider("ANNUAL", "5", "10", Colors.blue[100]),
+            ],
           ),
         ),
-      ),
-    ]);
+        Container(
+            height: size.height * 0.90,
+            // flex: 2,
+            child: GridView.count(
+              primary: false,
+              padding: const EdgeInsets.all(20),
+              crossAxisSpacing: 25,
+              mainAxisSpacing: 25,
+              crossAxisCount: 3,
+              children: <Widget>[
+                _homeGrid("News", "lib/assets/images/news12.jpg",
+                    notificationRoute, '20'),
+                _homeGrid(
+                    "Tasks", "lib/assets/images/task.png", taskRoute, '3'),
+                _homeGrid("Emp Request", "lib/assets/images/empReuest.png",
+                    empRequestRoute, '2'),
+                // _homeGrid("Request", "lib/assets/images/download.png",
+                //     addRequestRoute, '9'),
+                _homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
+                    addDelegatesRoute, '6'),
+
+                _homeGrid("My Request", "lib/assets/images/images.png",
+                    myRequestRoute, '4'),
+                _homeGrid("Attendance", "lib/assets/images/attendance.png",
+                    attendanceRoute, null),
+
+                // _homeGrid("Notifications",  "lib/assets/images/unnamed.jpg",notificationRoute),
+
+                _homeGrid(
+                    "Loans", "lib/assets/images/loan.png", loansRoute, null),
+                _homeGrid("Insurance", "lib/assets/images/insurance.png",
+                    insuranceRoute, null),
+                _homeGrid("Payslip", "lib/assets/images/payslip.png",
+                    payslipRoute, null),
+                _homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
+                    calendarViewRoute, null),
+                // _homeGrid("Check-In",  "lib/assets/images/XSgklyxE.jpg",''),
+              ],
+            )),
+      ]),
+    );
   }
 }

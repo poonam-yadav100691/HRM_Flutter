@@ -52,5 +52,11 @@
   "AddLeave":"Add Leave Request",
   "AddOT":"Add OT Request",
   "MyRequest":"My Request",
-  "TKRules":"TK Rules"
+  "TKRules":"TK Rules",
+  "News":"News",
+  "Loans":"Loans",
+  "Insurance":"Insurance",
+  "MyTask":"My Task",
+  "AddTask":"Add Task",
+  "MyAttendance":"My Attendance"
 }

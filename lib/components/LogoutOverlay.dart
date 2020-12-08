@@ -14,7 +14,7 @@ class LogoutOverlayState extends State<LogoutOverlay>
   Animation<double> scaleAnimation;
   void _handleLogout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove("username");
+    prefs.clear();
     Navigator.pushNamedAndRemoveUntil(
         context, '/login', ModalRoute.withName('/login'));
   }

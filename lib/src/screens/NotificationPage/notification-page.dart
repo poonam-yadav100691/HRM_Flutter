@@ -8,7 +8,7 @@ class NotificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(getTranslated(context, 'Notification')),
+        title: Text(getTranslated(context, 'News')),
         shadowColor: Colors.transparent,
         centerTitle: true,
         backgroundColor: leaveCardcolor,

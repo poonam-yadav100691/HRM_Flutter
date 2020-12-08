@@ -1,6 +1,11 @@
 import 'package:HRMNew/components/calendarView.dart';
 import 'package:HRMNew/src/screens/Account/account.dart';
 import 'package:HRMNew/src/screens/AddDelegates/addDelegates.dart';
+import 'package:HRMNew/src/screens/Attendance/attendance.dart';
+
+import 'package:HRMNew/src/screens/Loans/loans.dart';
+import 'package:HRMNew/src/screens/Insurance/insurance.dart';
+
 import 'package:HRMNew/src/screens/AddRequest/addRequest.dart';
 import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/requestDetails.dart';
 import 'package:HRMNew/src/screens/MyRequest/myRequest.dart';
@@ -15,10 +20,13 @@ import 'package:HRMNew/src/screens/Dashboard/approveHome/approve-home.dart';
 import 'package:HRMNew/src/screens/Dashboard/pendingHome/pending-home.dart';
 import 'package:HRMNew/src/screens/Dashboard/rejectHome/component/reject-home.dart';
 import 'package:HRMNew/src/screens/NotificationPage/notification-page.dart';
+import 'package:HRMNew/src/screens/Payslip/payslip.dart';
 import 'package:HRMNew/src/screens/RulesPage/rulesPage.dart';
+import 'package:HRMNew/src/screens/Task/TaskAdd/taskAdd.dart';
+import 'package:HRMNew/src/screens/Task/task.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:HRMNew/src/screens/landing.dart';
-import 'package:HRMNew/src/screens/login.dart';
+import 'package:HRMNew/src/screens/Login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:HRMNew/routes/route_names.dart';
 
@@ -64,6 +72,19 @@ class CustomRouter {
 
       case rulesRoute:
         return MaterialPageRoute(builder: (_) => RulesPage());
+      case loansRoute:
+        return MaterialPageRoute(builder: (_) => Loans());
+      case insuranceRoute:
+        return MaterialPageRoute(builder: (_) => Insurance());
+      case taskRoute:
+        return MaterialPageRoute(builder: (_) => Task());
+
+      case addTaskRoute:
+        return MaterialPageRoute(builder: (_) => TaskAdd());
+      case attendanceRoute:
+        return MaterialPageRoute(builder: (_) => Attendance());
+      case payslipRoute:
+        return MaterialPageRoute(builder: (_) => Payslip());
     }
     return MaterialPageRoute(builder: (_) => Landing());
   }

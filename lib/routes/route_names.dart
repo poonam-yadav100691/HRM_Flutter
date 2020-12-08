@@ -19,5 +19,11 @@ const String empLeaveRequestRoute = '/empLeaveRequest';
 const String empRequestRoute = '/empRequestRoute';
 const String requestDetailsRoute = '/requestDetailsRoute';
 const String calendarViewRoute = '/calendarViewRoute';
+const String loansRoute = '/loansRoute';
+const String insuranceRoute = '/insuranceRoute';
+const String taskRoute = '/taskRoute';
+const String addTaskRoute = '/addTaskRoute';
 
 const String rulesRoute = '/rulesRoute';
+const String attendanceRoute = '/attendanceRoute';
+const String payslipRoute = '/payslipRoute';

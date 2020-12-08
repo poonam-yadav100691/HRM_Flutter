@@ -1,3 +1,4 @@
+import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -21,16 +22,27 @@ class _LandingState extends State<Landing> {
 
   _loadUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _username = (prefs.getString('username') ?? "");
-    if (_username == "") {
-      //Navigator.pushNamed(context, '/login');
+    String token = prefs.getString(AppConstant.ACCESS_TOKEN);
+
+    print("token 345 $token");
+    if (token == null) {
       Navigator.pushNamedAndRemoveUntil(
           context, '/login', ModalRoute.withName('/login'));
-    } else {
+    } else if (token != null) {
       Navigator.pushNamedAndRemoveUntil(
           context, '/home', ModalRoute.withName('/home'));
     }
   }
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // _username = (prefs.getString('username') ?? "");
+  // if (_username == "") {
+  //   //Navigator.pushNamed(context, '/login');
+  //   Navigator.pushNamedAndRemoveUntil(
+  //       context, '/login', ModalRoute.withName('/login'));
+  // } else {
+  //   Navigator.pushNamedAndRemoveUntil(
+  //       context, '/home', ModalRoute.withName('/home'));
+  // }
 
   @override
   Widget build(BuildContext context) {
