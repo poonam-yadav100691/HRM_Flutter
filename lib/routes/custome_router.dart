@@ -1,3 +1,4 @@
+import 'package:HRMNew/components/TakePictureScreen.dart';
 import 'package:HRMNew/components/calendarView.dart';
 import 'package:HRMNew/src/screens/Account/account.dart';
 import 'package:HRMNew/src/screens/AddDelegates/addDelegates.dart';
@@ -19,6 +20,7 @@ import 'package:HRMNew/src/screens/EmpRequest/EmpOtRequest/EmpOtRequest.dart';
 import 'package:HRMNew/src/screens/Dashboard/approveHome/approve-home.dart';
 import 'package:HRMNew/src/screens/Dashboard/pendingHome/pending-home.dart';
 import 'package:HRMNew/src/screens/Dashboard/rejectHome/component/reject-home.dart';
+import 'package:HRMNew/src/screens/NotificationPage/AddNews/addNews.dart';
 import 'package:HRMNew/src/screens/NotificationPage/notification-page.dart';
 import 'package:HRMNew/src/screens/Payslip/payslip.dart';
 import 'package:HRMNew/src/screens/RulesPage/rulesPage.dart';
@@ -85,6 +87,11 @@ class CustomRouter {
         return MaterialPageRoute(builder: (_) => Attendance());
       case payslipRoute:
         return MaterialPageRoute(builder: (_) => Payslip());
+      case takePictureScreenRoute:
+        return MaterialPageRoute(builder: (_) => TakePictureScreen());
+
+      case addNewsRoute:
+        return MaterialPageRoute(builder: (_) => AddNews());
     }
     return MaterialPageRoute(builder: (_) => Landing());
   }

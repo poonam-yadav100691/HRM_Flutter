@@ -27,3 +27,5 @@ const String addTaskRoute = '/addTaskRoute';
 const String rulesRoute = '/rulesRoute';
 const String attendanceRoute = '/attendanceRoute';
 const String payslipRoute = '/payslipRoute';
+const String takePictureScreenRoute = '/takePictureScreenRoute';
+const String addNewsRoute = '/addNewsRoute';

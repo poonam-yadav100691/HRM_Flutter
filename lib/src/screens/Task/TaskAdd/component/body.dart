@@ -1,5 +1,3 @@
-import 'package:HRMNew/components/MyCustomDate.dart';
-import 'package:HRMNew/components/MyCustomDateRange.dart';
 import 'package:HRMNew/components/MyCustomDropDown.dart';
 import 'package:HRMNew/components/MyCustomFileUpload.dart';
 import 'package:HRMNew/components/MyCustomTextField.dart';
@@ -51,12 +49,8 @@ class _BodyState extends State<Body> {
                 MyCustomDropDown(
                   title: "Select Responsible Person",
                 ),
-                MyCustomTextField(
-                  title: "Subject",
-                ),
-                MyCustomTextField(
-                  title: "Reason",
-                ),
+                MyCustomTextField(title: "Subject", attrName: 'subject'),
+                MyCustomTextField(title: "Reason", attrName: 'reason'),
                 MyCustomFileUpload(),
               ],
             ),

@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class MyCustomFileUpload extends StatefulWidget {
   final String title;
   final ValueChanged<String> validator;
+  final String attrName;
 
-  MyCustomFileUpload({this.title, this.validator});
+  MyCustomFileUpload({this.title, this.validator, this.attrName});
 
   @override
   _MyCustomFileUploadState createState() => _MyCustomFileUploadState();

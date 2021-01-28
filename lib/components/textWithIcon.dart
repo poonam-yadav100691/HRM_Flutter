@@ -9,7 +9,7 @@ class TextWithIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(5.0),
       margin: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
       child: TextField(
           autocorrect: true,

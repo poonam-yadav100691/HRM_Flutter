@@ -6,8 +6,9 @@ import 'package:intl/intl.dart';
 class MyCustomDateRange extends StatefulWidget {
   final String title;
   final ValueChanged<String> validator;
+  final String attrName;
 
-  MyCustomDateRange({this.title, this.validator});
+  MyCustomDateRange({this.title, this.validator, this.attrName});
 
   @override
   _MyCustomDateRangeState createState() => _MyCustomDateRangeState();
@@ -40,7 +41,7 @@ class _MyCustomDateRangeState extends State<MyCustomDateRange> {
           firstDate: DateTime.now().subtract(Duration(days: 356)),
           lastDate: DateTime.now().add(Duration(days: 356)),
           format: DateFormat('dd MMM yyyy'),
-          attribute: widget.title,
+          attribute: widget.attrName,
           decoration: new InputDecoration(
             fillColor: Colors.white,
             border: _focusNode.hasFocus

@@ -1,11 +1,13 @@
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class MyCustomTextField extends StatefulWidget {
   final String title;
   final ValueChanged<String> validator;
+  final String attrName;
 
-  MyCustomTextField({this.title, this.validator});
+  MyCustomTextField({this.title, this.validator, this.attrName});
 
   @override
   _MyCustomTextFieldState createState() => _MyCustomTextFieldState();
@@ -36,9 +38,10 @@ class _MyCustomTextFieldState extends State<MyCustomTextField> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
+      child: FormBuilderTextField(
         autocorrect: false,
         focusNode: _focusNode,
+        attribute: widget.attrName,
         style: TextStyle(color: Colors.black),
         decoration: new InputDecoration(
           fillColor: Colors.white,
@@ -54,11 +57,13 @@ class _MyCustomTextFieldState extends State<MyCustomTextField> {
               EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
           labelText: widget.title,
         ),
-        validator: widget.validator,
+        validators: [FormBuilderValidators.required()],
+        // validators: [widget.validator],
         onChanged: _onChanged,
-        onSaved: (String newValue) {
-          print(newValue);
-        },
+        // onSaved: (String newValue) {
+        //   print(newValue);
+        // },
+        //  attribute: null,
       ),
     );
   }

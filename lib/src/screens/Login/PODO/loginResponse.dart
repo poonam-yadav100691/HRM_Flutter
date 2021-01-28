@@ -1,67 +1,56 @@
 class loginResponse {
-  String token;
-  int empId;
+  String tokenKey;
+  int userId;
+  String emp_no;
   String roleName;
-  String englishname;
-  String username;
-  String access_token;
-  String firstName;
-  String laoName;
-  String lastName;
-  String role;
-  String empPhoto;
-  String empPhone1;
+  String eng_fullname;
+  String lao_fullname;
+  String emp_photo;
+  String emp_mobile;
   String userEmail;
-  String departname;
+  String emp_dep;
+  String emp_company;
 
-  loginResponse({
-    this.token,
-    this.empId,
-    this.roleName,
-    this.englishname,
-    this.username,
-    this.access_token,
-    this.firstName,
-    this.laoName,
-    this.lastName,
-    this.role,
-    this.empPhoto,
-    this.empPhone1,
-    this.userEmail,
-    this.departname,
-  });
+  loginResponse(
+      {this.tokenKey,
+      this.userId,
+      this.emp_no,
+      this.roleName,
+      this.eng_fullname,
+      this.lao_fullname,
+      this.emp_photo,
+      this.emp_mobile,
+      this.userEmail,
+      this.emp_dep,
+      this.emp_company});
 
   loginResponse.fromJson(Map<String, dynamic> json) {
-    token = json['token'];
-    empId = json['empId'];
+    tokenKey = json['TokenKey'];
+    userId = json['UserId'];
+    emp_no = json['emp_no'];
     roleName = json['roleName'];
-    englishname = json['englishname'];
-    username = json['username'];
-    access_token = json['access_token'];
-    firstName = json['firstName'];
-    laoName = json['laoName'];
-    lastName = json['lastName'];
-    empPhoto = json['empPhoto'];
-    empPhone1 = json['empPhone1'];
+    eng_fullname = json['eng_fullname'];
+    lao_fullname = json['lao_fullname'];
+    emp_photo = json['emp_photo'];
+    emp_mobile = json['emp_mobile'];
     userEmail = json['userEmail'];
-    departname = json['departname'];
+    emp_dep = json['emp_dep'];
+    emp_company = json['emp_company'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['token'] = this.token;
-    data['empId'] = this.empId;
+    data['TokenKey'] = this.tokenKey;
+    data['UserId'] = this.userId;
+    data['emp_no'] = this.emp_no;
     data['roleName'] = this.roleName;
-    data['userName'] = this.englishname;
-    data['username'] = this.username;
-    data['access_token'] = this.access_token;
-    data['firstName'] = this.firstName;
-    data['laoName'] = this.laoName;
-    data['lastName'] = this.lastName;
-    data['empPhoto'] = this.empPhoto;
-    data['empPhone1'] = this.empPhone1;
+    data['eng_fullname'] = this.emp_mobile;
+    data['lao_fullname'] = this.lao_fullname;
+    data['emp_photo'] = this.emp_photo;
+    data['emp_mobile'] = this.emp_mobile;
     data['userEmail'] = this.userEmail;
-    data['departname'] = this.departname;
+    data['emp_dep'] = this.emp_dep;
+    data['emp_company'] = this.emp_company;
     return data;
   }
 }

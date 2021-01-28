@@ -1,19 +1,15 @@
 import 'package:HRMNew/src/constants/colors.dart';
-import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/component/body.dart';
-import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
+import 'package:HRMNew/src/screens/NotificationPage/AddNews/component/body.dart';
 import 'package:flutter/material.dart';
 
-class MyLeaveRequest extends StatelessWidget {
-  // final List data;
-  final List<ResultObject> data;
-  MyLeaveRequest({Key key, @required this.data}) : super(key: key);
+class AddNews extends StatelessWidget {
+  AddNews();
 
   @override
   Widget build(BuildContext context) {
-    print("***********>>> $data");
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Requests'),
+        title: Text('Add News'),
         shadowColor: Colors.transparent,
         centerTitle: true,
         backgroundColor: leaveCardcolor,
@@ -30,7 +26,7 @@ class MyLeaveRequest extends StatelessWidget {
               Navigator.pop(context);
             }),
       ),
-      body: Body(leaveList: data),
+      body: Body(),
       resizeToAvoidBottomPadding: true,
     );
   }

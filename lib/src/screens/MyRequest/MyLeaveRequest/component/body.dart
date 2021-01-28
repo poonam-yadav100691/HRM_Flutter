@@ -1,32 +1,55 @@
+import 'dart:convert';
+
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
 import 'package:flutter/material.dart';
 import './background.dart';
 
 class Body extends StatefulWidget {
+  final List<ResultObject> leaveList;
+  Body({Key key, @required this.leaveList}) : super(key: key);
+
   @override
-  _BodyState createState() => _BodyState();
+  _BodyState createState() => _BodyState(leaveList);
 }
 
 class _BodyState extends State<Body> {
+  List<ResultObject> leaveList;
+
+// MyRequests myRequest = new MyRequests.fromJson(leaveList);
+//         print("j&&& $myRequest");
+//         myRequestList = myRequest.resultObject;
+//        print("myRequestList $myRequestList");
+  _BodyState(this.leaveList);
+
   @override
   Widget build(BuildContext context) {
+    // List jsonResponse = jsonDecode(leaveList);
+    print("############statusText## $leaveList");
+    // print("@@@@@@@@@@@@@@@@ $jsonResponse");
+    final children = <Widget>[];
+    for (var i = 0; i < leaveList.length; i++) {
+      children.add(new Column(
+        children: [
+          new Container(
+              margin: const EdgeInsets.symmetric(
+                vertical: 15.0,
+                horizontal: 10.0,
+              ),
+              child: new Stack(
+                children: <Widget>[
+                  // new ListView(
+                  //   children: children,
+                  // )
+                  planetCard(context, leaveList),
+                  planetThumbnail,
+                ],
+              )),
+        ],
+      ));
+    }
     Size size = MediaQuery.of(context).size;
-    return Background(
-        child: Column(
-      children: [
-        new Container(
-            margin: const EdgeInsets.symmetric(
-              vertical: 15.0,
-              horizontal: 10.0,
-            ),
-            child: new Stack(
-              children: <Widget>[
-                planetCard(context),
-                planetThumbnail,
-              ],
-            )),
-      ],
-    ));
+    return Background(child: ListView(children: children));
   }
 
   final planetThumbnail = new Container(
@@ -39,7 +62,8 @@ class _BodyState extends State<Body> {
       width: 50.0,
     ),
   );
-  Widget planetCard(BuildContext context) {
+  Widget planetCard(BuildContext context, leaveList) {
+    // print(leaveList);
     return Container(
       // width: MediaQuery.of(context).size.width * 0.88,
       margin: new EdgeInsets.only(left: 26.0),
@@ -74,7 +98,7 @@ class _BodyState extends State<Body> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'PERSONAL LEAVE : ',
+                              leaveList.requestTitle,
                               style: new TextStyle(
                                   color: kRedColor,
                                   fontWeight: FontWeight.w500),

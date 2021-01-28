@@ -50,22 +50,17 @@ class _BodyState extends State<Body> {
               children: [
                 MyCustomDateRange(
                   title: "Select Leave Date Range",
+                  attrName: 'date_range',
                 ),
-                MyCustomTextField(
-                  title: "Total Days",
-                ),
+                MyCustomTextField(title: "Total Days", attrName: 'total_days'),
                 MyCustomDate(
                   title: "Return to work on",
                 ),
                 MyCustomDropDown(
                   title: "Select Responsible Person",
                 ),
-                MyCustomTextField(
-                  title: "Subject",
-                ),
-                MyCustomTextField(
-                  title: "Reason",
-                ),
+                MyCustomTextField(title: "Subject", attrName: 'subject'),
+                MyCustomTextField(title: "Reason", attrName: 'reason'),
                 MyCustomFileUpload(),
               ],
             ),

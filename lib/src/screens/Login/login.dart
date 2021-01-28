@@ -39,6 +39,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   final _minimumPadding = 5.0;
   bool invisible = true;
   bool _obscureText = true;
+  bool isLoading = true;
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
@@ -95,7 +96,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     if (_formKey.currentState.validate()) {
       UIhelper.dismissKeyboard(context);
 
-      logIn();
+      getToken();
     } else {
       setState(() {
         _state = 3;
@@ -104,59 +105,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     }
   }
 
-  Future<void> getProfile(token) async {
-    final uri = Services.GetUserProfiles;
-
-    Map<String, String> headers = {'Authorization': 'Bearer $token'};
-    http.get(uri, headers: headers).then((response) {
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-
-        loginResponse login = new loginResponse.fromJson(jsonResponse);
-        print("Reponse--- : $jsonResponse");
-        // http.Response response = await http.get(uri, headers: headers);
-        // print("headers 1");
-        // var jsonResponse = json.decode(response.body);
-        // print("headers 3 ${jsonResponse}");
-        // // loginResponse login = new loginResponse.fromJson(jsonResponse);
-        // print("jsonResponse..." + jsonResponse.toString());
-
-        // if (response.statusCode == 200) {
-        // print("response.statusCode" + response.statusCode.toString());
-
-        sharedPreferences.setInt(AppConstant.USER_ID.toString(), login.empId);
-        sharedPreferences.setString(AppConstant.ACCESS_TOKEN, token);
-        sharedPreferences.setString(AppConstant.USERNAME, login.englishname);
-        sharedPreferences.setString(AppConstant.LAO_NAME, login.laoName);
-        sharedPreferences.setString(AppConstant.IMAGE, login.empPhoto);
-        sharedPreferences.setString(AppConstant.PHONENO, login.empPhone1);
-        sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
-        sharedPreferences.setString(AppConstant.DEPARTMENT, login.departname);
-
-        String accessToken =
-            sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
-        print("token $accessToken");
-
-        setState(() {
-          _state = 2;
-          buttonText = 'Success';
-          animateButton();
-        });
-        Navigator.pushNamedAndRemoveUntil(
-            context, homeRoute, ModalRoute.withName(homeRoute));
-      } else {
-        print("response.statusCode.." + response.statusCode.toString());
-        setState(() {
-          _state = 3;
-          buttonText = 'RETRY';
-        });
-        _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
-            "Something wnet wrong.. Please try again later."));
-      }
-    });
-  }
-
-  Future<void> logIn() async {
+  Future<void> getToken() async {
     Network().check().then((intenet) async {
       if (intenet != null && intenet) {
         sharedPreferences = await SharedPreferences.getInstance();
@@ -164,24 +113,63 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           _state = 1;
           buttonText = 'LOADING..';
         });
+
         try {
-          final uri = Services.LOGIN +
-              "?username=" +
-              usernameController.text.trim() +
-              "&pass=" +
-              passwordController.text.trim();
+          final uri = Services.LOGIN;
+          Map body = {
+            "PassKey": "a486f489-76c0-4c49-8ff0-d0fdec0a162b",
+            "UserName": usernameController.text.trim(),
+            "UserPassword": passwordController.text.trim()
+          };
 
-          print("uri..." + uri);
-          // http.Response response1 = await http.get(uri);
-          // var jsonResponse1 = json.decode(response1.body);
-          // print("jsonResponse..." + jsonResponse1.toString());
-          http.get(uri).then((response) {
+          http.post(uri, body: body).then((response) {
             if (response.statusCode == 200) {
-              var myresponse = jsonDecode(response.body);
-              print("Reponse status : $myresponse");
-              loginResponse login = new loginResponse.fromJson(myresponse);
+              var jsonResponse = jsonDecode(response.body);
+              print("Reponse---2 : $jsonResponse");
+              if (jsonResponse["StatusCode"] == 200) {
+                loginResponse login =
+                    new loginResponse.fromJson(jsonResponse["ResultObject"][0]);
+                // print(login.toString());
+                print("login.tokenKey: ${login.tokenKey}");
+                print("Reponse---3 : ${login.emp_company}");
 
-              getProfile(login.token);
+                sharedPreferences.setInt(
+                    AppConstant.USER_ID.toString(), login.userId);
+                sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
+                sharedPreferences.setString(
+                    AppConstant.ACCESS_TOKEN, login.tokenKey);
+                sharedPreferences.setString(
+                    AppConstant.USERNAME, login.eng_fullname);
+                sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);
+                sharedPreferences.setString(
+                    AppConstant.PHONENO, login.emp_mobile);
+                sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
+                sharedPreferences.setString(
+                    AppConstant.DEPARTMENT, login.emp_dep);
+
+                sharedPreferences.setString(
+                    AppConstant.COMPANY, login.emp_company);
+
+                sharedPreferences.setString(
+                    AppConstant.LoginGmailID, usernameController.text.trim());
+                sharedPreferences.setString(
+                    AppConstant.PASSWORD, passwordController.text.trim());
+
+                setState(() {
+                  _state = 2;
+                  buttonText = 'Success';
+                  animateButton();
+                });
+                Navigator.pushNamedAndRemoveUntil(
+                    context, homeRoute, ModalRoute.withName(homeRoute));
+              } else {
+                setState(() {
+                  _state = 3;
+                  buttonText = 'RETRY';
+                });
+                _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
+                    "Something wnet wrong.. Please try again later."));
+              }
             } else {
               print("response.statusCode.." + response.statusCode.toString());
               setState(() {
@@ -193,11 +181,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             }
           });
         } catch (e) {
-          setState(() {
-            _state = 3;
-            buttonText = 'RETRY';
-          });
-          print(e.toString());
+          print("Error: $e");
+          return (e);
         }
       } else {
         Navigator.pop(context);

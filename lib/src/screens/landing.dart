@@ -33,16 +33,6 @@ class _LandingState extends State<Landing> {
           context, '/home', ModalRoute.withName('/home'));
     }
   }
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
-  // _username = (prefs.getString('username') ?? "");
-  // if (_username == "") {
-  //   //Navigator.pushNamed(context, '/login');
-  //   Navigator.pushNamedAndRemoveUntil(
-  //       context, '/login', ModalRoute.withName('/login'));
-  // } else {
-  //   Navigator.pushNamedAndRemoveUntil(
-  //       context, '/home', ModalRoute.withName('/home'));
-  // }
 
   @override
   Widget build(BuildContext context) {
