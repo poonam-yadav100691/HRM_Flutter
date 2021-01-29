@@ -49,6 +49,7 @@ class ResultObject {
   String managerName;
   String date_request;
   String requestFor;
+  String statusText;
   String lang;
 
   ResultObject(
@@ -62,6 +63,7 @@ class ResultObject {
       this.managerName,
       this.requestFor,
       this.returnDate,
+        this.statusText,
       this.lang});
 
   ResultObject.fromJson(Map<String, dynamic> json) {
@@ -75,6 +77,7 @@ class ResultObject {
     managerName = json['managerName'];
     date_request = json['date_request'];
     requestFor = json['RequestFor'];
+    statusText=json["statusText"];
     lang = json['lang'];
   }
 
@@ -90,6 +93,7 @@ class ResultObject {
     data['managerName'] = this.managerName;
     data['date_request'] = this.date_request;
     data['RequestFor'] = this.requestFor;
+    data['statusText']=this.statusText;
     data['lang'] = this.lang;
     return data;
   }

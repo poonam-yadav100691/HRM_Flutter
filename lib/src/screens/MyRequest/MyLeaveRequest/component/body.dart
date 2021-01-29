@@ -41,8 +41,8 @@ class _BodyState extends State<Body> {
                   // new ListView(
                   //   children: children,
                   // )
-                  planetCard(context, leaveList),
-                  planetThumbnail,
+                  planetCard(context, leaveList[i]),
+                  planetThumbnail(context,leaveList[i]),
                 ],
               )),
         ],
@@ -52,18 +52,18 @@ class _BodyState extends State<Body> {
     return Background(child: ListView(children: children));
   }
 
-  final planetThumbnail = new Container(
-    // margin: new EdgeInsets.symmetric(vertical: double.maxFinite * 0.5),
-    // color: Colors.pink,
-    // alignment: FractionalOffset.centerLeft,
+  Widget planetThumbnail(BuildContext context, leaveList) {
+    print(leaveList.statusText);
+    return  Container(
     child: new Image(
-      image: new AssetImage("lib/assets/images/cancel.png"),
+       image: new AssetImage("lib/assets/images/"+leaveList.statusText+".png") ,
       height: 50.0,
       width: 50.0,
     ),
   );
+  }
   Widget planetCard(BuildContext context, leaveList) {
-    // print(leaveList);
+    print(leaveList);
     return Container(
       // width: MediaQuery.of(context).size.width * 0.88,
       margin: new EdgeInsets.only(left: 26.0),
@@ -97,16 +97,16 @@ class _BodyState extends State<Body> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              leaveList.requestTitle,
+                            leaveList.requestTitle!=null?  Text(
+                              leaveList.requestTitle ,
                               style: new TextStyle(
                                   color: kRedColor,
                                   fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              'Full Day',
+                            ) :Container(),
+                            leaveList.requestFor!=null?Text(
+                              " : "+ leaveList.requestFor,
                               style: new TextStyle(),
-                            ),
+                            ):Container(),
                           ],
                         ),
                       ),
@@ -127,33 +127,33 @@ class _BodyState extends State<Body> {
                       ],
                     ),
                   ),
-                  Padding(
+                  leaveList.date_request!=null? Padding(
                     padding: const EdgeInsets.only(bottom: 5.0),
                     child: Row(
                       children: [
                         Text(
-                          'Date Of Reply :',
+                          'Date Of Request :',
                           style: new TextStyle(),
                         ),
                         Text(
-                          '13 Mar 20',
+                          leaveList.date_request,
                           style: new TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
-                  ),
-                  Row(
+                  ):Container(),
+                  leaveList.date_request!=null? Row(
                     children: [
                       Text(
                         'Manager :',
                         style: new TextStyle(),
                       ),
                       Text(
-                        'Ta Manager',
+                        leaveList.managerName,
                         style: new TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ],
-                  ),
+                  ):Container(),
                 ],
               ),
             ),

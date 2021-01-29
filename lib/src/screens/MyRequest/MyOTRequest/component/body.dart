@@ -34,7 +34,7 @@ class _BodyState extends State<Body> {
     // color: Colors.pink,
     // alignment: FractionalOffset.centerLeft,
     child: new Image(
-      image: new AssetImage("lib/assets/images/checked.png"),
+      image: new AssetImage("lib/assets/images/Reject.png"),
       height: 50.0,
       width: 50.0,
     ),
