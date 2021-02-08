@@ -40,6 +40,11 @@ class _BodyState extends State<Body> {
   final TextEditingController leaveController = new TextEditingController();
   final TextEditingController responsiblePerController =
       new TextEditingController();
+
+  final TextEditingController returnDateSelected = new TextEditingController();
+  final TextEditingController rangeDateSelected = new TextEditingController();
+  final TextEditingController leaveApplyFor = new TextEditingController();
+
   List<ResultObject> leaveList = new List();
   List<String> leaveTypeList = new List();
 
@@ -48,11 +53,14 @@ class _BodyState extends State<Body> {
 
   String leaveLable = "Leave";
   String leaveId;
+  // String endDate;
 
   int totalDays = 0;
 
   String respPerLable = "Leave";
   String respPerId;
+
+  var endDate;
   _focusListener() {
     setState(() {});
   }
@@ -86,8 +94,8 @@ class _BodyState extends State<Body> {
 
   void _onDateRangeSelect(val) {
     final startDate = val[0];
-    final endDate = val[1];
-    final difference = endDate.difference(startDate).inDays;
+    this.endDate = val[1];
+    final difference = this.endDate.difference(startDate).inDays;
     setState(() {
       totalDays = difference;
     });
@@ -136,7 +144,29 @@ class _BodyState extends State<Body> {
                                   bottom: 3.0, left: 3.0, right: 3.0),
                               labelText: 'Leave Apply For ',
                             ),
-                            onChanged: _onRadioChanged,
+                            // onChanged: _onRadioChanged,
+                            onChanged: (val) {
+                              // New <----------
+                              // if (value == "Yes") {
+                              //   setState((){
+                              //     isVisible = true;
+                              //   });
+                              // } else {
+                              //   setState(() {
+                              //     isVisible = false;
+                              //   });
+                              // }
+                              print(val);
+                              if (val == "Half Day") {
+                                setState(() {
+                                  showHalf = true;
+                                });
+                              } else {
+                                setState(() {
+                                  showHalf = false;
+                                });
+                              }
+                            },
                             validators: [FormBuilderValidators.required()],
                             options: ["Full Day", "Half Day"]
                                 .map((lang) => FormBuilderFieldOption(
@@ -194,6 +224,7 @@ class _BodyState extends State<Body> {
                         Container(
                           padding: const EdgeInsets.all(9),
                           child: FormBuilderDateRangePicker(
+                            controller: rangeDateSelected,
                             attribute: 'date_range',
                             onChanged: _onDateRangeSelect,
                             firstDate: DateTime.now(),
@@ -226,6 +257,8 @@ class _BodyState extends State<Body> {
                             padding: const EdgeInsets.all(8.0),
                             child: FormBuilderDateTimePicker(
                               attribute: "date",
+                              controller: returnDateSelected,
+                              onChanged: null,
                               inputType: InputType.date,
                               firstDate: DateTime.now(),
                               format: DateFormat("dd-MM-yyyy"),

@@ -42,43 +42,32 @@ class ResultObject {
   String requestID;
   String requestNo;
   String requestType;
-  String requestTitle;
-  String strDate;
-  String endDate;
-  String returnDate;
   String managerName;
-  String date_request;
-  String requestFor;
+  String submitDate;
   String statusText;
-  String lang;
+  String fileName;
+  String attachedFile;
 
   ResultObject(
       {this.requestID,
       this.requestNo,
       this.requestType,
-      this.requestTitle,
-      this.strDate,
-      this.endDate,
-      this.date_request,
+      this.submitDate,
       this.managerName,
-      this.requestFor,
-      this.returnDate,
         this.statusText,
-      this.lang});
+      this.fileName,
+        this.attachedFile});
 
   ResultObject.fromJson(Map<String, dynamic> json) {
     requestID = json['RequestID'];
     requestNo = json['RequestNo'];
     requestType = json['RequestType'];
-    requestTitle = json['RequestTitle'];
-    strDate = json['strDate'];
-    endDate = json['endDate'];
-    returnDate = json['returnDate'];
     managerName = json['managerName'];
-    date_request = json['date_request'];
-    requestFor = json['RequestFor'];
+    submitDate = json['SubmitDate'];
     statusText=json["statusText"];
-    lang = json['lang'];
+    fileName = json['fileName'];
+    attachedFile = json['attachedFile'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -86,15 +75,11 @@ class ResultObject {
     data['RequestID'] = this.requestID;
     data['RequestNo'] = this.requestNo;
     data['RequestType'] = this.requestType;
-    data['RequestTitle'] = this.requestTitle;
-    data['strDate'] = this.strDate;
-    data['endDate'] = this.endDate;
-    data['returnDate'] = this.returnDate;
     data['managerName'] = this.managerName;
-    data['date_request'] = this.date_request;
-    data['RequestFor'] = this.requestFor;
+    data['SubmitDate'] = this.submitDate;
+    data['RequestFor'] = this.fileName;
     data['statusText']=this.statusText;
-    data['lang'] = this.lang;
+    data['lang'] = this.attachedFile;
     return data;
   }
 }

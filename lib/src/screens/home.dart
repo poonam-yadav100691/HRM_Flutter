@@ -85,11 +85,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 new PermissionResponse.fromJson(parsed).list;
             print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
             getLeaveCounts();
-            setState(() {
-              username = sharedPreferences.getString(AppConstant.USERNAME);
-              department = sharedPreferences.getString(AppConstant.DEPARTMENT);
-              image = sharedPreferences.getString(AppConstant.IMAGE);
-            });
+
+
+
           } else {
             print("ModelError: ${jsonResponse["ModelErrors"]}");
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
@@ -196,11 +194,17 @@ class _MyHomePageState extends State<MyHomePage> {
         });
 
         balanceList = balance.resultObject;
+
         // for (int i = 0; i < balanceList.length; i++) {
         //   leaveTypeList.add(balanceList[i]);
         // }
         // });
         print(balanceList.toString());
+        setState(() {
+          username = sharedPreferences.getString(AppConstant.USERNAME);
+          department = sharedPreferences.getString(AppConstant.DEPARTMENT);
+          image = sharedPreferences.getString(AppConstant.IMAGE);
+        });
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {

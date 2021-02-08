@@ -13,4 +13,5 @@ class Services {
   static final String AddNews = BASE_URL + 'News/add';
   static final String NewsDetail = BASE_URL + 'NewsItem';
   static final String MyRequest = BASE_URL + 'User/MyRequest';
+  static final String MyLevReqDetails = BASE_URL + 'User/MyRequestDetail';
 }

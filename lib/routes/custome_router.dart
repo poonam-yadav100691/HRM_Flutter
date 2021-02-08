@@ -9,6 +9,7 @@ import 'package:HRMNew/src/screens/Insurance/insurance.dart';
 
 import 'package:HRMNew/src/screens/AddRequest/addRequest.dart';
 import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/requestDetails.dart';
+import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveReqDetails/myLeaveReqDetails.dart';
 import 'package:HRMNew/src/screens/MyRequest/myRequest.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveRequest.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOtRequest/myOtRequest.dart';
@@ -92,6 +93,11 @@ class CustomRouter {
 
       case addNewsRoute:
         return MaterialPageRoute(builder: (_) => AddNews());
+      case myLeaveReqDetails:
+        return MaterialPageRoute(
+            builder: (_) => MyLeaveReqDetails(
+                  levReqDetailID: null,
+                ));
     }
     return MaterialPageRoute(builder: (_) => Landing());
   }
