@@ -1,63 +1,71 @@
+import 'package:HRMNew/src/screens/Task/TaskPending/component/PODO.dart';
 import 'package:flutter/material.dart';
+
 import './background.dart';
 
 class Body extends StatefulWidget {
-  const Body({
-    Key key,
-  }) : super(key: key);
+  final List<ResultObject> taskAll;
+  Body({Key key, @required this.taskAll}) : super(key: key);
 
   @override
-  _BodyState createState() => _BodyState();
+  _BodyState createState() => _BodyState(taskAll);
 }
 
-class _BodyState extends State<Body> {
-  // bool valuefirst = false;
-  List<bool> valuefirst = new List<bool>();
-  @override
-  void initState() {
-    // TODO: implement initState
-    setState(() {
-      for (int i = 0; i < 4; i++) {
-        valuefirst.add(false);
-      }
-    });
-  }
+class _BodyState extends State<Body> with TickerProviderStateMixin {
+  List<ResultObject> taskAll;
 
-  void ItemChange(bool val, int index) {
-    setState(() {
-      valuefirst[index] = val;
-    });
-  }
+  // var totalDays = 0;
 
+  _BodyState(this.taskAll);
   @override
   Widget build(BuildContext context) {
-    return Background(
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-                itemCount: valuefirst.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return new Card(
-                    child: new Container(
-                      padding: new EdgeInsets.all(15.0),
-                      child: new Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text('Task ${index + 1}'),
-                          ),
-                          Text('Subtitle Task ${index + 1}'),
-                        ],
+    print(taskAll.length);
+    if (taskAll.length != 0) {
+      return Background(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                  itemCount: taskAll.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return new Card(
+                      child: new Container(
+                        padding: new EdgeInsets.all(15.0),
+                        child: new Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: Text(taskAll[index].taskName),
+                                ),
+                                taskAll[index].taskStatus
+                                    ? Text("Completed",
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.bold))
+                                    : Text("Pending",
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            Text(taskAll[index].taskDetail),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }),
-          ),
-        ],
-      ),
-    );
+                    );
+                  }),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container(child: Center(child: CircularProgressIndicator()));
+    }
   }
 }

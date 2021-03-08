@@ -51,9 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Colors.green[100],
     Colors.orange[100],
     Colors.purple[100],
-
   ];
-              
 
   List<ResultObject> balanceList = new List();
   @override
@@ -64,6 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future _register() async {
+    setState(() {
+      isLoading = true;
+    });
     sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     print("Token Access: $token");
@@ -79,16 +80,15 @@ class _MyHomePageState extends State<MyHomePage> {
           if (jsonResponse["StatusCode"] == 200) {
             // sharedPreferences.setString(
             //     AppConstant.PERMISSIONS, jsonResponse['ResultObject']);
-            print("Permissions:*****");
             final List parsed = jsonResponse['ResultObject'];
             List<Permission> _permissions =
                 new PermissionResponse.fromJson(parsed).list;
-            print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
+            // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
             getLeaveCounts();
-
-
-
           } else {
+            setState(() {
+              isLoading = false;
+            });
             print("ModelError: ${jsonResponse["ModelErrors"]}");
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
               getToken();
@@ -99,7 +99,6 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         } else {
           print("response.statusCode.." + response.statusCode.toString());
-
           _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
               "Something wnet wrong.. Please try again later."));
         }
@@ -176,9 +175,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> getLeaveCounts() async {
-    setState(() {
-      isLoading = true;
-    });
     balanceList.clear();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
@@ -189,10 +185,6 @@ class _MyHomePageState extends State<MyHomePage> {
       print("j&&&&&&&&&&&&&&&&&&&&&&&" + jsonResponse.toString());
       GetBalance balance = new GetBalance.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
-        setState(() {
-          isLoading = false;
-        });
-
         balanceList = balance.resultObject;
 
         // for (int i = 0; i < balanceList.length; i++) {
@@ -201,6 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // });
         print(balanceList.toString());
         setState(() {
+          isLoading = false;
           username = sharedPreferences.getString(AppConstant.USERNAME);
           department = sharedPreferences.getString(AppConstant.DEPARTMENT);
           image = sharedPreferences.getString(AppConstant.IMAGE);
@@ -618,29 +611,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ]),
           child: ListView(
             scrollDirection: Axis.horizontal,
-            // children: [
-            //   for (int i = 0; i < balanceList.length; i++)
-            //     {
-            //       _homeSlider(balanceList[i].leaveName, balanceList[i].leaveUse,
-            //           balanceList[i].leaveTotal, Colors.pink[200])
-            //       // print("id $balanceList")
-            //     }
-            //   // _homeSlider("PL", "10", "20", Colors.pink[200]),
-            //   // _homeSlider("SICK", "3", "7", Colors.green[100]),
-            //   // _homeSlider("CASUAL", "2", "5", Colors.orange[100]),
-            //   // _homeSlider("PERSONAL", "1", "5", Colors.purple[100]),
-            //   // _homeSlider("ANNUAL", "5", "10", Colors.blue[100]),
-            // ],
             children: <Widget>[
-              
-              for (var i=0; i< balanceList.length;i++)
-              
- _homeSlider(balanceList[i].leaveName, balanceList[i].leaveUse,
-                      balanceList[i].leaveTotal, _color[i])
-                      // i++
-              
-                // for (var color in _color)
-                 
+              for (var i = 0; i < balanceList.length; i++)
+                _homeSlider(balanceList[i].leaveName, balanceList[i].leaveUse,
+                    balanceList[i].leaveTotal, _color[i])
+              // i++
+
+              // for (var color in _color)
             ],
           ),
         ),
@@ -674,13 +651,78 @@ class _MyHomePageState extends State<MyHomePage> {
                     payslipRoute, null),
                 _homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
                     calendarViewRoute, null),
-                _homeGrid(
-                    "Check-In", "lib/assets/images/XSgklyxE.jpg", '', null),
+                // _homeGrid(
+                //     "Check-In", "lib/assets/images/XSgklyxE.jpg", '', null),
               ],
             ),
           ),
         ),
       ]),
     );
+  }
+}
+
+class GetToken {
+  SharedPreferences sharedPreferences;
+  Future<void> getToken() async {
+    Network().check().then((intenet) async {
+      if (intenet != null && intenet) {
+        sharedPreferences = await SharedPreferences.getInstance();
+        String username = sharedPreferences.getString(AppConstant.LoginGmailID);
+        String password = sharedPreferences.getString(AppConstant.PASSWORD);
+        String urname = sharedPreferences.getString(AppConstant.USERNAME);
+
+        print("Here--In Token-----$username");
+        try {
+          final uri = Services.LOGIN;
+          Map body = {
+            "PassKey": "a486f489-76c0-4c49-8ff0-d0fdec0a162b",
+            "UserName": username,
+            "UserPassword": password
+          };
+          print("Here--In Token-----$body");
+
+          http.post(uri, body: body).then((response) {
+            if (response.statusCode == 200) {
+              var jsonResponse = jsonDecode(response.body);
+              print("Here--In Token-----$jsonResponse");
+              if (jsonResponse["StatusCode"] == 200) {
+                loginResponse login =
+                    new loginResponse.fromJson(jsonResponse["ResultObject"][0]);
+
+                sharedPreferences.setInt(
+                    AppConstant.USER_ID.toString(), login.userId);
+                sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
+                sharedPreferences.setString(
+                    AppConstant.ACCESS_TOKEN, login.tokenKey);
+                print("New token : ${login.tokenKey}");
+                sharedPreferences.setString(
+                    AppConstant.USERNAME, login.eng_fullname);
+                sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);
+                sharedPreferences.setString(
+                    AppConstant.PHONENO, login.emp_mobile);
+                sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
+                sharedPreferences.setString(
+                    AppConstant.DEPARTMENT, login.emp_dep);
+                sharedPreferences.setString(
+                    AppConstant.COMPANY, login.emp_company);
+                return login.tokenKey;
+              } else {
+                return "Something wnet wrong.. Please try again later.";
+              }
+            } else {
+              print("response.statusCode.." + response.statusCode.toString());
+
+              return "Something wnet wrong.. Please try again later.";
+            }
+          });
+        } catch (e) {
+          print("Error: $e");
+          return (e);
+        }
+      } else {
+        return "Please check internet connection";
+      }
+    });
   }
 }

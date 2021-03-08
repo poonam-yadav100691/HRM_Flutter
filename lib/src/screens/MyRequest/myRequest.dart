@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -19,21 +18,29 @@ class MyRequest extends StatefulWidget {
   _MyRequestState createState() => _MyRequestState();
 }
 
-class _MyRequestState extends State<MyRequest> {
-  bool isLoading = true;
+class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<ResultObject> myRequestList = new List();
   List<ResultObject> leaveReqList = new List();
   List<ResultObject> otReqList = new List();
+  AnimationController animationController;
+  Animation<dynamic> animation;
+  bool isLoading = false;
 
   @override
   void initState() {
-    super.initState();
     _getRequests();
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData _mediaQueryData = MediaQuery.of(context);
+    var screenWidth = _mediaQueryData.size.width;
+    var screenHeight = _mediaQueryData.size.height;
     if (!isLoading) {
       return Align(
           alignment: Alignment.bottomLeft, // and bottomLeft

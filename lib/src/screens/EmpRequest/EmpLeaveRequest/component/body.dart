@@ -1,34 +1,77 @@
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/requestDetails.dart';
 import 'package:flutter/material.dart';
+import '../../empRequestPODO.dart';
 import './background.dart';
 
+import 'package:intl/intl.dart';
+
 class Body extends StatefulWidget {
+  final List<ResultObject> empLeaveList;
+  Body({Key key, @required this.empLeaveList}) : super(key: key);
+
   @override
-  _BodyState createState() => _BodyState();
+  _BodyState createState() => _BodyState(empLeaveList);
 }
 
-class _BodyState extends State<Body> {
-  @override
-  Widget build(BuildContext context) {
-    return Background(
-        child: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: planetCard(context, "Juil", "Backend Developer", '29/09/2020'),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-              bottom: 5.0, top: 5.0, left: 10.0, right: 10),
-          child:
-              planetCard(context, "Mike", "Front End Developer", '04/09/2020'),
-        ),
-      ],
-    ));
-  }
+class _BodyState extends State<Body> with TickerProviderStateMixin {
+  List<ResultObject> empLeaveList;
 
-  Widget planetCard(BuildContext context, name, design, date) {
+  // var totalDays = 0;
+
+  _BodyState(this.empLeaveList);
+
+  @override
+  AnimationController animationController;
+  Animation<dynamic> animation;
+  Widget build(BuildContext context) {
+    // List jsonResponse = jsonDecode(empLeaveList);
+    final children = <Widget>[];
+    for (var i = 0; i < empLeaveList.length; i++) {
+      children.add(
+        new Container(
+          margin: const EdgeInsets.symmetric(
+            vertical: 10.0,
+            horizontal: 10.0,
+          ),
+          child: planetCard(
+              context,
+              empLeaveList[i].empName,
+              empLeaveList[i].empPosition,
+              empLeaveList[i].dateRequest,
+              empLeaveList[i].requestID),
+        ),
+      );
+    }
+    Size size = MediaQuery.of(context).size;
+    return Background(child: ListView(children: children));
+  }
+  // Widget build(BuildContext context) {
+  //   return Background(
+
+  //       child: Column(
+  //     children: [
+  //       Padding(
+  //         padding: const EdgeInsets.all(10.0),
+  //         child: planetCard(context, "Juil", "Backend Developer", '29/09/2020'),
+  //       ),
+  //       Padding(
+  //         padding: const EdgeInsets.only(
+  //             bottom: 5.0, top: 5.0, left: 10.0, right: 10),
+  //         child:
+  //             planetCard(context, "Mike", "Front End Developer", '04/09/2020'),
+  //       ),
+  //     ],
+  //   ));
+  // }
+
+  Widget planetCard(BuildContext context, name, design, date, id) {
+    var inputFormat = DateFormat('MM/dd/yyyy HH:mm:ss a');
+    var outputFormat = DateFormat('dd/MM/yy');
+    var inputDate2 = inputFormat.parse(date); // <-- Incoming date
+    var returnDate = outputFormat.format(inputDate2);
+
     Size size = MediaQuery.of(context).size;
     return InkWell(
       child: Container(
@@ -97,7 +140,7 @@ class _BodyState extends State<Body> {
                                           fontWeight: FontWeight.w600),
                                     ),
                                     Text(
-                                      date,
+                                      returnDate,
                                       style: new TextStyle(
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -121,7 +164,14 @@ class _BodyState extends State<Body> {
         ),
       ),
       onTap: () {
-        Navigator.pushNamed(context, requestDetailsRoute);
+        print("empLeaveList[i].requestID:: ${id}");
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RequestDetails(levReqDetailID: id),
+          ),
+        );
       },
     );
   }

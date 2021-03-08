@@ -40,6 +40,7 @@ class _MyCustomTextFieldState extends State<MyCustomTextField> {
       padding: const EdgeInsets.all(8.0),
       child: FormBuilderTextField(
         autocorrect: false,
+
         focusNode: _focusNode,
         attribute: widget.attrName,
         style: TextStyle(color: Colors.black),

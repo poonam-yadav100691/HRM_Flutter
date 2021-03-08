@@ -21,8 +21,8 @@ import 'package:HRMNew/src/screens/EmpRequest/EmpOtRequest/EmpOtRequest.dart';
 import 'package:HRMNew/src/screens/Dashboard/approveHome/approve-home.dart';
 import 'package:HRMNew/src/screens/Dashboard/pendingHome/pending-home.dart';
 import 'package:HRMNew/src/screens/Dashboard/rejectHome/component/reject-home.dart';
-import 'package:HRMNew/src/screens/NotificationPage/AddNews/addNews.dart';
-import 'package:HRMNew/src/screens/NotificationPage/notification-page.dart';
+import 'package:HRMNew/src/screens/NewsPage/AddNews/addNews.dart';
+import 'package:HRMNew/src/screens/NewsPage/news-page.dart';
 import 'package:HRMNew/src/screens/Payslip/payslip.dart';
 import 'package:HRMNew/src/screens/RulesPage/rulesPage.dart';
 import 'package:HRMNew/src/screens/Task/TaskAdd/taskAdd.dart';
@@ -53,7 +53,7 @@ class CustomRouter {
       case loginRoute:
         return MaterialPageRoute(builder: (_) => Login());
       case notificationRoute:
-        return MaterialPageRoute(builder: (_) => NotificationPage());
+        return MaterialPageRoute(builder: (_) => NewsPage());
       case addDelegatesRoute:
         return MaterialPageRoute(builder: (_) => AddDelegates());
       case myRequestRoute:

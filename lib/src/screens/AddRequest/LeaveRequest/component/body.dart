@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import 'package:HRMNew/components/MyCustomDate.dart';
-import 'package:HRMNew/components/MyCustomDateRange.dart';
-import 'package:HRMNew/components/MyCustomDropDown.dart';
 import 'package:HRMNew/components/MyCustomFileUpload.dart';
 import 'package:HRMNew/components/MyCustomTextField.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -23,16 +20,15 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class Body extends StatefulWidget {
-  final String title;
-  final ValueChanged<String> validator;
-
-  Body({this.title, this.validator});
-
   @override
   _BodyState createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> {
+class _BodyState extends State<Body> with TickerProviderStateMixin {
+  AnimationController animationController;
+  Animation<dynamic> animation;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   SharedPreferences sharedPreferences;
   var _focusNode = new FocusNode();
   bool showHalf = false;
@@ -40,7 +36,6 @@ class _BodyState extends State<Body> {
   final TextEditingController leaveController = new TextEditingController();
   final TextEditingController responsiblePerController =
       new TextEditingController();
-
   final TextEditingController returnDateSelected = new TextEditingController();
   final TextEditingController rangeDateSelected = new TextEditingController();
   final TextEditingController leaveApplyFor = new TextEditingController();
@@ -70,6 +65,8 @@ class _BodyState extends State<Body> {
     _focusNode.addListener(_focusListener);
     getTypeOfLeave();
     getResponsiblePerson();
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
     super.initState();
   }
 
@@ -101,6 +98,8 @@ class _BodyState extends State<Body> {
     });
     print(difference);
   }
+
+  void _onReturnDateSelect(val) {}
 
   ValueChanged _onhalfChanged = (val) => print(val);
   // ValueChanged _onRadioChanged = (val) => print(val);
@@ -253,38 +252,50 @@ class _BodyState extends State<Body> {
                         MyCustomTextField(
                             title: totalDays.toString(),
                             attrName: 'total_days'),
+                        // Padding(
+                        //     padding: const EdgeInsets.all(8.0),
+                        //     child: FormBuilderDateTimePicker(
+                        //       // attribute: "date",
+                        //       inputType: InputType.date,
+                        //       firstDate: DateTime.now(),
+                        //       format: DateFormat("dd-MM-yyyy"),
+                        //       // initialValue: DateTime.now(),
+
+                        //       autocorrect: false,
+                        //       focusNode: _focusNode,
+                        //       style: TextStyle(color: Colors.black),
+                        //     )),
+
                         Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FormBuilderDateTimePicker(
-                              attribute: "date",
-                              controller: returnDateSelected,
-                              onChanged: null,
-                              inputType: InputType.date,
-                              firstDate: DateTime.now(),
-                              format: DateFormat("dd-MM-yyyy"),
-                              // initialValue: DateTime.now(),
-                              decoration: new InputDecoration(
-                                fillColor: Colors.white,
-                                border: _focusNode.hasFocus
-                                    ? OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: leaveCardcolor))
-                                    : OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.grey)),
-                                filled: true,
-                                contentPadding: EdgeInsets.only(
-                                    bottom: 10.0, left: 10.0, right: 10.0),
-                                labelText: "Return to work date",
-                              ),
-                              autocorrect: false,
-                              focusNode: _focusNode,
-                              style: TextStyle(color: Colors.black),
-                            )),
+                          padding: const EdgeInsets.all(8.0),
+                          child: FormBuilderDateTimePicker(
+                            attribute: "returnDate",
+                            // controller: returnDateSelected,
+                            // onChanged: _onReturnDateSelect,
+                            inputType: InputType.date,
+                            firstDate: DateTime.now(),
+                            format: DateFormat("dd-MM-yyyy"),
+                            decoration: new InputDecoration(
+                              fillColor: Colors.white,
+                              border: _focusNode.hasFocus
+                                  ? OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0)),
+                                      borderSide:
+                                          BorderSide(color: leaveCardcolor))
+                                  : OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0)),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey)),
+                              filled: true,
+                              contentPadding: EdgeInsets.only(
+                                  bottom: 10.0, left: 10.0, right: 10.0),
+                              labelText: "Return to work date",
+                            ),
+                          ),
+                        ),
+
                         Container(
                           padding: const EdgeInsets.all(9),
                           child: TextFormField(

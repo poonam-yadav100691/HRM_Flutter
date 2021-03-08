@@ -16,13 +16,19 @@ class Body extends StatefulWidget {
   _BodyState createState() => _BodyState(leaveList);
 }
 
-class _BodyState extends State<Body> {
+class _BodyState extends State<Body> with TickerProviderStateMixin {
   List<ResultObject> leaveList;
 
   // var totalDays = 0;
 
   _BodyState(this.leaveList);
 
+//  void initState() {
+//     animationController = AnimationController(
+//         duration: const Duration(milliseconds: 1000), vsync: this);
+//     super.initState();
+
+//   }
   // void _onDateRangeSelect(startdate, enddate) async {
   //   DateTime tempDate1 =
   //       new DateFormat("MM/dd/yyyy hh:mm:ss a").parse(startdate);
@@ -43,6 +49,8 @@ class _BodyState extends State<Body> {
   // }
 
   @override
+  AnimationController animationController;
+  Animation<dynamic> animation;
   Widget build(BuildContext context) {
     // List jsonResponse = jsonDecode(leaveList);
     final children = <Widget>[];
@@ -51,8 +59,6 @@ class _BodyState extends State<Body> {
         new GestureDetector(
           onTap: () {
             print("leaveList[i].requestID:: ${leaveList[i].requestID}");
-            // Navigator.pushNamed(context, myLeaveReqDetails,
-            //     arguments: {'levReqDetailID': leaveList[i].requestID});
 
             Navigator.push(
               context,
@@ -96,10 +102,6 @@ class _BodyState extends State<Body> {
   Widget planetCard(BuildContext context, leaveList) {
     var inputFormat = DateFormat('MM/dd/yyyy HH:mm:ss a');
     var outputFormat = DateFormat('dd/MM/yy');
-    // var inputDate = inputFormat.parse(leaveList.strDate);
-    // var startDate = outputFormat.format(inputDate);
-    // var inputDate1 = inputFormat.parse(leaveList.endDate);
-    // var endDate = outputFormat.format(inputDate1);
     var inputDate2 =
         inputFormat.parse(leaveList.submitDate); // <-- Incoming date
     var returnDate = outputFormat.format(inputDate2); // <-- Desired date

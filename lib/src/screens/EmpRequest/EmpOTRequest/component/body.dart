@@ -1,35 +1,68 @@
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:flutter/material.dart';
+import '../../empRequestPODO.dart';
 import './background.dart';
+import 'package:intl/intl.dart';
 
 class Body extends StatefulWidget {
+  final List<ResultObject> empOtList;
+  Body({Key key, @required this.empOtList}) : super(key: key);
+
   @override
-  _BodyState createState() => _BodyState();
+  _BodyState createState() => _BodyState(empOtList);
 }
 
-class _BodyState extends State<Body> {
+class _BodyState extends State<Body> with TickerProviderStateMixin {
+  List<ResultObject> empOtList;
+
+  // var totalDays = 0;
+
+  _BodyState(this.empOtList);
+
   @override
+  AnimationController animationController;
+  Animation<dynamic> animation;
   Widget build(BuildContext context) {
-    return Background(
-        child: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: planetCard(context, "Juil", "Backend Developer", '29/09/2020'),
+    // List jsonResponse = jsonDecode(empOtList);
+    final children = <Widget>[];
+    for (var i = 0; i < empOtList.length; i++) {
+      children.add(
+        new GestureDetector(
+          onTap: () {
+            print("empOtList[i].requestID:: ${empOtList[i].requestID}");
+
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) =>
+            //         MyLeaveReqDetails(levReqDetailID: empOtList[i].requestID),
+            //   ),
+            // );
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(
+              vertical: 10.0,
+              horizontal: 10.0,
+            ),
+            child: planetCard(context, empOtList[i].empName,
+                empOtList[i].empPosition, empOtList[i].dateRequest),
+          ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-              bottom: 5.0, top: 5.0, left: 10.0, right: 10),
-          child:
-              planetCard(context, "Mike", "Front End Developer", '04/09/2020'),
-        ),
-      ],
-    ));
+      );
+    }
+    Size size = MediaQuery.of(context).size;
+    return Background(child: ListView(children: children));
   }
 
   Widget planetCard(BuildContext context, name, design, date) {
     Size size = MediaQuery.of(context).size;
+
+    var inputFormat = DateFormat('MM/dd/yyyy HH:mm:ss a');
+    var outputFormat = DateFormat('dd/MM/yy');
+    var inputDate2 = inputFormat.parse(date); // <-- Incoming date
+    var returnDate = outputFormat.format(inputDate2);
+
     return InkWell(
       child: Container(
         decoration: new BoxDecoration(
@@ -97,7 +130,7 @@ class _BodyState extends State<Body> {
                                           fontWeight: FontWeight.w600),
                                     ),
                                     Text(
-                                      date,
+                                      returnDate,
                                       style: new TextStyle(
                                           fontWeight: FontWeight.w500),
                                     ),

@@ -1,19 +1,15 @@
 import 'package:HRMNew/src/screens/Task/TaskAll/component/body.dart';
+import 'package:HRMNew/src/screens/Task/TaskPending/component/PODO.dart';
 import 'package:flutter/material.dart';
 
-class TaskAll extends StatefulWidget {
-  // final TabController tabBar;
-  TaskAll();
+class TaskAll extends StatelessWidget {
+  final List<ResultObject> data;
+  TaskAll({Key key, @required this.data}) : super(key: key);
 
-  @override
-  _TaskAllState createState() => _TaskAllState();
-}
-
-class _TaskAllState extends State<TaskAll> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Body(),
+      body: Body(taskAll: data),
       resizeToAvoidBottomPadding: true,
     );
   }

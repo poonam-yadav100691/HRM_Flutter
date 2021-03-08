@@ -32,7 +32,7 @@ class GetLevReqDetails {
     }
     if (json['RequestItemObject'] != null) {
       requestItemObject = new List<RequestItemObject>();
-      json['RequestTitleObject'].forEach((v) {
+      json['RequestItemObject'].forEach((v) {
         requestItemObject.add(new RequestItemObject.fromJson(v));
       });
     }
@@ -123,7 +123,7 @@ class RequestItemObject {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['RequestID'] = this.itemID;
+    data['itemID'] = this.itemID;
     data['itemType'] = this.itemType;
     data['duration'] = this.duration;
     data['strDate'] = this.strDate;

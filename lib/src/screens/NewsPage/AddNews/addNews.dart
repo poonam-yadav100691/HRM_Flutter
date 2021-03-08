@@ -1,5 +1,5 @@
 import 'package:HRMNew/src/constants/colors.dart';
-import 'package:HRMNew/src/screens/NotificationPage/AddNews/component/body.dart';
+import 'package:HRMNew/src/screens/NewsPage/AddNews/component/body.dart';
 import 'package:flutter/material.dart';
 
 class AddNews extends StatelessWidget {

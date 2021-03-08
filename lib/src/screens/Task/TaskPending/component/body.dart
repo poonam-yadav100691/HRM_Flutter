@@ -1,80 +1,172 @@
+import 'dart:convert';
+
 import 'package:HRMNew/routes/route_names.dart';
+import 'package:HRMNew/src/constants/AppConstant.dart';
+import 'package:HRMNew/src/constants/Services.dart';
+import 'package:HRMNew/src/screens/Task/TaskPending/component/PODO.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 import './background.dart';
 
 class Body extends StatefulWidget {
-  const Body({
-    Key key,
-  }) : super(key: key);
+  final List<ResultObject> taskPenList;
+  Body({Key key, @required this.taskPenList}) : super(key: key);
 
   @override
-  _BodyState createState() => _BodyState();
+  _BodyState createState() => _BodyState(taskPenList);
 }
 
-class _BodyState extends State<Body> {
-  // bool valuefirst = false;
-  List<bool> valuefirst = new List<bool>();
-  @override
-  void initState() {
-    // TODO: implement initState
-    setState(() {
-      for (int i = 0; i < 4; i++) {
-        valuefirst.add(false);
-      }
-    });
-  }
+class _BodyState extends State<Body> with TickerProviderStateMixin {
+  List<ResultObject> taskPenList;
+  AnimationController animationController;
+  Animation<dynamic> animation;
+  bool isLoading = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  void ItemChange(bool val, int index) {
+  _BodyState(this.taskPenList);
+  List<bool> valuefirst = new List<bool>();
+
+  @override
+  void initState() {}
+
+  void _itemChange(bool val, int index) {
     setState(() {
       valuefirst[index] = val;
     });
   }
 
+  Future<void> _markcompleted() async {
+    setState(() {
+      isLoading = true;
+    });
+    // var x = valuefirst.map((val, index) {
+    List map = new List();
+
+    valuefirst.asMap().entries.map((entry) {
+      int idx = entry.key;
+      bool val = entry.value;
+      if (val && map.indexOf(val) == -1) {
+        apiCallMark(idx);
+      }
+      // return map;
+    }).toList();
+  }
+
+  apiCallMark(index) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    print("Here.. $index");
+
+    final uri = Services.MarkCompTaskList;
+    Map body = {
+      "Tokenkey": token,
+      "lang": '2',
+      "taskID": taskPenList[index].taskID,
+      "CompleteStatus": "true"
+    };
+    print("j&&& $body");
+    http.post(uri, body: body).then((response) {
+      var jsonResponse = jsonDecode(response.body);
+      if (jsonResponse["StatusCode"] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pushNamed(context, taskRoute);
+        print("j&&& $jsonResponse");
+      } else {
+        print("ModelError: ${jsonResponse["ModelErrors"]}");
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          setState(() {
+            isLoading = false;
+          });
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Background(
-      child: Column(
-        children: [
-          GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, addTaskRoute);
-              },
-              child: Card(
-                child: new Container(
-                  // padding: new EdgeInsets.all(5.0),
-                  child: ListTile(
-                    leading: Icon(Icons.add),
-                    title: Text('Add Task'),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-                  ),
-                ),
-              )),
-          Expanded(
-            child: ListView.builder(
-                itemCount: valuefirst.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return new Card(
-                    child: new Container(
-                      padding: new EdgeInsets.all(0.0),
-                      child: new Column(
-                        children: <Widget>[
-                          new CheckboxListTile(
-                              activeColor: Colors.green,
-                              value: valuefirst[index],
-                              title: new Text('Task ${index + 1}'),
-                              subtitle: Text('Subtitle Task ${index + 1}'),
-                              controlAffinity: ListTileControlAffinity.leading,
-                              onChanged: (bool val) {
-                                ItemChange(val, index);
-                              })
-                        ],
-                      ),
+    if (taskPenList.length != 0) {
+      if (taskPenList.length > valuefirst.length &&
+          taskPenList.length != valuefirst.length) {
+        setState(() {
+          for (int i = 0; i < taskPenList.length; i++) {
+            valuefirst.add(false);
+          }
+        });
+      }
+
+      return Background(
+        child: Column(
+          children: [
+            GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, addTaskRoute);
+                },
+                child: Card(
+                  child: new Container(
+                    // padding: new EdgeInsets.all(5.0),
+                    child: ListTile(
+                      leading: Icon(Icons.add),
+                      title: Text('Add Task'),
+                      trailing: Icon(Icons.keyboard_arrow_right),
                     ),
-                  );
-                }),
-          ),
-        ],
-      ),
-    );
+                  ),
+                )),
+            valuefirst.indexOf(true) > -1
+                ? Container(
+                    margin: EdgeInsets.all(5),
+                    child: FlatButton(
+                      child: Text(
+                        'Marked Task Completed',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                      color: Colors.blueAccent,
+                      textColor: Colors.white,
+                      onPressed: () {
+                        _markcompleted();
+                      },
+                    ),
+                  )
+                : Container(),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: taskPenList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return new Card(
+                      child: new Container(
+                        padding: new EdgeInsets.all(0.0),
+                        child: new Column(
+                          children: <Widget>[
+                            new CheckboxListTile(
+                                activeColor: Colors.green,
+                                value: valuefirst[index],
+                                title: new Text(taskPenList[index].taskName),
+                                subtitle: Text(taskPenList[index].taskDetail),
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                                onChanged: (bool val) {
+                                  _itemChange(val, index);
+                                })
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container(child: Center(child: CircularProgressIndicator()));
+    }
   }
 }

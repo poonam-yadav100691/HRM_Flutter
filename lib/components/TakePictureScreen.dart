@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io' as Io;
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -97,10 +99,24 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               '${DateTime.now()}.png',
             );
 
+            var file = File(path);
+            if (file != null) {
+              print("helo");
+              base64Encode(file.readAsBytesSync());
+              var base64Image = base64Encode(file.readAsBytesSync());
+              print("Imageee::: ${base64Image}");
+
+              final bytes = Io.File(path).readAsBytesSync();
+
+              String img64 = base64Encode(bytes);
+              print("object");
+              print(img64.substring(0, 100));
+              // Navigator.pop(context, base64Encode(file.readAsBytesSync()));
+            }
             // Attempt to take a picture and log where it's been saved.
             await _controller.takePicture(path);
 
-            Navigator.pop(context, path);
+            //  Navigator.pop(context, path);
 
             // If the picture was taken, display it on a new screen.
             // Navigator.push(
@@ -134,11 +150,16 @@ class DisplayPictureScreen extends StatelessWidget {
       body: Column(
         children: [
           Image.file(File(imagePath)),
-          FlatButton(
-              onPressed: () {
-                Navigator.pop(context, imagePath);
-              },
-              child: Text("Get this Image"))
+          // FlatButton(
+          //     // onPressed: () {
+          //     //   var file = File(imagePath);
+          //     //   if (file != null) {
+          //     //     base64Encode(file.readAsBytesSync());
+          //     //     print(base64Encode(file.readAsBytesSync()));
+          //     //     // Navigator.pop(context, base64Encode(file.readAsBytesSync()));
+          //     //   }
+          //     // },
+          //     child: Text("Get this Image"))
         ],
       ),
     );

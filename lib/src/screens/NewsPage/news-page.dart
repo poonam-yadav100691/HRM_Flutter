@@ -1,10 +1,10 @@
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/colors.dart';
-import 'package:HRMNew/src/screens/NotificationPage/component/body.dart';
+import 'package:HRMNew/src/screens/NewsPage/component/body.dart';
 import 'package:flutter/material.dart';
 
-class NotificationPage extends StatelessWidget {
+class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

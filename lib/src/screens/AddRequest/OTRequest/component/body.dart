@@ -42,90 +42,103 @@ class _BodyState extends State<Body> {
     Size size = MediaQuery.of(context).size;
     final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
     return Background(
-        child: FormBuilder(
-            child: Column(
+        child: Column(
       children: [
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                MyCustomDate(
-                  title: "Select OT Date ",
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: FormBuilderDateTimePicker(
-                    attribute: 'OTStartTime',
-                    decoration: new InputDecoration(
-                      fillColor: Colors.white,
-                      border: _focusNode.hasFocus
-                          ? OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: leaveCardcolor))
-                          : OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.grey)),
-                      filled: true,
-                      contentPadding: EdgeInsets.only(
-                          bottom: 10.0, left: 10.0, right: 10.0),
-                      labelText: 'OT Start From',
+        SafeArea(
+            bottom: true,
+            top: false,
+            child: FormBuilder(
+                key: _fbKey,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        children: [
+                          MyCustomDate(
+                            title: "Select OT Date ",
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FormBuilderDateTimePicker(
+                              attribute: 'OTStartTime',
+                              decoration: new InputDecoration(
+                                fillColor: Colors.white,
+                                border: _focusNode.hasFocus
+                                    ? OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)),
+                                        borderSide:
+                                            BorderSide(color: leaveCardcolor))
+                                    : OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)),
+                                        borderSide:
+                                            BorderSide(color: Colors.grey)),
+                                filled: true,
+                                contentPadding: EdgeInsets.only(
+                                    bottom: 10.0, left: 10.0, right: 10.0),
+                                labelText: 'OT Start From',
+                              ),
+                              onChanged: _onDateTimeChanged,
+                              validators: [FormBuilderValidators.required()],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FormBuilderDateTimePicker(
+                              attribute: 'OTEndTime',
+                              decoration: new InputDecoration(
+                                fillColor: Colors.white,
+                                border: _focusNode.hasFocus
+                                    ? OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)),
+                                        borderSide:
+                                            BorderSide(color: leaveCardcolor))
+                                    : OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)),
+                                        borderSide:
+                                            BorderSide(color: Colors.grey)),
+                                filled: true,
+                                contentPadding: EdgeInsets.only(
+                                    bottom: 10.0, left: 10.0, right: 10.0),
+                                labelText: 'OT End On',
+                              ),
+                              onChanged: _onDateTimeChanged,
+                              validators: [FormBuilderValidators.required()],
+                            ),
+                          ),
+                          MyCustomTextField(
+                              title: "Manager", attrName: 'manager'),
+                          MyCustomTextField(
+                              title: "Subject", attrName: 'subject'),
+                          MyCustomTextField(
+                              title: "Reason", attrName: 'reason'),
+                          MyCustomFileUpload(),
+                        ],
+                      ),
                     ),
-                    onChanged: _onDateTimeChanged,
-                    validators: [FormBuilderValidators.required()],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: FormBuilderDateTimePicker(
-                    attribute: 'OTEndTime',
-                    decoration: new InputDecoration(
-                      fillColor: Colors.white,
-                      border: _focusNode.hasFocus
-                          ? OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: leaveCardcolor))
-                          : OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.grey)),
-                      filled: true,
-                      contentPadding: EdgeInsets.only(
-                          bottom: 10.0, left: 10.0, right: 10.0),
-                      labelText: 'OT End On',
+                    Container(
+                      width: size.width * 0.9,
+                      height: 50,
+                      child: RaisedButton(
+                          color: leaveCardcolor,
+                          textColor: kWhiteColor,
+                          child: Text(
+                            "Send",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          onPressed: () {
+                            if (_fbKey.currentState.saveAndValidate()) {
+                              print(_fbKey.currentState.value);
+                            }
+                          }),
                     ),
-                    onChanged: _onDateTimeChanged,
-                    validators: [FormBuilderValidators.required()],
-                  ),
-                ),
-                MyCustomTextField(title: "Manager", attrName: 'manager'),
-                MyCustomTextField(title: "Subject", attrName: 'subject'),
-                MyCustomTextField(title: "Reason", attrName: 'reason'),
-                MyCustomFileUpload(),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          width: size.width * 0.9,
-          height: 50,
-          child: RaisedButton(
-              color: leaveCardcolor,
-              textColor: kWhiteColor,
-              child: Text(
-                "Send",
-                style: TextStyle(fontSize: 20),
-              ),
-              onPressed: () {
-                if (_fbKey.currentState.saveAndValidate()) {
-                  print(_fbKey.currentState.value);
-                }
-              }),
-        ),
+                  ],
+                ))),
       ],
-    )));
+    ));
   }
 }

@@ -1,9 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:HRMNew/components/TakePictureScreen.dart';
 import 'package:HRMNew/routes/route_names.dart';
+import 'package:HRMNew/src/constants/AppConstant.dart';
+import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:HRMNew/src/screens/home%20copy.dart';
+import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 import './background.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
@@ -22,6 +30,9 @@ class _BodyState extends State<Body> {
   StreamSubscription<Position> _positionStreamSubscription;
   bool _isCheckinDisabled, _isCheckoutDisabled, _showSubmitBtn;
   String result1;
+  Position position;
+
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -30,62 +41,6 @@ class _BodyState extends State<Body> {
     _isCheckoutDisabled = true;
     _showSubmitBtn = false;
   }
-  // void _incrementCounter() {
-  //   setState(() {
-  //     _isButtonDisabled = true;
-  //   });
-  // }
-
-  // Future _enableLocation() async {
-  //   LocationPermission permission;
-  //   await Geolocator.checkPermission().then((value) async => {
-  //         print(value),
-  //         if (value.toString() == 'LocationPermission.denied')
-  //           {
-  //             permission = await Geolocator.requestPermission(),
-  //             print("permission not granted $permission"),
-  //           }
-  //         else
-  //           {
-  //             print("permission granted"),
-  //           }
-
-  //         // _positionItems.add(
-  //         //     _PositionItem(_PositionItemType.permission, value.toString()))
-  //       });
-  //   setState(() {});
-  // }
-
-  // Future<void> _showMyDialog() async {
-  //   return showDialog<void>(
-  //     context: context,
-  //     barrierDismissible: false, // user must tap button!
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('Take Photo!!'),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: <Widget>[
-  //               Text(
-  //                   'For completion of check-in process, you have to click photo of your work place and submit.'),
-  //             ],
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: Text(
-  //               'Agree',
-  //             ),
-  //             onPressed: () async {
-  //               await Navigator.pop(context);
-  //               getCamera(context);
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   Future<void> _showMyDialog(serviceRequestText) async {
     return showDialog(
@@ -134,25 +89,8 @@ class _BodyState extends State<Body> {
     );
     setState(() {});
     print("Result imgaeg : $result1");
+
     _showSubmitBtn = true;
-    print("_isCheckoutDisabled: $_isCheckoutDisabled");
-    print("_isCheckinDisabled: $_isCheckinDisabled");
-    // if (serviceRequestText == 'Check-Out') {
-    //   setState(() {
-    //     _isCheckinDisabled = false;
-    //     _isCheckoutDisabled = true;
-    //   });
-    // } else {
-    //   setState(() {
-    //     _isCheckinDisabled = true;
-    //     _isCheckoutDisabled = false;
-    //   });
-    // }
-
-    print("_isCheckoutDisabled: $_isCheckoutDisabled");
-    print("_isCheckinDisabled: $_isCheckinDisabled");
-
-    // Navigator.pushNamed(context, takePictureScreenRoute);
   }
 
   Future _determinePosition(serviceRequestText) async {
@@ -183,13 +121,56 @@ class _BodyState extends State<Body> {
       }
     }
 
-    Position position = await Geolocator.getCurrentPosition(
+    position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     if (position != null) {
       _showMyDialog(serviceRequestText);
     }
-    print(position);
+    print("position%%%%%%%%%%::: ${position.latitude}");
     //  / return print(position); // return await Geolocator.getCurrentPosition();
+  }
+
+  Future<void> submitAttendance(checkinout) async {
+    print("checkinout:::$checkinout");
+    setState(() {
+      isLoading = true;
+    });
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    final uri = Services.MyAttendance;
+    Map body = {
+      "TokenKey": token,
+      "CheckDataTime": new DateTime.now().toString(),
+      "longitude": position.longitude,
+      "latitude": position.latitude,
+      "checkInOut": checkinout ? "checkin" : "checkout",
+      "picture": result1
+    };
+    print("body : $body");
+    http.post(uri, body: body).then((response) {
+      var jsonResponse = jsonDecode(response.body);
+      print("Reponse : $jsonResponse");
+
+      if (jsonResponse["StatusCode"] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pushNamed(context, homeRoute);
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        print("ModelError: ${jsonResponse["ModelErrors"]}");
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          GetToken().getToken();
+          submitAttendance(checkinout);
+          // Future<String> token = getToken();
+        } else {
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
+      }
+    });
   }
 
   @override
@@ -248,6 +229,7 @@ class _BodyState extends State<Body> {
                     _showSubmitBtn = false;
                     result1 = null;
                     setState(() {});
+                    submitAttendance(_isCheckinDisabled);
                   },
                   textColor: Colors.white,
                   padding: const EdgeInsets.all(10.0),

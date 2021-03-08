@@ -1,15 +1,31 @@
 import 'package:HRMNew/components/approvalAction.dart';
+import 'package:HRMNew/src/constants/AppConstant.dart';
+import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import './background.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:HRMNew/src/screens/home.dart';
+import 'package:http/http.dart' as http;
 
 class Body extends StatefulWidget {
+  final String data;
+  Body({Key key, @required this.data}) : super(key: key);
+
   @override
-  _BodyState createState() => _BodyState();
+  _BodyState createState() => _BodyState(data);
 }
 
-class _BodyState extends State<Body> {
+class _BodyState extends State<Body> with TickerProviderStateMixin {
+  String data;
+
+  bool isLoading = false;
+
+  _BodyState(this.data);
+
   final _formKey = GlobalKey<FormState>();
 
   void takeAction(text) {
@@ -19,8 +35,46 @@ class _BodyState extends State<Body> {
     );
   }
 
+  Future<void> _getEmpReqDetails(reqID) async {
+    print("reqID:::$reqID");
+    setState(() {
+      isLoading = true;
+    });
+    // myReqTitleObj.clear();
+    // approvedObject.clear();
+    // requestItemObject.clear();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    final uri = Services.MyLevReqDetails;
+    Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
+    http.post(uri, body: body).then((response) {
+      var jsonResponse = jsonDecode(response.body);
+      print("Reponse---2 : $jsonResponse");
+      // GetLevReqDetails getLevReqDetails =
+      //     new GetLevReqDetails.fromJson(jsonResponse);
+      if (jsonResponse["StatusCode"] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+
+        // myReqTitleObj = getLevReqDetails.requestTitleObject;
+        // approvedObject = getLevReqDetails.approvedObject;
+        // requestItemObject = getLevReqDetails.requestItemObject;
+      } else {
+        print("ModelError: ${jsonResponse["ModelErrors"]}");
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          // Future<String> token = getToken();
+        } else {
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("data ((((...$data");
     Size size = MediaQuery.of(context).size;
     return Background(
       child: SingleChildScrollView(

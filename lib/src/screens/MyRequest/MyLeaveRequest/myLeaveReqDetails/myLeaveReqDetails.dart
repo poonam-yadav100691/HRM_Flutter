@@ -1,13 +1,16 @@
 import 'dart:convert';
 
+import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/Account/component/background.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveReqDetails/myLevReqDetailPODO.dart';
+import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:intl/intl.dart';
 
 class MyLeaveReqDetails extends StatefulWidget {
@@ -28,12 +31,27 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
   List<RequestItemObject> requestItemObject = new List();
   bool isLoading = true;
 
+  int totalDays;
+
   @override
   void initState() {
     super.initState();
-    print("reqID---:::${widget.levReqDetailID}");
     String levDetails = widget.levReqDetailID;
     _getReqDetails(levDetails);
+  }
+
+  void _onDateRangeSelect(startdate, enddate) async {
+    DateTime tempDate1 =
+        new DateFormat("MM/dd/yyyy hh:mm:ss a").parse(startdate);
+    DateTime tempDate = new DateFormat("MM/dd/yyyy hh:mm:ss a").parse(enddate);
+
+    final startDate = tempDate1;
+    final endDate = tempDate;
+    final difference = await endDate.difference(startDate).inDays;
+    setState(() {
+      totalDays = difference;
+    });
+    print(difference);
   }
 
   Future<void> _getReqDetails(reqID) async {
@@ -58,17 +76,47 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
           isLoading = false;
         });
 
-        print("j&&& $getLevReqDetails");
         myReqTitleObj = getLevReqDetails.requestTitleObject;
         approvedObject = getLevReqDetails.approvedObject;
         requestItemObject = getLevReqDetails.requestItemObject;
-
-        // print(getLevReqDetailsList.toString());
-        // print(leaveReqList.toString());
-        // print(otReqList.toString());
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          // Future<String> token = getToken();
+        } else {
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
+      }
+    });
+  }
+
+  Future<void> cancelMyRequest(reqID) async {
+    print("reqID66:::$reqID");
+    setState(() {
+      isLoading = true;
+    });
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    final uri = Services.CancelMyrequest;
+    Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
+    http.post(uri, body: body).then((response) {
+      var jsonResponse = jsonDecode(response.body);
+      print("Reponse---44432222 : $jsonResponse");
+
+      if (jsonResponse["StatusCode"] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pushNamed(context, myRequestRoute);
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        print("ModelError: ${jsonResponse["ModelErrors"]}");
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          var token = GetToken().getToken();
+          cancelMyRequest(reqID);
           // Future<String> token = getToken();
         } else {
           // currentState.showSnackBar(
@@ -127,64 +175,70 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            // leaveList.requestNo != null?
-                                            Text(
-                                              "Request No. : XXXXX",
-                                              style: new TextStyle(
-                                                  color: kRedColor,
-                                                  fontWeight: FontWeight.w500),
-                                            )
-                                            // : Container(),
+                                            myReqTitleObj[0].requestID != null
+                                                ? Text(
+                                                    "Request No. : " +
+                                                        myReqTitleObj[0]
+                                                            .requestID,
+                                                    style: new TextStyle(
+                                                        color: kRedColor,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  )
+                                                : Container(),
                                           ],
                                         ),
                                       ),
 
-                                      // leaveList.statusText != null
-                                      // ?
-                                      Text(
-                                        "leaveList.statusText",
-                                        style: new TextStyle(
-                                            color: kRedColor,
-                                            fontWeight: FontWeight.w500),
-                                      )
-                                      // : Container(),
+                                      myReqTitleObj[0].statusText != null
+                                          ? Text(
+                                              myReqTitleObj[0].statusText,
+                                              style: new TextStyle(
+                                                  color: kRedColor,
+                                                  fontWeight: FontWeight.w500),
+                                            )
+                                          : Container(),
 
                                       // totalDays.toString(),
                                     ],
                                   ),
 
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 5.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Date Of Request :',
-                                          style: new TextStyle(),
-                                        ),
-                                        Text(
-                                          "returnDate",
-                                          style: new TextStyle(
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  myReqTitleObj[0].submitDate != null
+                                      ? Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 5.0),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'Date Of Request : ',
+                                                style: new TextStyle(),
+                                              ),
+                                              Text(
+                                                myReqTitleObj[0].submitDate,
+                                                style: new TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : Container(),
                                   // : Container(),
-                                  // leaveList.submitDate != null?
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Manager :',
-                                        style: new TextStyle(),
-                                      ),
-                                      Text(
-                                        "leaveList.managerName",
-                                        style: new TextStyle(
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ],
-                                  )
-                                  // : Container(),
+                                  myReqTitleObj[0].managerName != null
+                                      ? Row(
+                                          children: [
+                                            Text(
+                                              'Manager : ',
+                                              style: new TextStyle(),
+                                            ),
+                                            Text(
+                                              myReqTitleObj[0].managerName,
+                                              style: new TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        )
+                                      : Container(),
                                 ],
                               ),
                             ),
@@ -202,30 +256,36 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                      child: planetCard(
-                          context,
-                          "Team Lead",
-                          "Remark here... text remark here..",
-                          '04/09/2020 10:30AM'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                      child: leaveReqItems(
-                          context,
-                          "Team Lead",
-                          "Remark here... text remark here..",
-                          '04/09/2020 10:30AM'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                      child: leaveReqItems(
-                          context,
-                          "Team Lead",
-                          "Remark here... text remark here..",
-                          '04/09/2020 10:30AM'),
-                    ),
+                    Container(
+                        padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                        child: Column(children: [
+                          for (var apprvObj in approvedObject)
+                            planetCard(context, apprvObj.approvedName,
+                                apprvObj.comment, apprvObj.approvedDate),
+                        ])),
+                    Container(
+                        padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                        child: Column(children: [
+                          for (var rqtItmObj in requestItemObject)
+                            leaveReqItems(context, rqtItmObj),
+                        ])),
+                    (myReqTitleObj[0].statusText != null &&
+                            myReqTitleObj[0].statusText == 'Pending')
+                        ? Container(
+                            padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                            child: Column(children: [
+                              OutlineButton(
+                                onPressed: () {
+                                  cancelMyRequest(myReqTitleObj[0].requestID);
+                                },
+                                child: Text('Cancel Request',
+                                    style: TextStyle(color: Colors.red)),
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                ),
+                              )
+                            ]))
+                        : Container(),
                   ],
                 ),
               ),
@@ -234,11 +294,22 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
         ),
       );
     } else {
-      return Container(child: Center(child: CircularProgressIndicator()));
+      Center(child: CircularProgressIndicator());
     }
   }
 
-  Widget leaveReqItems(BuildContext context, name, remark, date) {
+  Widget leaveReqItems(BuildContext context, reqItmObj) {
+    var inputFormat = DateFormat('MM/dd/yyyy HH:mm:ss a');
+    var outputFormat = DateFormat('dd/MM/yy');
+    var inputDate = inputFormat.parse(reqItmObj.strDate);
+    var startDate = outputFormat.format(inputDate);
+
+    var inputDate1 = inputFormat.parse(reqItmObj.endDate);
+    var endDate = outputFormat.format(inputDate1);
+
+    var inputDate2 = inputFormat.parse(reqItmObj.returnDate);
+    var returnDate = outputFormat.format(inputDate2);
+
     Size size = MediaQuery.of(context).size;
     return Container(
       decoration: new BoxDecoration(
@@ -272,84 +343,113 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(bottom: 5.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // leaveList.requestNo != null?
-                                Text(
-                                  "Leave Type : Personal Leave (Full Day)",
-                                  style: new TextStyle(
-                                      color: kRedColor,
-                                      fontWeight: FontWeight.w500),
-                                )
-                                // : Container(),
-                              ],
-                            ),
+                            child: reqItmObj.itemType != null
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Leave Type : ",
+                                        style: new TextStyle(
+                                            color: kRedColor,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      reqItmObj.itemType != null
+                                          ? Text(
+                                              reqItmObj.itemType,
+                                              style: new TextStyle(
+                                                  color: kRedColor,
+                                                  fontWeight: FontWeight.w500),
+                                            )
+                                          : Container(),
+                                      reqItmObj.requestFor != null
+                                          ? Text(
+                                              "(" + reqItmObj.itemType + ")",
+                                              style: new TextStyle(
+                                                  color: kRedColor,
+                                                  fontWeight: FontWeight.w500),
+                                            )
+                                          : Container(),
+                                    ],
+                                  )
+                                : Container(),
                           ),
                           Text(
-                            "5 Days",
+                            reqItmObj.duration + " day",
                             style: new TextStyle(
                                 color: kRedColor, fontWeight: FontWeight.w500),
                           )
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Period : ',
-                              style: new TextStyle(),
-                            ),
-                            Text(
-                              "01/02/2020 - 05/02/2020",
-                              style: new TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Return Date :',
-                              style: new TextStyle(),
-                            ),
-                            Text(
-                              "06/02/2020",
-                              style: new TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Reason : ',
-                              style: new TextStyle(),
-                            ),
-                            Text(
-                              "Reason desc here text here.....",
-                              style: new TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'Delegation : ',
-                            style: new TextStyle(),
-                          ),
-                          Text(
-                            "Mr. Reason desc",
-                            style: new TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      )
+                      startDate != null
+                          ? Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Period : ',
+                                    style: new TextStyle(),
+                                  ),
+                                  Text(
+                                    startDate + " To " + endDate,
+                                    style: new TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                      returnDate != null
+                          ? Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Return Date :',
+                                    style: new TextStyle(),
+                                  ),
+                                  Text(
+                                    returnDate,
+                                    style: new TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                      reqItmObj.requestReason != null
+                          ? Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Reason : ',
+                                    style: new TextStyle(),
+                                  ),
+                                  Text(
+                                    reqItmObj.requestReason,
+                                    style: new TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                      reqItmObj.responseName != null
+                          ? Row(
+                              children: [
+                                Text(
+                                  'Delegation : ',
+                                  style: new TextStyle(),
+                                ),
+                                Text(
+                                  reqItmObj.responseName,
+                                  style: new TextStyle(
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            )
+                          : Container()
                     ],
                   ),
                 ),
@@ -400,25 +500,15 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                   Expanded(
                     child: Row(
                       children: [
-                        // Container(
-                        //   padding: const EdgeInsets.only(left: 6.0),
-                        //   child: ClipOval(
-                        //     child: Image.asset(
-                        //       "lib/assets/images/profile.jpg",
-                        //       height: 47,
-                        //       // width: 90,
-                        //     ),
-                        //   ),
-                        // ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
+                          padding: const EdgeInsets.only(left: 5.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Container(
-                                width: size.width * 0.65,
-                                padding: EdgeInsets.only(bottom: 5),
+                                width: size.width * 0.83,
+                                padding: EdgeInsets.only(bottom: 10),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
