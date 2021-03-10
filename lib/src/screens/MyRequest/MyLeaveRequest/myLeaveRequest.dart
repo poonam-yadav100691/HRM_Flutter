@@ -17,12 +17,7 @@ class MyLeaveRequest extends StatelessWidget {
         shadowColor: Colors.transparent,
         centerTitle: true,
         backgroundColor: leaveCardcolor,
-
         automaticallyImplyLeading: false,
-        // title: Text(getTranslated(context, 'MyAccount')),
-        // backgroundColor: leaveCardcolor,
-        // shadowColor: Colors.transparent,
-        // centerTitle: true,
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             color: Colors.white,

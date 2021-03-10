@@ -39,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double _panelHeightClosed = 95.0;
   SharedPreferences sharedPreferences;
   String _username, firstName, lastName, username, department, image;
+  Uint8List bytes;
 
   bool isLoading = true;
   var _color = [
@@ -303,12 +304,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _panel(ScrollController sc, BuildContext context) {
-    print("in panel--- $sc");
-
     var now = new DateTime.now();
     var formatter = new DateFormat('E, dd MMM yyyy');
     String formattedDate = formatter.format(now);
-    Uint8List bytes = Base64Codec().decode(image);
+    if (image != null) {
+      bytes = Base64Codec().decode(image);
+    }
+
     return MediaQuery.removePadding(
       context: context,
       removeTop: true,
@@ -352,17 +354,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 5.0,
                   ),
                   Container(
-                    padding: const EdgeInsets.only(left: 15.0),
-                    child: new CircleAvatar(
-                      radius: 35,
-                      child: ClipOval(
-                        child: new Image.memory(
-                          bytes,
-                          height: 75,
-                        ),
-                      ),
-                    ),
-                  ),
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: new CircleAvatar(
+                        radius: 35,
+                        child: bytes != null
+                            ? ClipOval(
+                                child: new Image.memory(
+                                bytes,
+                                height: 75,
+                              ))
+                            : ClipOval(
+                                child: Image.asset(
+                                  "lib/assets/images/profile.jpg",
+                                  height: 75,
+                                  // width: 90,
+                                ),
+                              ),
+                      )),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 15.0),

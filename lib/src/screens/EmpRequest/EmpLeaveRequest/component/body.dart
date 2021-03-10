@@ -28,21 +28,25 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     // List jsonResponse = jsonDecode(empLeaveList);
     final children = <Widget>[];
-    for (var i = 0; i < empLeaveList.length; i++) {
-      children.add(
-        new Container(
-          margin: const EdgeInsets.symmetric(
-            vertical: 10.0,
-            horizontal: 10.0,
+    if (empLeaveList != null) {
+      for (var i = 0; i < empLeaveList.length; i++) {
+        children.add(
+          new Container(
+            margin: const EdgeInsets.symmetric(
+              vertical: 10.0,
+              horizontal: 10.0,
+            ),
+            child: planetCard(
+                context,
+                empLeaveList[i].empName,
+                empLeaveList[i].empPosition,
+                empLeaveList[i].dateRequest,
+                empLeaveList[i].requestID),
           ),
-          child: planetCard(
-              context,
-              empLeaveList[i].empName,
-              empLeaveList[i].empPosition,
-              empLeaveList[i].dateRequest,
-              empLeaveList[i].requestID),
-        ),
-      );
+        );
+      }
+    } else {
+      children.add(Container());
     }
     Size size = MediaQuery.of(context).size;
     return Background(child: ListView(children: children));
@@ -149,6 +153,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               ),
                               Text(
                                 design,
+                                style: new TextStyle(),
+                              ),
+                              Text(
+                                "Request Id: " + id,
                                 style: new TextStyle(),
                               ),
                             ],

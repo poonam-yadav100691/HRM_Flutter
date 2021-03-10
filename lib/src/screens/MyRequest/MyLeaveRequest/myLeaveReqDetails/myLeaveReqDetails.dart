@@ -54,6 +54,30 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
     print(difference);
   }
 
+  List<Widget> _getrequestItemObjectUI() {
+    List<Widget> list = [];
+    if (requestItemObject != null) {
+      for (var rqtItmObj in requestItemObject)
+        leaveReqItems(context, rqtItmObj);
+    } else {
+      list.add(Container());
+    }
+    return list;
+  }
+
+  List<Widget> _getapprovedObjectUI() {
+    List<Widget> list = [];
+    if (approvedObject != null) {
+      for (var apprvObj in approvedObject) {
+        list.add(planetCard(context, apprvObj.approvedName, apprvObj.comment,
+            apprvObj.approvedDate));
+      }
+    } else {
+      list.add(Container());
+    }
+    return list;
+  }
+
   Future<void> _getReqDetails(reqID) async {
     print("reqID:::$reqID");
     setState(() {
@@ -258,17 +282,14 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                     ),
                     Container(
                         padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                        child: Column(children: [
-                          for (var apprvObj in approvedObject)
-                            planetCard(context, apprvObj.approvedName,
-                                apprvObj.comment, apprvObj.approvedDate),
-                        ])),
+                        child: Column(
+                          children: _getapprovedObjectUI(),
+                        )),
                     Container(
                         padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                        child: Column(children: [
-                          for (var rqtItmObj in requestItemObject)
-                            leaveReqItems(context, rqtItmObj),
-                        ])),
+                        child: Column(
+                          children: _getrequestItemObjectUI(),
+                        )),
                     (myReqTitleObj[0].statusText != null &&
                             myReqTitleObj[0].statusText == 'Pending')
                         ? Container(
