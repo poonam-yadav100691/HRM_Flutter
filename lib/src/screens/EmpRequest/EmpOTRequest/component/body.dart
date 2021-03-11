@@ -45,8 +45,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
               vertical: 10.0,
               horizontal: 10.0,
             ),
-            child: planetCard(context, empOtList[i].empName,
-                empOtList[i].empPosition, empOtList[i].dateRequest),
+            child: planetCard(
+                context,
+                empOtList[i].empName,
+                empOtList[i].empPosition,
+                empOtList[i].dateRequest,
+                empOtList[i].requestID),
           ),
         ),
       );
@@ -55,7 +59,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     return Background(child: ListView(children: children));
   }
 
-  Widget planetCard(BuildContext context, name, design, date) {
+  Widget planetCard(BuildContext context, name, design, date, id) {
     Size size = MediaQuery.of(context).size;
 
     var inputFormat = DateFormat('MM/dd/yyyy HH:mm:ss a');
@@ -139,6 +143,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               ),
                               Text(
                                 design,
+                                style: new TextStyle(),
+                              ),
+                              Text(
+                                id,
                                 style: new TextStyle(),
                               ),
                             ],

@@ -4,6 +4,7 @@ import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/screens/Task/TaskPending/component/PODO.dart';
+import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -141,27 +142,21 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                   itemBuilder: (BuildContext context, int index) {
                     return Dismissible(
                         background: stackBehindDismiss(),
-                        key: Key(taskPenList[index].taskID),
+                        key: UniqueKey(),
                         direction: DismissDirection.endToStart,
-                        // onDismissed: (direction) {
-                        //   setState(() {
-                        //     taskPenList.removeAt(index);
-                        //   });
-                        // },
-
                         onDismissed: (direction) {
-                          var item = taskPenList.elementAt(index);
                           //To delete
-                          deleteItem(index);
+                          deleteItem(taskPenList[index].taskID);
                           //To show a snackbar with the UNDO button
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text("Item deleted"),
-                              action: SnackBarAction(
-                                  label: "UNDO",
-                                  onPressed: () {
-                                    //To undo deletion
-                                    undoDeletion(index, item);
-                                  })));
+                          // Scaffold.of(context).showSnackBar(SnackBar(
+                          //     content: Text("Item deleted"),
+                          //     action: SnackBarAction(
+                          //         label: "UNDO",
+                          //         onPressed: () {
+                          //           //To undo deletion
+                          //           undoDeletion(index, item);
+                          //         }))
+                          // );
                         },
                         child: Container(
                           padding: new EdgeInsets.all(0.0),
@@ -190,14 +185,38 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     }
   }
 
-  void deleteItem(index) {
-    /*
-    By implementing this method, it ensures that upon being dismissed from our widget tree, 
-    the item is removed from our list of items and our list is updated, hence
-    preventing the "Dismissed widget still in widget tree error" when we reload.
-    */
+  Future<void> deleteItem(index) async {
+    print("reqID66:::$index");
     setState(() {
-      taskPenList.removeAt(index);
+      isLoading = true;
+    });
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    final uri = Services.DeleteTask;
+    Map body = {"Tokenkey": token, "taskID": index, "lang": '2'};
+    http.post(uri, body: body).then((response) {
+      var jsonResponse = jsonDecode(response.body);
+      print("Reponse---44432222 : $jsonResponse");
+
+      if (jsonResponse["StatusCode"] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pushNamed(context, taskRoute);
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        print("ModelError: ${jsonResponse["ModelErrors"]}");
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          var token = GetToken().getToken();
+          deleteItem(index);
+          // Future<String> token = getToken();
+        } else {
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
+      }
     });
   }
 
