@@ -66,7 +66,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       "taskID": taskPenList[index].taskID,
       "CompleteStatus": "true"
     };
-    print("j&&& $body");
     http.post(uri, body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       if (jsonResponse["StatusCode"] == 200) {
@@ -74,7 +73,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           isLoading = false;
         });
         Navigator.pushNamed(context, taskRoute);
-        print("j&&& $jsonResponse");
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
@@ -141,25 +139,47 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
               child: ListView.builder(
                   itemCount: taskPenList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return new Card(
-                      child: new Container(
-                        padding: new EdgeInsets.all(0.0),
-                        child: new Column(
-                          children: <Widget>[
-                            new CheckboxListTile(
-                                activeColor: Colors.green,
-                                value: valuefirst[index],
-                                title: new Text(taskPenList[index].taskName),
-                                subtitle: Text(taskPenList[index].taskDetail),
-                                controlAffinity:
-                                    ListTileControlAffinity.leading,
-                                onChanged: (bool val) {
-                                  _itemChange(val, index);
-                                })
-                          ],
-                        ),
-                      ),
-                    );
+                    return Dismissible(
+                        background: stackBehindDismiss(),
+                        key: Key(taskPenList[index].taskID),
+                        direction: DismissDirection.endToStart,
+                        // onDismissed: (direction) {
+                        //   setState(() {
+                        //     taskPenList.removeAt(index);
+                        //   });
+                        // },
+
+                        onDismissed: (direction) {
+                          var item = taskPenList.elementAt(index);
+                          //To delete
+                          deleteItem(index);
+                          //To show a snackbar with the UNDO button
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text("Item deleted"),
+                              action: SnackBarAction(
+                                  label: "UNDO",
+                                  onPressed: () {
+                                    //To undo deletion
+                                    undoDeletion(index, item);
+                                  })));
+                        },
+                        child: Container(
+                          padding: new EdgeInsets.all(0.0),
+                          child: new Column(
+                            children: <Widget>[
+                              new CheckboxListTile(
+                                  activeColor: Colors.green,
+                                  value: valuefirst[index],
+                                  title: new Text(taskPenList[index].taskName),
+                                  subtitle: Text(taskPenList[index].taskDetail),
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                  onChanged: (bool val) {
+                                    _itemChange(val, index);
+                                  })
+                            ],
+                          ),
+                        ));
                   }),
             ),
           ],
@@ -168,5 +188,38 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     } else {
       return Container(child: Center(child: CircularProgressIndicator()));
     }
+  }
+
+  void deleteItem(index) {
+    /*
+    By implementing this method, it ensures that upon being dismissed from our widget tree, 
+    the item is removed from our list of items and our list is updated, hence
+    preventing the "Dismissed widget still in widget tree error" when we reload.
+    */
+    setState(() {
+      taskPenList.removeAt(index);
+    });
+  }
+
+  void undoDeletion(index, item) {
+    /*
+    This method accepts the parameters index and item and re-inserts the {item} at
+    index {index}
+    */
+    setState(() {
+      taskPenList.insert(index, item);
+    });
+  }
+
+  Widget stackBehindDismiss() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20.0),
+      color: Colors.red,
+      child: Icon(
+        Icons.delete,
+        color: Colors.white,
+      ),
+    );
   }
 }

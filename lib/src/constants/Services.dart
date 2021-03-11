@@ -24,4 +24,8 @@ class Services {
 
   static final String MarkCompTaskList = BASE_URL + 'Task/UpdateTaskStatus';
   static final String MyAttendance = BASE_URL + 'MyAttendance/CheckIn-Out';
+  static final String InsuranceHeader = BASE_URL + 'User/InsuranceHeader';
+  static final String InsuranceDetail = BASE_URL + 'User/InsuranceDetail';
+
+  //InsuranceHeader
 }

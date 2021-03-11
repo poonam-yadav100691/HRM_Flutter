@@ -53,10 +53,6 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
                   backgroundColor: leaveCardcolor,
 
                   automaticallyImplyLeading: false,
-                  // title: Text(getTranslated(context, 'MyAccount')),
-                  // backgroundColor: leaveCardcolor,
-                  // shadowColor: Colors.transparent,
-                  // centerTitle: true,
                   leading: IconButton(
                       icon: Icon(Icons.arrow_back_ios),
                       color: Colors.white,
@@ -64,18 +60,6 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
                         Navigator.pop(context);
                       }),
                 ),
-                // floatingActionButton: FloatingActionButton.extended(
-                //   onPressed: () {
-                //     Navigator.pushNamed(context, addRequestRoute);
-                //     // Add your onPressed code here!
-                //   },
-                //   elevation: 4,
-                //   label: Text('Request'),
-                //   icon: Icon(
-                //     Icons.add,
-                //   ),
-                //   backgroundColor: Colors.pink,
-                // ),
                 body: TabBarView(
                   children: [
                     EmpLeaveRequest(data: empLeaveReqList),
