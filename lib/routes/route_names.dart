@@ -21,7 +21,9 @@ const String requestDetailsRoute = '/requestDetailsRoute';
 const String calendarViewRoute = '/calendarViewRoute';
 const String loansRoute = '/loansRoute';
 const String insuranceRoute = '/insuranceRoute';
+
 const String taskRoute = '/taskRoute';
+
 const String addTaskRoute = '/addTaskRoute';
 
 const String rulesRoute = '/rulesRoute';

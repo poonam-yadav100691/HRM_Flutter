@@ -178,7 +178,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         ),
       );
     } else {
-      return Container(child: CircularProgressIndicator());
+      return Container(child: Center(child: CircularProgressIndicator()));
     }
   }
 

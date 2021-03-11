@@ -19,13 +19,18 @@ class Services {
   static final String DelegatePerson = BASE_URL + 'User/DelegatePerson';
   static final String MyLevReqDetails = BASE_URL + 'User/MyRequestDetail';
   static final String CancelMyrequest = BASE_URL + 'User/cancelMyrequest';
+
   static final String TaskList = BASE_URL + 'Task/Tasklist';
   static final String AddTaskList = BASE_URL + 'Task/AddTask';
+  static final String DeleteTask = BASE_URL + 'Task/DeleteTask';
 
   static final String MarkCompTaskList = BASE_URL + 'Task/UpdateTaskStatus';
   static final String MyAttendance = BASE_URL + 'MyAttendance/CheckIn-Out';
   static final String InsuranceHeader = BASE_URL + 'User/InsuranceHeader';
   static final String InsuranceDetail = BASE_URL + 'User/InsuranceDetail';
+  static final String LoanHeader = BASE_URL + 'User/LoanHeader';
+
+  static final String LoanDetail = BASE_URL + 'User/LoanDetail';
 
   //InsuranceHeader
 }

@@ -46,51 +46,16 @@ class _BodyState extends State<Body> {
           isLoading = false;
         });
         newsLists = newsList.resultObject;
-        //     for (int i = 0; i < newsLists.length; i++) {
-        //       print(
-        //           "j&&&&&&&&&&&&&&&&&&&&&&& ${newsLists[i].expDate.toString()}");
-        //            DateTime tempDate1 =
-        //     new DateFormat("MM/dd/yyyy hh:mm:ss a").parse(newsLists[i].expDate);
-
-        // final startDate = tempDate1;
-        //         newsLists.addAll({"startDate1":startDate});
-
-        //     }
-
-        var newsListData = json.decode(response.body);
-        // newsListData = newsListData.map((dynamic newsList) {
-        //   String newsID = newsListData['newsID'];
-        //   String newsTitle = newsListData['newsTitle'];
-        //   String newContent = newsListData['newContent'];
-        //   String filePath = newsListData['file_path'];
-        //   String newAttachedfile = newsListData['newAttachedfile'];
-
-        //   var inputFormat = DateFormat('MM/dd/yyyy HH:mm:ss a');
-        //   var outputFormat = DateFormat('dd/MM/yy');
-        //   var inputDate = inputFormat.parse(newsListData['expDate']);
-        //   var expdate = outputFormat.format(inputDate);
-        //   String expDate = expdate;
-
-        //   Map<String, dynamic> toJson() {
-        //     final Map<String, dynamic> data = new Map<String, dynamic>();
-        //     data['newsID'] = newsID;
-        //     data['newsTitle'] = newsTitle;
-        //     data['newContent'] = newContent;
-        //     data['file_path'] = filePath;
-        //     data['newAttachedfile'] = newAttachedfile;
-        //     data['expDate'] = expDate;
-        //     return data;
-        //   }
-
-        //   print("newsListData: $newsListData");
-        // }).toList();
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          GetToken();
+          GetToken().getToken();
           // _getNewsList();
           // Future<String> token = getToken();
         } else {
+          setState(() {
+            isLoading = false;
+          });
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
         }
@@ -100,59 +65,62 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Colors.white,
-        // resizeToAvoidBottomPadding: true,
-        body: Background(
-            child: Container(
-          child: ListView.builder(
-              itemCount: newsLists.length,
-              padding: EdgeInsets.only(top: 8),
-              scrollDirection: Axis.vertical,
-              itemBuilder: (BuildContext context, int i) {
-                DateTime tempDate =
-                    new DateFormat('MM/dd/yyyy HH:mm:ss a', 'en_US')
-                        .parse(newsLists[i].expDate);
-                extDate = DateFormat("dd/MM/yy").format(tempDate);
+    if (!isLoading) {
+      return Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: Colors.white,
+          // resizeToAvoidBottomPadding: true,
+          body: Background(
+              child: ListView.builder(
+                  itemCount: newsLists.length,
+                  padding: EdgeInsets.only(top: 8),
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (BuildContext context, int i) {
+                    DateTime tempDate =
+                        new DateFormat('MM/dd/yyyy HH:mm:ss a', 'en_US')
+                            .parse(newsLists[i].expDate);
+                    extDate = DateFormat("dd/MM/yy").format(tempDate);
 
-                return Container(
-                  margin: const EdgeInsets.fromLTRB(9, 4, 9, 4),
-                  //  margin: const EdgeInsets.all(15.0),
-                  padding: const EdgeInsets.all(3.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.grey[200]),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ListTile(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              _buildPopupDialog(context, newsLists[i]),
-                        );
-                      },
-                      leading: Image.asset(
-                        "lib/assets/images/unnamed.jpg",
-                        fit: BoxFit.contain,
-                        width: 35,
+                    return Container(
+                      margin: const EdgeInsets.fromLTRB(9, 4, 9, 4),
+                      //  margin: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(3.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey[200]),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      title: Text(newsLists[i].newsTitle),
-                      // subtitle: Text(newsLists[i].newContent),
-                      subtitle: Flexible(
-                        child: RichText(
-                          overflow: TextOverflow.ellipsis,
-                          strutStyle: StrutStyle(fontSize: 12.0),
-                          text: TextSpan(
-                              style: TextStyle(color: Colors.black),
-                              text: newsLists[i].newContent),
-                        ),
-                      ),
-                      trailing: extDate != null ? Text(extDate) : Container()),
-                );
-              }),
-        )));
+                      child: ListTile(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  _buildPopupDialog(context, newsLists[i]),
+                            );
+                          },
+                          leading: Image.asset(
+                            "lib/assets/images/unnamed.jpg",
+                            fit: BoxFit.contain,
+                            width: 35,
+                          ),
+                          title: Text(newsLists[i].newsTitle),
+                          // subtitle: Text(newsLists[i].newContent),
+                          subtitle: Flexible(
+                            child: RichText(
+                              overflow: TextOverflow.ellipsis,
+                              strutStyle: StrutStyle(fontSize: 12.0),
+                              text: TextSpan(
+                                  style: TextStyle(color: Colors.black),
+                                  text: newsLists[i].newContent),
+                            ),
+                          ),
+                          trailing:
+                              extDate != null ? Text(extDate) : Container()),
+                    );
+                  })));
+    } else {
+      return Container(child: Center(child: CircularProgressIndicator()));
+    }
   }
 
   Widget _buildPopupDialog(BuildContext context, data) {
