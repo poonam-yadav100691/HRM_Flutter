@@ -62,8 +62,14 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
                 ),
                 body: TabBarView(
                   children: [
-                    EmpLeaveRequest(data: empLeaveReqList),
-                    EmpOTRequest(data: empOtReqList)
+                    empLeaveReqList.isNotEmpty?EmpLeaveRequest(data: empLeaveReqList):Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: Center(child: CircularProgressIndicator())),
+                    empLeaveReqList.isNotEmpty?EmpOTRequest(data: empOtReqList):Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: Center(child: CircularProgressIndicator()))
                   ],
                 ),
                 bottomNavigationBar: new TabBar(
@@ -107,9 +113,7 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
       var jsonResponse = jsonDecode(response.body);
       EmpRequestList myRequest = new EmpRequestList.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
-        setState(() {
-          isLoading = false;
-        });
+
 
         print("j&&&body: $body");
         print("uri::: $uri");
@@ -121,7 +125,9 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
             empOtReqList.add(empRequestList[i]);
           }
         }
-
+        setState(() {
+          isLoading = false;
+        });
         // print("DDDDDDDDDDDDDDDDDDDDD--->>>${empRequestList.toString()}");
         // print("FFFFFFFFFFFFFFFFFFFFF--->>>>${empLeaveReqList.toString()}");
         // print("CCCCCCCCCCCCCCCCCCCCF--->>>>${empOtReqList.toString()}");
