@@ -64,7 +64,12 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                   ),
                   body: TabBarView(
                     children: [
-                      MyLeaveRequest(data: leaveReqList),
+
+                  leaveReqList.isNotEmpty? MyLeaveRequest(data: leaveReqList):Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child: Center(child: CircularProgressIndicator())),
+
                       MyOTRequest()
                     ],
                   ),

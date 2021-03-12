@@ -82,7 +82,7 @@ class _SelectDialogState<T> extends State<SelectItemDialog<T>> {
     this.onChange,
     Future<List<T>> Function(String text) onFind,
   ) {
-    bloc = SelectOneBloc(itemsList, onFind);
+    bloc = SelectOneBloc(itemsList, onFind,null);
   }
 
   @override

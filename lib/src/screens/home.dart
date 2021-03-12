@@ -86,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 new PermissionResponse.fromJson(parsed).list;
             // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
             getLeaveCounts();
+
           } else {
             setState(() {
               isLoading = false;
@@ -180,6 +181,11 @@ class _MyHomePageState extends State<MyHomePage> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.LeaveBalance;
+
+
+    setState(() {
+      isLoading = true;
+    });
     Map body = {"Tokenkey": token, "lang": '2'};
     http.post(uri, body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
