@@ -183,8 +183,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   }
 
   Widget insuranceDetailsList(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     final children = <Widget>[];
     if (insuDetails != null) {
       for (var i = 0; i < insuDetails.length; i++) {

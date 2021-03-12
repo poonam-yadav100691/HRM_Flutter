@@ -1,11 +1,14 @@
-import 'package:HRMNew/components/MyCustomDate.dart';
-import 'package:HRMNew/components/MyCustomDateRange.dart';
-import 'package:HRMNew/components/MyCustomDropDown.dart';
-import 'package:HRMNew/components/MyCustomFileUpload.dart';
-import 'package:HRMNew/components/MyCustomTextField.dart';
+import 'dart:convert';
+
+import 'package:HRMNew/src/constants/AppConstant.dart';
+import 'package:HRMNew/src/constants/Services.dart';
+import 'package:HRMNew/src/screens/Loans/component/loanDetailsPODO.dart';
+import 'package:HRMNew/src/screens/Loans/component/loanPODO.dart';
+import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './background.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:http/http.dart' as http;
 
 class Body extends StatefulWidget {
   final String title;
@@ -17,17 +20,11 @@ class Body extends StatefulWidget {
   _BodyState createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> {
+class _BodyState extends State<Body> with TickerProviderStateMixin {
   var _focusNode = new FocusNode();
 
   _focusListener() {
     setState(() {});
-  }
-
-  @override
-  void initState() {
-    _focusNode.addListener(_focusListener);
-    super.initState();
   }
 
   @override
@@ -36,146 +33,272 @@ class _BodyState extends State<Body> {
     super.dispose();
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  List<ResultObject> loanHeader = new List();
+  List<ResultDetailsObject> loanDetails = new List();
+  AnimationController animationController;
+  Animation<dynamic> animation;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    _focusNode.addListener(_focusListener);
+    _getInsurHeader();
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
+    super.initState();
+  }
+
+  Future<void> _getInsurHeader() async {
+    loanHeader.clear();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    final uri = Services.LoanHeader;
+    Map body = {"Tokenkey": token, "lang": '2'};
+    http.post(uri, body: body).then((response) async {
+      var jsonResponse = jsonDecode(response.body);
+      LoanHeader insuranceHeaderLst = new LoanHeader.fromJson(jsonResponse);
+      if (jsonResponse["StatusCode"] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+        loanHeader = insuranceHeaderLst.resultObject;
+        print("DDDDDDD--->>>${loanHeader.toString()}");
+      } else {
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          print("ModelError: ${jsonResponse["ModelErrors"]}");
+          await GetToken().getToken();
+          _getInsurHeader();
+        } else {
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
+      }
+    });
+  }
+
+  Future<void> _getLoanDetails(int id) async {
+    loanDetails.clear();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    print(id.runtimeType);
+    Map body = {"Tokenkey": token, "loanID": id, "lang": '2'};
+
+    final uri1 = Services.InsuranceDetail;
+    http.post(uri1, body: body).then((response) async {
+      var jsonResponse = jsonDecode(response.body);
+      LoanDetails loanDetailsLst = new LoanDetails.fromJson(jsonResponse);
+      if (jsonResponse["StatusCode"] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+        loanDetails = loanDetailsLst.resultObject;
+        print("DD--->>>${loanDetails.toString()}");
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => _buildPopupDialog(context),
+        );
+      } else {
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          print("ModelError: ${jsonResponse["ModelErrors"]}");
+          await GetToken().getToken();
+          _getInsurHeader();
+        } else {
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
+      }
+    });
+  }
+
+  Widget _buildPopupDialog(BuildContext context) {
+    return new AlertDialog(
+      title: const Text('Loan Details'),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[new Container(child: loanDetailsList(context))],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          textColor: Theme.of(context).primaryColor,
+          child: const Text('Close'),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-     Size size = MediaQuery.of(context).size;
-    final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-    return Background(
-        child:  ListView(
-        padding: const EdgeInsets.all(8),
-        children: <Widget>[
-          Container(
-            // color: Colors.pink,
-            padding: const EdgeInsets.all(0.0),
-            margin: const EdgeInsets.all(10.0),
+    if (!isLoading) {
+      return Background(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
             child: Column(
               children: <Widget>[
-                //1stBox
-                Container(
-                  // padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    decoration: new BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.grey[350],
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                 "Laon amount: 44,440,400",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  "Months: 5",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Monthly Fee : 333,330.88',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.normal),
-                                ),
-                                Text(
-                                  'Interest : 8%',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.normal),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                   'Total Balance : 633,465.68',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.normal),
-                                ),
-                              
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                //2nd Box
-                Container(
-                  width: size.width,
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 10),
-                  child: Container(
-                    decoration: new BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.grey[350],
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: 8.0,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Pay Date :24/01/2020'),
-                                Text(
-                                    'Interest: 140,000',
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text('Total Pay : 330,000'),
-                          ),
-                           Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text('Balance : 430,000'),
-                          ),
-                        
-                        ],
-                      ),
-                    ),
-                  ),
-                  ),
-            
-               
-                //buttons
-             
+                Container(child: loanList(context)),
               ],
             ),
           ),
-        ],
-      ),);
+        ),
+      );
+    } else {
+      return Container(child: Center(child: CircularProgressIndicator()));
+    }
+  }
+
+  Widget loanList(BuildContext context) {
+    final children = <Widget>[];
+    if (loanHeader != null) {
+      for (var i = 0; i < loanHeader.length; i++) {
+        children.add(new GestureDetector(
+            onTap: () {
+              print("id ${loanHeader[i].loanID}");
+
+              _getLoanDetails(loanHeader[i].loanID);
+            },
+            child: new Container(
+              // padding: const EdgeInsets.all(10.0),
+              child: Container(
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.grey[350],
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Laon amount: ' +
+                                  loanHeader[i].loanAmount.toString(),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Months: 5" +
+                                  loanHeader[i].loanAmuntMonth.toString(),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Monthly Fee :' +
+                                  loanHeader[i].loanMonthlyFee.toString(),
+                              style: TextStyle(fontWeight: FontWeight.normal),
+                            ),
+                            Text(
+                              'Interest : ' +
+                                  loanHeader[i].loanInterest.toString(),
+                              style: TextStyle(fontWeight: FontWeight.normal),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Total Balance :' +
+                                  loanHeader[i].loanTotalBalance.toString(),
+                              style: TextStyle(fontWeight: FontWeight.normal),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )));
+      }
+    } else {
+      children.add(Container());
+    }
+
+    return Expanded(
+        child:
+            SizedBox(height: 200.0, child: new ListView(children: children)));
+  }
+
+  Widget loanDetailsList(BuildContext context) {
+    final children = <Widget>[];
+    if (loanDetails != null) {
+      for (var i = 0; i < loanDetails.length; i++) {
+        children.add(new Container(
+          // width: size.width,
+          padding: const EdgeInsets.only(top: 10.0, bottom: 10),
+          child: Container(
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.grey[350],
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 8.0,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Text('Pay Date :' + loanDetails[i].paymentDate),
+                        Text('Interest: ' +
+                            loanDetails[i].loanInterest.toString()),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                        'Total Pay :' + loanDetails[i].loanTotalPay.toString()),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                        'Balance :' + loanDetails[i].loanBalance.toString()),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
+      }
+    } else {
+      children.add(Container());
+    }
+
+    return Expanded(
+        child:
+            SizedBox(height: 200.0, child: new ListView(children: children)));
   }
 }
