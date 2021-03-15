@@ -10,6 +10,7 @@ import 'package:HRMNew/src/constants/select_single_item_dialog.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetLeaveType.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetResponsiblePerson.dart';
 import 'package:HRMNew/src/screens/Login/PODO/loginResponse.dart';
+import 'package:HRMNew/utils/UIhelper.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
@@ -34,9 +35,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   bool showHalf = false;
   bool isLoading = true;
   final TextEditingController leaveController = new TextEditingController();
+  final TextEditingController resoneController = new TextEditingController();
   final TextEditingController responsiblePerController =
       new TextEditingController();
   final TextEditingController returnDateSelected = new TextEditingController();
+  final TextEditingController leaveDateSelected = new TextEditingController();
   final TextEditingController rangeDateSelected = new TextEditingController();
   final TextEditingController leaveApplyFor = new TextEditingController();
 
@@ -55,7 +58,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   String respPerLable = "Leave";
   String respPerId;
 
-  var endDate;
+
   _focusListener() {
     setState(() {});
   }
@@ -89,19 +92,34 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     }
   }
 
+  DateTime strDate,endDate;
   void _onDateRangeSelect(val) {
-    final startDate = val[0];
-    this.endDate = val[1];
-    final difference = this.endDate.difference(startDate).inDays;
+     strDate = val[0];
+     endDate = val[1];
+
+     print('$strDate  $endDate ');
+    final difference = this.endDate.difference(strDate).inDays;
     setState(() {
       totalDays = difference;
     });
     print(difference);
   }
 
-  void _onReturnDateSelect(val) {}
+
+  int selectedLeaveRadio=1;
+  int selectedLeaveStartRadio=1;
+DateTime returnDate;
+  void _onReturnDateSelect(val) {
+    returnDate=val;
+
+  }
 
   ValueChanged _onhalfChanged = (val) => print(val);
+  ValueChanged _onLeaveChanged = (val){
+
+
+
+  };
   // ValueChanged _onRadioChanged = (val) => print(val);
 
   @override
@@ -123,92 +141,174 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: FormBuilderRadioGroup(
-                            attribute: 'LeaveApplyFor',
-                            decoration: new InputDecoration(
-                              fillColor: Colors.white,
-                              border: _focusNode.hasFocus
-                                  ? OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0)),
-                                      borderSide:
-                                          BorderSide(color: leaveCardcolor))
-                                  : OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0)),
-                                      borderSide:
-                                          BorderSide(color: Colors.grey)),
-                              filled: true,
-                              contentPadding: EdgeInsets.only(
-                                  bottom: 3.0, left: 3.0, right: 3.0),
-                              labelText: 'Leave Apply For ',
-                            ),
-                            // onChanged: _onRadioChanged,
-                            onChanged: (val) {
-                              // New <----------
-                              // if (value == "Yes") {
-                              //   setState((){
-                              //     isVisible = true;
-                              //   });
-                              // } else {
-                              //   setState(() {
-                              //     isVisible = false;
-                              //   });
-                              // }
-                              print(val);
-                              if (val == "Half Day") {
-                                setState(() {
-                                  showHalf = true;
-                                });
-                              } else {
-                                setState(() {
-                                  showHalf = false;
-                                });
-                              }
-                            },
-                            validators: [FormBuilderValidators.required()],
-                            options: ["Full Day", "Half Day"]
-                                .map((lang) => FormBuilderFieldOption(
-                                      value: lang,
-                                      child: Text('$lang'),
-                                    ))
-                                .toList(growable: false),
-                          ),
+                          // child: FormBuilderRadioGroup(
+                          //   attribute: 'LeaveApplyFor',
+                          //   decoration: new InputDecoration(
+                          //     fillColor: Colors.white,
+                          //     border: _focusNode.hasFocus
+                          //         ? OutlineInputBorder(
+                          //             borderRadius: BorderRadius.all(
+                          //                 Radius.circular(5.0)),
+                          //             borderSide:
+                          //                 BorderSide(color: leaveCardcolor))
+                          //         : OutlineInputBorder(
+                          //             borderRadius: BorderRadius.all(
+                          //                 Radius.circular(5.0)),
+                          //             borderSide:
+                          //                 BorderSide(color: Colors.grey)),
+                          //     filled: true,
+                          //     contentPadding: EdgeInsets.only(
+                          //         bottom: 3.0, left: 3.0, right: 3.0),
+                          //     labelText: 'Leave Apply For ',
+                          //   ),
+                          //   // onChanged: _onRadioChanged,
+                          //   onChanged: _onLeaveChanged,//(val) {
+                          //     // New <----------
+                          //     // if (value == "Yes") {
+                          //     //   setState((){
+                          //     //     isVisible = true;
+                          //     //   });
+                          //     // } else {
+                          //     //   setState(() {
+                          //     //     isVisible = false;
+                          //     //   });
+                          //     // }
+                          //     // print(val);
+                          //     // if (val == "Half Day") {
+                          //     //   setState(() {
+                          //     //     showHalf = true;
+                          //     //   });
+                          //     // } else {
+                          //     //   setState(() {
+                          //     //     showHalf = false;
+                          //     //   });
+                          //     // }
+                          //   //},
+                          //   validators: [FormBuilderValidators.required()],
+                          //   options: ["Full Day", "Half Day"]
+                          //       .map((lang) => FormBuilderFieldOption(
+                          //             value: lang,
+                          //             child: Text('$lang'),
+                          //           ))
+                          //       .toList(growable: false),
+                          //
+                          // )
+
+                         child:Container(
+                           width: MediaQuery.of(context).size.width,
+                           padding: EdgeInsets.symmetric(horizontal: 8),
+                           decoration: BoxDecoration(
+                               border: Border.all(
+                                 color: Colors.grey,
+                               ),
+                               shape: BoxShape.rectangle,
+                               borderRadius: BorderRadius.all(Radius.circular(8))
+
+                           ),
+                           child: Row(
+                             children: [
+                               Row(
+                                 children: [
+                                   Text('Leave Apply For'),
+                                   Radio(value: selectedLeaveRadio, groupValue: 1, onChanged:(flag){
+                                     setState(() {
+                                                selectedLeaveRadio=1;
+                                                showHalf = false;
+                                              });
+
+
+                                   }),
+                                   Text('Full Day')
+                                 ],
+                               ),
+                               Row(
+                                 children: [
+                                   Radio(value: selectedLeaveRadio, groupValue: 2, onChanged:(flag){
+                                     setState(() {
+                                       selectedLeaveRadio=2;
+                                       showHalf = true;
+                                     });
+                                   }),
+                                   Text('Half Day')
+                                 ],
+                               ), ],
+                           ),
+                         )
+                          ,
                         ),
                         showHalf
                             ? Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: FormBuilderRadioGroup(
-                                  attribute: 'LeaveApplyFrom',
-                                  decoration: new InputDecoration(
-                                    fillColor: Colors.white,
-                                    border: _focusNode.hasFocus
-                                        ? OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0)),
-                                            borderSide: BorderSide(
-                                                color: leaveCardcolor))
-                                        : OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0)),
-                                            borderSide:
-                                                BorderSide(color: Colors.grey)),
-                                    filled: true,
-                                    contentPadding: EdgeInsets.only(
-                                        bottom: 3.0, left: 3.0, right: 3.0),
-                                    labelText: 'Leave Start From',
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey,
+                                      ),
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: BorderRadius.all(Radius.circular(8))
+
                                   ),
-                                  onChanged: _onhalfChanged,
-                                  validators: [
-                                    FormBuilderValidators.required()
-                                  ],
-                                  options: ["First Half", "Second Half"]
-                                      .map((lang) => FormBuilderFieldOption(
-                                            value: lang,
-                                            child: Text('$lang'),
-                                          ))
-                                      .toList(growable: false),
-                                ),
+                                  child: Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text('Leave Start From'),
+                                          Radio(value: selectedLeaveStartRadio, groupValue: 1, onChanged:(flag){
+                                            setState(() {
+                                              selectedLeaveStartRadio=1;
+                                            });
+
+
+                                          }),
+                                          Text('First Half')
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Radio(value: selectedLeaveStartRadio, groupValue: 2, onChanged:(flag){
+                                            setState(() {
+                                              selectedLeaveStartRadio=2;
+                                            });
+                                          }),
+                                          Text('Second Half')
+                                        ],
+                                      ), ],
+                                  ),
+                                )
+
+                                // FormBuilderRadioGroup(
+                                //   attribute: 'LeaveStartFrom',
+                                //   decoration: new InputDecoration(
+                                //     fillColor: Colors.white,
+                                //     border: _focusNode.hasFocus
+                                //         ? OutlineInputBorder(
+                                //             borderRadius: BorderRadius.all(
+                                //                 Radius.circular(5.0)),
+                                //             borderSide: BorderSide(
+                                //                 color: leaveCardcolor))
+                                //         : OutlineInputBorder(
+                                //             borderRadius: BorderRadius.all(
+                                //                 Radius.circular(5.0)),
+                                //             borderSide:
+                                //                 BorderSide(color: Colors.grey)),
+                                //     filled: true,
+                                //     contentPadding: EdgeInsets.only(
+                                //         bottom: 3.0, left: 3.0, right: 3.0),
+                                //     labelText: 'Leave Start From',
+                                //   ),
+                                //   onChanged: _onhalfChanged,
+                                //   validators: [
+                                //     FormBuilderValidators.required()
+                                //   ],
+                                //   options: ["First Half", "Second Half"]
+                                //       .map((lang) => FormBuilderFieldOption(
+                                //             value: lang,
+                                //             child: Text('$lang'),
+                                //           ))
+                                //       .toList(growable: false),
+                                // ),
                               )
                             : Container(),
                         // MyCustomDateRange(
@@ -220,7 +320,35 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                         //   },
                         // ),
 
-                        Container(
+                        selectedLeaveRadio==2?Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FormBuilderDateTimePicker(
+                            attribute: "returnDate",
+                            controller: leaveDateSelected,
+                            onChanged: _onReturnDateSelect,
+                            inputType: InputType.date,
+                            firstDate: DateTime.now(),
+                            format: DateFormat("dd-MM-yyyy"),
+                            decoration: new InputDecoration(
+                              fillColor: Colors.white,
+                              border: _focusNode.hasFocus
+                                  ? OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0)),
+                                  borderSide:
+                                  BorderSide(color: leaveCardcolor))
+                                  : OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0)),
+                                  borderSide:
+                                  BorderSide(color: Colors.grey)),
+                              filled: true,
+                              contentPadding: EdgeInsets.only(
+                                  bottom: 10.0, left: 10.0, right: 10.0),
+                              labelText: "Select Date",
+                            ),
+                          ),
+                        ): Container(
                           padding: const EdgeInsets.all(9),
                           child: FormBuilderDateRangePicker(
                             controller: rangeDateSelected,
@@ -249,9 +377,25 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
-                        MyCustomTextField(
-                            title: totalDays.toString(),
-                            attrName: 'total_days'),
+
+
+                        selectedLeaveRadio==2?Container():  Container(
+                          width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(16),
+                            margin: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                              ),
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.all(Radius.circular(8))
+
+                            ),
+                            child: Text( 'Applying for  ${totalDays.toString()} days' )),
+
+                        // MyCustomTextField(
+                        //     title: totalDays.toString(),
+                        //     attrName: 'total_days'),
                         // Padding(
                         //     padding: const EdgeInsets.all(8.0),
                         //     child: FormBuilderDateTimePicker(
@@ -270,8 +414,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           padding: const EdgeInsets.all(8.0),
                           child: FormBuilderDateTimePicker(
                             attribute: "returnDate",
-                            // controller: returnDateSelected,
-                            // onChanged: _onReturnDateSelect,
+                             controller: returnDateSelected,
+                             onChanged: _onReturnDateSelect,
                             inputType: InputType.date,
                             firstDate: DateTime.now(),
                             format: DateFormat("dd-MM-yyyy"),
@@ -425,8 +569,43 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                         // MyCustomTextField(
                         //     title: "Total Days", attrName: 'total_days'),
                         // MyCustomTextField(title: "Subject", attrName: 'subject'),
-                        MyCustomTextField(title: "Reason", attrName: 'reason'),
-                        MyCustomFileUpload(),
+                        // MyCustomTextField(title: "Reason", attrName: 'reason'),
+
+                        Container(
+                          padding: const EdgeInsets.all(9),
+                          child: TextFormField(
+                            decoration: new InputDecoration(
+                              fillColor: Colors.white,
+                              border: _focusNode.hasFocus
+                                  ? OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0)),
+                                  borderSide:
+                                  BorderSide(color: leaveCardcolor))
+                                  : OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(5.0)),
+                                  borderSide:
+                                  BorderSide(color: Colors.grey)),
+                              filled: true,
+                              contentPadding: EdgeInsets.only(
+                                  bottom: 10.0, left: 10.0, right: 10.0),
+                              // suffixIcon: Icon(Icons.keyboard_arrow_down),
+                              labelText: 'Reason',
+                            ),
+                            controller: resoneController,
+                            validator: (String value) {
+                              if (value.isEmpty) {
+                                return 'Please Select Reason';
+                              } else {
+                                return null;
+                              }
+                            },
+
+                          ),
+                        ),
+
+                        // MyCustomFileUpload(),
                         Container(
                           width: size.width * 0.9,
                           height: 50,
@@ -441,6 +620,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               onPressed: () {
                                 if (_fbKey.currentState.saveAndValidate()) {
                                   print(_fbKey.currentState.value);
+                                  _placeRequests();
+
                                 }
                               }),
                         ),
@@ -492,6 +673,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       }
     });
   }
+
+
 
   Future<String> getToken() async {
     Network().check().then((intenet) async {
@@ -558,6 +741,54 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         Navigator.pop(context);
         Toast.show("Please check internet connection", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      }
+    });
+  }
+
+
+  Future<void> _placeRequests() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    final uri = Services.AddNewLeave;
+    Map body = {
+                "TokenKey": token,
+                "lang": '2',
+                "LeaveTypeId": leaveId,
+                 "strDate":selectedLeaveStartRadio==2?leaveController.text:strDate.toString(),
+                "endDate": endDate.toString(),
+                "ReturnDate": returnDate.toString(),
+                "TotalDays": totalDays.toString(),
+                "reasone": resoneController.text,
+                "responsiblePersonID": respPerId,
+                "LeaveFor": "",
+    };
+
+    print('$body');
+    http.post(uri, body: body).then((response) {
+      var jsonResponse = jsonDecode(response.body);
+      // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+      if (jsonResponse["StatusCode"] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+
+        print("j&&& $jsonResponse");
+        Navigator.pop(context);
+
+
+
+      } else {
+        print("ModelError: ${jsonResponse["ModelErrors"]}");
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          // Future<String> token = getToken();
+        } else {
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
       }
     });
   }

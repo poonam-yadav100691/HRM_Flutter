@@ -36,7 +36,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     String empLevId = widget.data;
-    _getEmpReqDetails(empLevId);
+      _getEmpReqDetails(empLevId);
   }
 
   void takeAction(text) {

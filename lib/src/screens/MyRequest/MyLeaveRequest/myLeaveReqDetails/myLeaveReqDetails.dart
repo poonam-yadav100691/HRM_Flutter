@@ -315,7 +315,11 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
         ),
       );
     } else {
-      Center(child: CircularProgressIndicator());
+     return  Scaffold(appBar: AppBar(
+       title: Text('Request Details'),
+     ),
+         body: Background(
+             child: Center(child: CircularProgressIndicator())));
     }
   }
 

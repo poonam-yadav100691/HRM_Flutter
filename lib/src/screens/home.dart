@@ -384,7 +384,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(username,
+                          Text(username??"",
                               style: TextStyle(
                                   fontSize: 16.0, fontWeight: FontWeight.bold)),
                           Padding(padding: EdgeInsets.only(top: 6)),

@@ -26,7 +26,7 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
   List<ResultObject> otReqList = new List();
   AnimationController animationController;
   Animation<dynamic> animation;
-  bool isLoading = false;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                   body: TabBarView(
                     children: [
 
-                  leaveReqList.isNotEmpty? MyLeaveRequest(data: leaveReqList):Container(
+                      (leaveReqList??[]).isNotEmpty? MyLeaveRequest(data: leaveReqList):Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height,
                           child: Center(child: CircularProgressIndicator())),
