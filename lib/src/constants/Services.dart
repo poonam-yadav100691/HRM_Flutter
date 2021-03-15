@@ -16,6 +16,8 @@ class Services {
   static final String EmpRequest = BASE_URL + 'User/EmployeeRequest';
   static final String EmpRequestDetails =
       BASE_URL + 'User/EmployeeRequestDetail';
+  static final String DelegateList = BASE_URL + 'User/DelegatesList';
+
   static final String DelegatePerson = BASE_URL + 'User/DelegatePerson';
   static final String MyLevReqDetails = BASE_URL + 'User/MyRequestDetail';
   static final String CancelMyrequest = BASE_URL + 'User/cancelMyrequest';

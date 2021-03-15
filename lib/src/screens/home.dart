@@ -86,7 +86,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 new PermissionResponse.fromJson(parsed).list;
             // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
             getLeaveCounts();
-
           } else {
             setState(() {
               isLoading = false;
@@ -181,7 +180,6 @@ class _MyHomePageState extends State<MyHomePage> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.LeaveBalance;
-
 
     setState(() {
       isLoading = true;
@@ -652,7 +650,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 _homeGrid("Emp Request", "lib/assets/images/empReuest.png",
                     empRequestRoute, '2'),
                 _homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
-                    addDelegatesRoute, '6'),
+                    delegateRoute, '6'),
                 _homeGrid("My Request", "lib/assets/images/images.png",
                     myRequestRoute, '4'),
                 _homeGrid("Attendance", "lib/assets/images/attendance.png",

@@ -31,4 +31,7 @@ const String attendanceRoute = '/attendanceRoute';
 const String payslipRoute = '/payslipRoute';
 const String takePictureScreenRoute = '/takePictureScreenRoute';
 const String addNewsRoute = '/addNewsRoute';
+const String delegateRoute = '/delegateRoute';
+
+const String addDelegateRoute = '/addDelegateRoute';
 const String myLeaveReqDetails = '/myLeaveReqDetails';

@@ -8,7 +8,7 @@ import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/constants/select_single_item_dialog.dart';
-import 'package:HRMNew/src/screens/AddDelegates/delegatePODO.dart';
+import 'package:HRMNew/src/screens/Delegates/AddDelegates/delegatePODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 
 import 'package:flutter/material.dart';

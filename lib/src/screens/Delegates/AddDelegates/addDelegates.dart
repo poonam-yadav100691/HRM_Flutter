@@ -2,7 +2,7 @@ import 'package:HRMNew/classes/language.dart';
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/colors.dart';
-import 'package:HRMNew/src/screens/AddDelegates/component/body.dart';
+import 'package:HRMNew/src/screens/Delegates/AddDelegates/component/body.dart';
 import 'package:flutter/material.dart';
 
 class AddDelegates extends StatefulWidget {
