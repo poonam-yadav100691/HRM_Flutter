@@ -45,6 +45,8 @@ class ResultObject {
   String startDate;
   String endDate;
   String responseName;
+  String entryDate;
+  String acceptDate;
 
   ResultObject(
       {this.delegatesId,
@@ -52,7 +54,9 @@ class ResultObject {
       this.noted,
       this.startDate,
       this.endDate,
-      this.responseName});
+      this.responseName,
+      this.entryDate,
+      this.acceptDate});
 
   ResultObject.fromJson(Map<String, dynamic> json) {
     delegatesId = json['delegatesId'];
@@ -61,6 +65,8 @@ class ResultObject {
     startDate = json['startDate'];
     endDate = json['endDate'];
     responseName = json['responseName'];
+    entryDate = json['entryDate'];
+    acceptDate = json['acceptDate'];
   }
 
   Map<String, dynamic> toJson() {
@@ -71,6 +77,8 @@ class ResultObject {
     data['startDate'] = this.startDate;
     data['endDate'] = this.endDate;
     data['responseName'] = this.responseName;
+    data['entryDate'] = this.entryDate;
+    data['acceptDate'] = this.acceptDate;
     return data;
   }
 }

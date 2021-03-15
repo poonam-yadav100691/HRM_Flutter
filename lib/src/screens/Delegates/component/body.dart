@@ -22,7 +22,7 @@ class _BodyState extends State<Body> {
   List<ResultObject> delegates = new List();
   bool invisible = true;
 
-  String extDate;
+  String extDate = null;
   @override
   void initState() {
     _getNewsList();
@@ -56,8 +56,9 @@ class _BodyState extends State<Body> {
           setState(() {
             isLoading = false;
           });
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(jsonResponse["ModelErrors"]),
+          ));
         }
       }
     });
@@ -76,11 +77,14 @@ class _BodyState extends State<Body> {
                   padding: EdgeInsets.only(top: 8),
                   scrollDirection: Axis.vertical,
                   itemBuilder: (BuildContext context, int i) {
-                    DateTime tempDate =
-                        new DateFormat('dd/MM/yyyy HH:mm:ss a', 'en_US')
-                            .parse(delegates[i].endDate);
-                    extDate = DateFormat("dd/MM/yy").format(tempDate);
-
+                    print(delegates[i].entryDate != null);
+                    if (delegates[i].entryDate != "" ||
+                        delegates[i].entryDate.length > 0) {
+                      DateTime tempDate =
+                          new DateFormat('dd/MM/yyyy HH:mm:ss a', 'en_US')
+                              .parse(delegates[i].entryDate);
+                      extDate = DateFormat("dd/MM/yy").format(tempDate);
+                    }
                     return Container(
                       margin: const EdgeInsets.fromLTRB(9, 4, 9, 4),
                       //  margin: const EdgeInsets.all(15.0),
@@ -105,14 +109,13 @@ class _BodyState extends State<Body> {
                           ),
                           title: Text(delegates[i].delegatesByName),
                           // subtitle: Text(delegates[i].newContent),
-                          subtitle:  RichText(
-                              overflow: TextOverflow.ellipsis,
-                              strutStyle: StrutStyle(fontSize: 12.0),
-                              text: TextSpan(
-                                  style: TextStyle(color: Colors.black),
-                                  text: delegates[i].noted),
-                            ),
-                          
+                          subtitle: RichText(
+                            overflow: TextOverflow.ellipsis,
+                            strutStyle: StrutStyle(fontSize: 12.0),
+                            text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                text: delegates[i].noted),
+                          ),
                           trailing:
                               extDate != null ? Text(extDate) : Container()),
                     );
@@ -123,6 +126,14 @@ class _BodyState extends State<Body> {
   }
 
   Widget _buildPopupDialog(BuildContext context, data) {
+    DateTime tempDate1 =
+        new DateFormat('dd/MM/yyyy HH:mm:ss a', 'en_US').parse(data.entryDate);
+    var entryDate1 = DateFormat("dd/MM/yy").format(tempDate1);
+
+    DateTime tempDate2 =
+        new DateFormat('dd/MM/yyyy HH:mm:ss a', 'en_US').parse(data.acceptDate);
+    var accept2 = DateFormat("dd/MM/yy").format(tempDate2);
+
     return new AlertDialog(
       title: const Text('Delegates Details'),
       content: new Column(
@@ -132,22 +143,48 @@ class _BodyState extends State<Body> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
             child: Text(
-              "Title : " + data.delegatesByName,
+              "Delegates By Name : " + data.delegatesByName,
               style: TextStyle(
                 fontSize: 18,
               ),
             ),
           ),
-          Text("Start Date : " + data.startDate),
-          Text("End Date : " + data.endDate),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-            child: Text("Content responseName: " + data.noted),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-            child: Text("Response Name: " + data.responseName),
-          ),
+          data.startDate != null
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  child: Text("Start Date : " + data.startDate),
+                )
+              : Container(),
+          data.endDate != null
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  child: Text("End Date : " + data.endDate),
+                )
+              : Container(),
+          data.noted != null
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  child: Text("Content : " + data.noted),
+                )
+              : Container(),
+          data.responseName != null
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  child: Text("Response Name: " + data.responseName),
+                )
+              : Container(),
+          data.entryDate != null
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  child: Text("Entry Date: " + entryDate1),
+                )
+              : Container(),
+          data.acceptDate != null
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  child: Text("Accept Date: " + accept2),
+                )
+              : Container(),
         ],
       ),
       actions: <Widget>[

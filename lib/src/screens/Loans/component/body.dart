@@ -6,6 +6,7 @@ import 'package:HRMNew/src/screens/Loans/component/loanDetailsPODO.dart';
 import 'package:HRMNew/src/screens/Loans/component/loanPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './background.dart';
 import 'package:http/http.dart' as http;
@@ -78,14 +79,15 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     });
   }
 
-  Future<void> _getLoanDetails(int id) async {
+  Future<void> _getLoanDetails(String id) async {
     loanDetails.clear();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
-    print(id.runtimeType);
     Map body = {"Tokenkey": token, "loanID": id, "lang": '2'};
+    print(body);
 
-    final uri1 = Services.InsuranceDetail;
+    final uri1 = Services.LoanDetail;
+    print(uri1);
     http.post(uri1, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       LoanDetails loanDetailsLst = new LoanDetails.fromJson(jsonResponse);
@@ -97,7 +99,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         print("DD--->>>${loanDetails.toString()}");
         showDialog(
           context: context,
-          builder: (BuildContext context) => _buildPopupDialog(context),
+          builder: (BuildContext context) =>
+              _buildPopupDialog(context, loanDetails),
         );
       } else {
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
@@ -112,13 +115,57 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     });
   }
 
-  Widget _buildPopupDialog(BuildContext context) {
+  Widget _buildPopupDialog(BuildContext context, data) {
+    Size size = MediaQuery.of(context).size;
     return new AlertDialog(
-      title: const Text('Loan Details'),
-      content: new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[new Container(child: loanDetailsList(context))],
+      title: const Text('Loans Details'),
+      content: Expanded(
+        child: Container(
+          height: size.height,
+          width: size.width,
+          child: new Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: data.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (BuildContext context, int i) {
+                      return Container(
+                          margin: const EdgeInsets.all(2),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.black12,
+                            border: Border.all(color: Colors.grey[200]),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Interest : " +
+                                  data[i].loanInterest.toString()),
+                              Text(data[i].paymentDate),
+                              Text(
+                                "Total Pay : " +
+                                    data[i].loanTotalPay.toString(),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Text(
+                                "Balance : " + data[i].loanBalance.toString(),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ));
+                    })
+              ]),
+        ),
       ),
       actions: <Widget>[
         new FlatButton(
@@ -160,7 +207,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             onTap: () {
               print("id ${loanHeader[i].loanID}");
 
-              _getLoanDetails(loanHeader[i].loanID);
+              _getLoanDetails(loanHeader[i].loanID.toString());
             },
             child: new Container(
               // padding: const EdgeInsets.all(10.0),
