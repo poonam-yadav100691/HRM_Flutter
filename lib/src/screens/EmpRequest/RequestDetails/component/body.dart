@@ -91,9 +91,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     print("data ((((...$data");
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -110,129 +108,127 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       appBar: AppBar(
         title: Text('Request Details'),
       ),
-      body: (myReqTitleObj.isEmpty && (isLoading)) ? Container(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
-          height: MediaQuery
-              .of(context)
-              .size
-              .height,
-          child: Center(child: CircularProgressIndicator())) : Background(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(6.0),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, .15), blurRadius: 16.0)
-                  ],
-                ),
-                margin: EdgeInsets.all(15),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10.0, right: 10, top: 10, bottom: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            // Icon(Icons.arrow_back_ios),
-                            Container(
-                              padding: const EdgeInsets.only(left: 5.0),
-                              child: ClipOval(
-                                child: Image.asset(
-                                  "lib/assets/images/profile.jpg",
-                                  height: 55,
-                                  // width: 90,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Text(myReqTitleObj[0].empName,
-                                        style: TextStyle(
-                                            fontSize: 19.0,
-                                            fontWeight: FontWeight.bold)),
-                                    Padding(
-                                      padding:
-                                      const EdgeInsets.only(top: 8.0),
-                                      child: Text(
-                                          myReqTitleObj[0].empPosition,
-                                          style: TextStyle(fontSize: 14.0)),
+      body: (myReqTitleObj.isEmpty && (isLoading))
+          ? Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: Center(child: CircularProgressIndicator()))
+          : Background(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6.0),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, .15),
+                              blurRadius: 16.0)
+                        ],
+                      ),
+                      margin: EdgeInsets.all(15),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 10.0, right: 10, top: 10, bottom: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  // Icon(Icons.arrow_back_ios),
+                                  Container(
+                                    padding: const EdgeInsets.only(left: 5.0),
+                                    child: ClipOval(
+                                      child: Image.asset(
+                                        "lib/assets/images/profile.jpg",
+                                        height: 55,
+                                        // width: 90,
+                                      ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 15.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(myReqTitleObj[0].empName,
+                                              style: TextStyle(
+                                                  fontSize: 19.0,
+                                                  fontWeight: FontWeight.bold)),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 8.0),
+                                            child: Text(
+                                                myReqTitleObj[0].empPosition,
+                                                style:
+                                                    TextStyle(fontSize: 14.0)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: Icon(Icons.phone),
+                                    ),
+                                    onTap: () => launch(
+                                        "tel://" + myReqTitleObj[0].empContact),
+                                  ),
+                                ],
                               ),
                             ),
-                            InkWell(
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
                               child: Container(
-                                padding: EdgeInsets.all(10),
-                                child: Icon(Icons.phone),
+                                color: Colors.grey[300],
                               ),
-                              onTap: () => launch("tel://21213123123"),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(
-                        width: size.width,
-                        height: 1.0,
-                        child: Container(
-                          color: Colors.grey[300],
-                        ),
+                    ),
+                    Container(
+                      width: size.width * .9,
+                      margin: EdgeInsets.only(top: 10),
+                      child: Text(
+                        "Previous Manager's Notes",
+                        textAlign: TextAlign.left,
+                        style: new TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 70),
+                      child: planetCard(
+                          context,
+                          "Team Lead",
+                          "Remark here... text remark here..",
+                          '04/09/2020 10:30AM'),
+                    ),
+                  ],
                 ),
               ),
-              Container(
-                width: size.width * .9,
-                margin: EdgeInsets.only(top: 10),
-                child: Text(
-                  "Previous Manager's Notes",
-                  textAlign: TextAlign.left,
-                  style: new TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 70),
-                child: planetCard(
-                    context,
-                    "Team Lead",
-                    "Remark here... text remark here..",
-                    '04/09/2020 10:30AM'),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
-
   List<Widget> getRequestedLeaves() {
-    List<Widget> list=[];
+    List<Widget> list = [];
 
     myReqTitleObj.forEach((element) {
-
       //todo pending implementation of my request
 
       // list.add(Column(
@@ -371,130 +367,126 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       //   ]
       //   ,
       // ););
-
-
     });
-
   }
 }
 
-  Widget planetCard(BuildContext context, name, remark, date) {
-    Size size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: new BoxDecoration(
-          color: kWhiteColor,
-          shape: BoxShape.rectangle,
-          borderRadius: new BorderRadius.circular(8.0),
-          boxShadow: <BoxShadow>[
-            new BoxShadow(
-              color: kGreyLightColor,
-              blurRadius: 5.0,
-              offset: new Offset(0.5, 0.5),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Container(
-                      width: 13,
-                      height: 65.0,
-                      // color: Colors.pink,
-                      child: new Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(8.0),
-                              bottomLeft: Radius.circular(8.0)),
-                          color: Colors.green,
-                        ),
-                      )),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(left: 6.0),
-                          child: ClipOval(
-                            child: Image.asset(
-                              "lib/assets/images/profile.jpg",
-                              height: 47,
-                              // width: 90,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Container(
-                                width: size.width * 0.65,
-                                padding: EdgeInsets.only(bottom: 5),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Text(
-                                      name,
-                                      style: new TextStyle(
-                                          color: kRedColor,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Text(
-                                      date,
-                                      style: new TextStyle(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Text(
-                                remark,
-                                style: new TextStyle(),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+Widget planetCard(BuildContext context, name, remark, date) {
+  Size size = MediaQuery.of(context).size;
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      decoration: new BoxDecoration(
+        color: kWhiteColor,
+        shape: BoxShape.rectangle,
+        borderRadius: new BorderRadius.circular(8.0),
+        boxShadow: <BoxShadow>[
+          new BoxShadow(
+            color: kGreyLightColor,
+            blurRadius: 5.0,
+            offset: new Offset(0.5, 0.5),
+          ),
+        ],
       ),
-    );
-  }
-
-  Widget _itemBuilder(label, textValue) {
-    return Container(
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 15.0, bottom: 15),
+          Container(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
               children: [
-                Text(
-                  label,
-                  style: new TextStyle(fontWeight: FontWeight.w400),
-                ),
-                Text(
-                  textValue,
-                  style: new TextStyle(fontWeight: FontWeight.w500),
+                Container(
+                    width: 13,
+                    height: 65.0,
+                    // color: Colors.pink,
+                    child: new Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8.0),
+                            bottomLeft: Radius.circular(8.0)),
+                        color: Colors.green,
+                      ),
+                    )),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(left: 6.0),
+                        child: ClipOval(
+                          child: Image.asset(
+                            "lib/assets/images/profile.jpg",
+                            height: 47,
+                            // width: 90,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                              width: size.width * 0.65,
+                              padding: EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Text(
+                                    name,
+                                    style: new TextStyle(
+                                        color: kRedColor,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Text(
+                                    date,
+                                    style: new TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              remark,
+                              style: new TextStyle(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
+Widget _itemBuilder(label, textValue) {
+  return Container(
+    child: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 15.0, bottom: 15),
+          child: Row(
+            children: [
+              Text(
+                label,
+                style: new TextStyle(fontWeight: FontWeight.w400),
+              ),
+              Text(
+                textValue,
+                style: new TextStyle(fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}

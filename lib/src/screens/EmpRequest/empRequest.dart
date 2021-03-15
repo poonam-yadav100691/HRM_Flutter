@@ -51,7 +51,6 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
                   shadowColor: Colors.transparent,
                   centerTitle: true,
                   backgroundColor: leaveCardcolor,
-
                   automaticallyImplyLeading: false,
                   leading: IconButton(
                       icon: Icon(Icons.arrow_back_ios),
@@ -62,14 +61,18 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
                 ),
                 body: TabBarView(
                   children: [
-                    empLeaveReqList.isNotEmpty?EmpLeaveRequest(data: empLeaveReqList):Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        child: Center(child: CircularProgressIndicator())),
-                    empLeaveReqList.isNotEmpty?EmpOTRequest(data: empOtReqList):Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        child: Center(child: CircularProgressIndicator()))
+                    empLeaveReqList.isNotEmpty
+                        ? EmpLeaveRequest(data: empLeaveReqList)
+                        : Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            child: Center(child: CircularProgressIndicator())),
+                    empLeaveReqList.isNotEmpty
+                        ? EmpOTRequest(data: empOtReqList)
+                        : Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            child: Center(child: CircularProgressIndicator()))
                   ],
                 ),
                 bottomNavigationBar: new TabBar(
@@ -109,14 +112,12 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.EmpRequest;
     Map body = {"Tokenkey": token, "lang": '2'};
+        print("j&&&body: $body");
+        print("uri::: $uri");
     http.post(uri, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       EmpRequestList myRequest = new EmpRequestList.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
-
-
-        print("j&&&body: $body");
-        print("uri::: $uri");
         empRequestList = myRequest.resultObject;
         for (int i = 0; i < empRequestList.length; i++) {
           if (empRequestList[i].requestType == 'Leave') {
@@ -139,6 +140,10 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
           _getEmpRequests();
           // Future<String> token = getToken();
         } else {
+             setState(() {
+          isLoading = false;
+        });
+            print("ModelError: ${jsonResponse["ModelErrors"]}");
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
         }

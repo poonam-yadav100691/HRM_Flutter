@@ -1,8 +1,9 @@
 import 'package:HRMNew/components/TakePictureScreen.dart';
 import 'package:HRMNew/components/calendarView.dart';
 import 'package:HRMNew/src/screens/Account/account.dart';
-import 'package:HRMNew/src/screens/AddDelegates/addDelegates.dart';
 import 'package:HRMNew/src/screens/Attendance/attendance.dart';
+import 'package:HRMNew/src/screens/Delegates/AddDelegates/addDelegates.dart';
+import 'package:HRMNew/src/screens/Delegates/delegrate.dart';
 
 import 'package:HRMNew/src/screens/Loans/loans.dart';
 import 'package:HRMNew/src/screens/Insurance/insurance.dart';
@@ -54,7 +55,9 @@ class CustomRouter {
         return MaterialPageRoute(builder: (_) => Login());
       case notificationRoute:
         return MaterialPageRoute(builder: (_) => NewsPage());
-      case addDelegatesRoute:
+      case delegateRoute:
+        return MaterialPageRoute(builder: (_) => Delegate());
+      case addDelegateRoute:
         return MaterialPageRoute(builder: (_) => AddDelegates());
       case myRequestRoute:
         return MaterialPageRoute(builder: (_) => MyRequest());
