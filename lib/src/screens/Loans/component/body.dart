@@ -118,11 +118,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   Widget _buildPopupDialog(BuildContext context, data) {
     Size size = MediaQuery.of(context).size;
     return new AlertDialog(
+      insetPadding: EdgeInsets.all(10),
+      contentPadding: EdgeInsets.all(10),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       title: const Text('Loans Details'),
       content: Expanded(
         child: Container(
           height: size.height,
-          width: size.width,
+          width: size.width * 0.9,
           child: new Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
