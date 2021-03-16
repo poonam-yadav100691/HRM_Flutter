@@ -29,6 +29,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final children = <Widget>[];
     if (empLeaveList != null) {
       for (var i = 0; i < empLeaveList.length; i++) {
+        print(empLeaveList[i].toJson());
         children.add(
           new Container(
             margin: const EdgeInsets.symmetric(

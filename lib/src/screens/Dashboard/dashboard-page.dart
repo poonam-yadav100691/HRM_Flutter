@@ -8,7 +8,5 @@ class Dashboard extends StatelessWidget {
       body: Body(),
     );
   }
-
   //  Future<T> _onBackPressed<T>(BuildContext context, Widget page) {
-
 }

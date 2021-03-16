@@ -6,6 +6,7 @@ import 'package:HRMNew/components/MyCustomTextField.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './background.dart';
@@ -59,6 +60,11 @@ class _BodyState extends State<Body> {
     endOn=val.toString();
   }
 
+  DateTime selecteddate=DateTime.now();
+  bool dateSelectedselect=false;
+  String selectedenddateTime = '${DateTime.now().add(Duration(minutes: 40))}';
+  String selectedstartdateTime = '${DateTime.now().add(Duration(minutes: 40))}';
+
 
   bool isLoading = true;
   @override
@@ -79,61 +85,160 @@ class _BodyState extends State<Body> {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
-                          MyCustomDate(
-                            title: "Select OT Date ",
+
+                          GestureDetector(
+                            onTap: () async{
+                              final DateTime pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(DateTime.now().year+1));
+                              if (pickedDate != null && pickedDate != selecteddate)
+                                setState(() {
+                                  selecteddate = pickedDate;
+                                  dateSelectedselect=true;
+
+                                });
+                            },
+                            child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                padding: EdgeInsets.all(16),
+                                margin: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                    ),
+
+                                    shape: BoxShape.rectangle,
+                                    borderRadius: BorderRadius.all(Radius.circular(8))
+
+                                ),
+                                child: Text(dateSelectedselect?'Selected OT Date : $selecteddate':'Select OT Date ')),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FormBuilderDateTimePicker(
-                              attribute: 'OTStartTime',
-                              decoration: new InputDecoration(
-                                fillColor: Colors.white,
-                                border: _focusNode.hasFocus
-                                    ? OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: leaveCardcolor))
-                                    : OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.grey)),
-                                filled: true,
-                                contentPadding: EdgeInsets.only(
-                                    bottom: 10.0, left: 10.0, right: 10.0),
-                                labelText: 'OT Start From',
+
+
+                          Container(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 6,
+                                child: DateTimePicker(
+                                  type: DateTimePickerType.dateTime,
+                                  use24HourFormat: false,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                      prefixIcon: Icon(Icons.calendar_today),
+                                      labelText: 'OT Start From'),
+                                  initialValue:
+                                  '${DateTime.now().add(Duration(minutes: 40))}',
+                                  firstDate: DateTime.now()
+                                      .add(Duration(minutes: 40)),
+                                  lastDate:
+                                  DateTime.now().add(Duration(days: 8)),
+                                  dateLabelText: ' OT Start From',
+                                  style: Theme.of(context).textTheme.caption,
+                                  onChanged: (val) {
+                                        selectedstartdateTime = val;
+
+                                  },
+                                  validator: (val) {
+                                    print(val);
+                                    return null;
+                                  },
+                                  onSaved: (val) => print(val),
+                                ),
                               ),
-                              onChanged: _onstrDateChanged,
-                              validators: [FormBuilderValidators.required()],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FormBuilderDateTimePicker(
-                              attribute: 'OTEndTime',
-                              decoration: new InputDecoration(
-                                fillColor: Colors.white,
-                                border: _focusNode.hasFocus
-                                    ? OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: leaveCardcolor))
-                                    : OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.grey)),
-                                filled: true,
-                                contentPadding: EdgeInsets.only(
-                                    bottom: 10.0, left: 10.0, right: 10.0),
-                                labelText: 'OT End On',
+                          // Padding(
+                          //   padding: const EdgeInsets.all(8.0),
+                          //   child: FormBuilderDateTimePicker(
+                          //     attribute: 'OTStartTime',
+                          //     decoration: new InputDecoration(
+                          //       fillColor: Colors.white,
+                          //       border: _focusNode.hasFocus
+                          //           ? OutlineInputBorder(
+                          //               borderRadius: BorderRadius.all(
+                          //                   Radius.circular(5.0)),
+                          //               borderSide:
+                          //                   BorderSide(color: leaveCardcolor))
+                          //           : OutlineInputBorder(
+                          //               borderRadius: BorderRadius.all(
+                          //                   Radius.circular(5.0)),
+                          //               borderSide:
+                          //                   BorderSide(color: Colors.grey)),
+                          //       filled: true,
+                          //       contentPadding: EdgeInsets.only(
+                          //           bottom: 10.0, left: 10.0, right: 10.0),
+                          //       labelText: 'OT Start From',
+                          //     ),
+                          //     onChanged: _onstrDateChanged,
+                          //     validators: [FormBuilderValidators.required()],
+                          //   ),
+                          // ),
+
+                          Container(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 6,
+                                child: DateTimePicker(
+                                  type: DateTimePickerType.dateTime,
+                                  use24HourFormat: false,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      prefixIcon: Icon(Icons.calendar_today),
+                                      labelText: 'OT Ends On'),
+                                  initialValue:
+                                  '${DateTime.now().add(Duration(minutes: 40))}',
+                                  firstDate: DateTime.now()
+                                      .add(Duration(minutes: 40)),
+                                  lastDate:
+                                  DateTime.now().add(Duration(days: 8)),
+                                  dateLabelText: 'OT Ends On',
+                                  style: Theme.of(context).textTheme.caption,
+                                  onChanged: (val) {
+                                    selectedenddateTime = val;
+
+                                  },
+                                  validator: (val) {
+                                    print(val);
+                                    return null;
+                                  },
+                                  onSaved: (val) => print(val),
+                                ),
                               ),
-                              onChanged: _onendDateChanged,
-                              validators: [FormBuilderValidators.required()],
                             ),
                           ),
+                          // Padding(
+                          //   padding: const EdgeInsets.all(8.0),
+                          //   child: FormBuilderDateTimePicker(
+                          //     attribute: 'OTEndTime',
+                          //     decoration: new InputDecoration(
+                          //       fillColor: Colors.white,
+                          //       border: _focusNode.hasFocus
+                          //           ? OutlineInputBorder(
+                          //               borderRadius: BorderRadius.all(
+                          //                   Radius.circular(5.0)),
+                          //               borderSide:
+                          //                   BorderSide(color: leaveCardcolor))
+                          //           : OutlineInputBorder(
+                          //               borderRadius: BorderRadius.all(
+                          //                   Radius.circular(5.0)),
+                          //               borderSide:
+                          //                   BorderSide(color: Colors.grey)),
+                          //       filled: true,
+                          //       contentPadding: EdgeInsets.only(
+                          //           bottom: 10.0, left: 10.0, right: 10.0),
+                          //       labelText: 'OT End On',
+                          //     ),
+                          //     onChanged: _onendDateChanged,
+                          //     validators: [FormBuilderValidators.required()],
+                          //   ),
+                          // ),
+
+
+
                           Container(
                             padding: const EdgeInsets.all(9),
                             child: TextFormField(
@@ -265,13 +370,12 @@ class _BodyState extends State<Body> {
                                 "TokenKey": token,
                                 "lang": '2',
                                 "OTDate": date,
-                                "stTime": startFrom,
-                                "endTime": endOn,
+                                "stTime": selectedstartdateTime,
+                                "endTime": selectedenddateTime,
                                 "otTitle": subjectController.text,
                                 "otReason": reasonController.text,
                                 // "reasone": .text,
                                 "empId": id,
-                                "LeaveFor": "",
                               };
 
 

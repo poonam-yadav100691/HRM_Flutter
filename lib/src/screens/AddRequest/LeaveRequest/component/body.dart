@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Network.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -54,6 +55,13 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   String respPerLable = "Leave";
   String respPerId;
 
+  DateTime returndate=DateTime.now();
+  bool dateSelectedreturn=false;
+
+
+  DateTime selecteddate=DateTime.now();
+  bool dateSelectedselect=false;
+
 
   _focusListener() {
     setState(() {});
@@ -89,19 +97,20 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   }
 
   DateTime strDate,endDate;
-  void _onDateRangeSelect(val) {
-     strDate = val[0];
-     endDate = val[1];
+  void _onDateRangeSelect(DateTimeRange val) {
+     strDate = val.start;
+     endDate = val.end;
 
      print('$strDate  $endDate ');
     final difference = this.endDate.difference(strDate).inDays;
     setState(() {
       totalDays = difference;
     });
-    print(difference);
+
   }
 
 
+  String selectedDateRange='Select Date Range';
   int selectedLeaveRadio=1;
   int selectedLeaveStartRadio=1;
 DateTime returnDate;
@@ -248,29 +257,39 @@ DateTime returnDate;
                                   ),
                                   child: Row(
                                     children: [
-                                      Row(
-                                        children: [
-                                          Text('Leave Start From'),
-                                          Radio(value: selectedLeaveStartRadio, groupValue: 1, onChanged:(flag){
-                                            setState(() {
-                                              selectedLeaveStartRadio=1;
-                                            });
-
-
-                                          }),
-                                          Text('First Half')
-                                        ],
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('Leave Start From : '),
                                       ),
-                                      Row(
+
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Radio(value: selectedLeaveStartRadio, groupValue: 2, onChanged:(flag){
-                                            setState(() {
-                                              selectedLeaveStartRadio=2;
-                                            });
-                                          }),
-                                          Text('Second Half')
-                                        ],
-                                      ), ],
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+
+                                              Radio( value: selectedLeaveStartRadio, groupValue: 1, onChanged:(flag){
+                                                setState(() {
+                                                  selectedLeaveStartRadio=1;
+                                                });
+                                              }),
+                                              Text('First Half')
+                                            ],
+                                          ),
+                                          Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Radio(value: selectedLeaveStartRadio, groupValue: 2, onChanged:(flag){
+                                                setState(() {
+                                                  selectedLeaveStartRadio=2;
+                                                });
+                                              }),
+                                              Text('Second Half')
+                                            ],
+                                          ), ],
+                                      ),
+                                    ],
                                   ),
                                 )
 
@@ -301,7 +320,7 @@ DateTime returnDate;
                                 //   options: ["First Half", "Second Half"]
                                 //       .map((lang) => FormBuilderFieldOption(
                                 //             value: lang,
-                                //             child: Text('$lang'),
+                                //             child: Text('$lan  g'),
                                 //           ))
                                 //       .toList(growable: false),
                                 // ),
@@ -316,63 +335,81 @@ DateTime returnDate;
                         //   },
                         // ),
 
-                        selectedLeaveRadio==2?Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: FormBuilderDateTimePicker(
-                            attribute: "returnDate",
-                            controller: leaveDateSelected,
-                            onChanged: _onReturnDateSelect,
-                            inputType: InputType.date,
-                            firstDate: DateTime.now(),
-                            format: DateFormat("dd-MM-yyyy"),
-                            decoration: new InputDecoration(
-                              fillColor: Colors.white,
-                              border: _focusNode.hasFocus
-                                  ? OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(5.0)),
-                                  borderSide:
-                                  BorderSide(color: leaveCardcolor))
-                                  : OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(5.0)),
-                                  borderSide:
-                                  BorderSide(color: Colors.grey)),
-                              filled: true,
-                              contentPadding: EdgeInsets.only(
-                                  bottom: 10.0, left: 10.0, right: 10.0),
-                              labelText: "Select Date",
-                            ),
-                          ),
-                        ): Container(
-                          padding: const EdgeInsets.all(9),
-                          child: FormBuilderDateRangePicker(
-                            controller: rangeDateSelected,
-                            attribute: 'date_range',
-                            onChanged: _onDateRangeSelect,
-                            firstDate: DateTime.now(),
-                            lastDate: DateTime(2030),
-                            format: DateFormat('dd-MM-yyyy'),
-                            decoration: new InputDecoration(
-                              fillColor: Colors.white,
-                              border: _focusNode.hasFocus
-                                  ? OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0)),
-                                      borderSide:
-                                          BorderSide(color: leaveCardcolor))
-                                  : OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0)),
-                                      borderSide:
-                                          BorderSide(color: Colors.grey)),
-                              filled: true,
-                              contentPadding: EdgeInsets.only(
-                                  bottom: 10.0, left: 10.0, right: 10.0),
-                              labelText: "Select Leave Date Range",
-                            ),
-                          ),
+                        selectedLeaveRadio==2?GestureDetector(
+                          onTap: () async{
+                            final DateTime pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(DateTime.now().year+1));
+                            if (pickedDate != null && pickedDate != selecteddate)
+                              setState(() {
+                                selecteddate = pickedDate;
+                                dateSelectedselect=true;
+
+                              });
+                          },
+                          child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(16),
+                              margin: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                  ),
+
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.all(Radius.circular(8))
+
+                              ),
+                              child: Text(dateSelectedselect?'Selected Date: $selecteddate':'Select Date')),
+                        ): GestureDetector(
+                          onTap: (){
+                            dateTimeRangePicker();
+                          },
+                          child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(16),
+                              margin: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                  ),
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.all(Radius.circular(8))
+
+                              ),
+                              child: Text( '$selectedDateRange' )),
                         ),
+
+
+                        // FormBuilderDateRangePicker(
+                          //   controller: rangeDateSelected,
+                          //   attribute: 'date_range',
+                          //   onChanged: _onDateRangeSelect,
+                          //   firstDate: DateTime.now(),
+                          //   lastDate: DateTime(2030),
+                          //   format: DateFormat('dd-MM-yyyy'),
+                          //   decoration: new InputDecoration(
+                          //     fillColor: Colors.white,
+                          //     border: _focusNode.hasFocus
+                          //         ? OutlineInputBorder(
+                          //             borderRadius: BorderRadius.all(
+                          //                 Radius.circular(5.0)),
+                          //             borderSide:
+                          //                 BorderSide(color: leaveCardcolor))
+                          //         : OutlineInputBorder(
+                          //             borderRadius: BorderRadius.all(
+                          //                 Radius.circular(5.0)),
+                          //             borderSide:
+                          //                 BorderSide(color: Colors.grey)),
+                          //     filled: true,
+                          //     contentPadding: EdgeInsets.only(
+                          //         bottom: 10.0, left: 10.0, right: 10.0),
+                          //     labelText: "Select Leave Date Range",
+                          //   ),
+                          // ),
+
 
 
                         selectedLeaveRadio==2?Container():  Container(
@@ -388,6 +425,37 @@ DateTime returnDate;
 
                             ),
                             child: Text( 'Applying for  ${totalDays.toString()} days' )),
+
+
+                        GestureDetector(
+                          onTap: () async{
+                            final DateTime pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(DateTime.now().year+1));
+                            if (pickedDate != null && pickedDate != returndate)
+                              setState(() {
+                                returndate = pickedDate;
+                                dateSelectedreturn=true;
+
+                              });
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(16),
+                              margin: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.all(Radius.circular(8))
+
+                              ),
+                              child: Text(dateSelectedreturn?'Return Date: $returndate':'Return to Work date')),
+                        ),
 
                         // MyCustomTextField(
                         //     title: totalDays.toString(),
@@ -406,35 +474,38 @@ DateTime returnDate;
                         //       style: TextStyle(color: Colors.black),
                         //     )),
 
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: FormBuilderDateTimePicker(
-                            attribute: "returnDate",
-                             controller: returnDateSelected,
-                             onChanged: _onReturnDateSelect,
-                            inputType: InputType.date,
-                            firstDate: DateTime.now(),
-                            format: DateFormat("dd-MM-yyyy"),
-                            decoration: new InputDecoration(
-                              fillColor: Colors.white,
-                              border: _focusNode.hasFocus
-                                  ? OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0)),
-                                      borderSide:
-                                          BorderSide(color: leaveCardcolor))
-                                  : OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0)),
-                                      borderSide:
-                                          BorderSide(color: Colors.grey)),
-                              filled: true,
-                              contentPadding: EdgeInsets.only(
-                                  bottom: 10.0, left: 10.0, right: 10.0),
-                              labelText: "Return to work date",
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   child: FormBuilderDateTimePicker(
+                        //     attribute: "returnDate",
+                        //      controller: returnDateSelected,
+                        //      onChanged: _onReturnDateSelect,
+                        //     inputType: InputType.date,
+                        //     firstDate: DateTime.now(),
+                        //     format: DateFormat("dd-MM-yyyy"),
+                        //     decoration: new InputDecoration(
+                        //       fillColor: Colors.white,
+                        //       border: _focusNode.hasFocus
+                        //           ? OutlineInputBorder(
+                        //               borderRadius: BorderRadius.all(
+                        //                   Radius.circular(5.0)),
+                        //               borderSide:
+                        //                   BorderSide(color: leaveCardcolor))
+                        //           : OutlineInputBorder(
+                        //               borderRadius: BorderRadius.all(
+                        //                   Radius.circular(5.0)),
+                        //               borderSide:
+                        //                   BorderSide(color: Colors.grey)),
+                        //       filled: true,
+                        //       contentPadding: EdgeInsets.only(
+                        //           bottom: 10.0, left: 10.0, right: 10.0),
+                        //       labelText: "Return to work date",
+                        //     ),
+                        //   ),
+                        // ),
+
+
+
 
                         Container(
                           padding: const EdgeInsets.all(9),
@@ -788,6 +859,28 @@ DateTime returnDate;
       }
     });
   }
+
+
+    dateTimeRangePicker() async {
+      DateTimeRange picked = await showDateRangePicker(
+        initialEntryMode: DatePickerEntryMode.input,
+        context: context,
+        firstDate: DateTime.now(),
+        lastDate: DateTime(DateTime.now().year +1),
+        initialDateRange: DateTimeRange(
+          end: DateTime(
+              DateTime.now().year, DateTime.now().month, DateTime.now().day + 13),
+          start: DateTime.now(),
+        ),
+      );
+
+      setState(() {
+        selectedDateRange='${picked.start.toUtc()}-${picked.end.toUtc()}';
+      });
+
+      _onDateRangeSelect(picked);
+    }
+
 
   Future<void> getResponsiblePerson() async {
     setState(() {

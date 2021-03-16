@@ -72,7 +72,7 @@ class CustomRouter {
       case empLeaveRequestRoute:
         return MaterialPageRoute(builder: (_) => EmpOTRequest());
       case requestDetailsRoute:
-        return MaterialPageRoute(builder: (_) => RequestDetails());
+        return MaterialPageRoute(builder: (_) =>      RequestDetails());
       case calendarViewRoute:
         return MaterialPageRoute(builder: (_) => CalendarView());
 

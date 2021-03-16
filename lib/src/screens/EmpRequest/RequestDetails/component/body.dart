@@ -4,6 +4,7 @@ import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/empReqDetailPODO.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import './background.dart';
@@ -44,6 +45,28 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       context,
       MaterialPageRoute(builder: (context) => ApprovalAction(text)),
     );
+  }
+
+
+
+  int totalDayss;
+
+  DateTime strDate,endDate;
+
+
+  int _onDateRangeSelect(String startDate,String endstrDate) {
+
+   DateFormat format= DateFormat.yMd();
+
+    strDate = format.parse(startDate);
+    endDate = format.parse(endstrDate);
+
+    print('$strDate  $endDate ');
+    final difference = endDate.difference(strDate).inDays;
+
+     return difference;
+
+
   }
 
   Future<void> _getEmpReqDetails(reqID) async {
@@ -116,6 +139,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           : Background(
               child: SingleChildScrollView(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
                       decoration: BoxDecoration(
@@ -196,6 +220,94 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 color: Colors.grey[300],
                               ),
                             ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text('Period: ${(requestItemObject[0].strDate).substring(0,9)} - ${requestItemObject[0].endDate.substring(0,9)}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text('Duration: ${requestItemObject[0].duration}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text('Request Status: ${myReqTitleObj[0].statusText}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text('Reason: ${requestItemObject[0].requestReason}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text('Manager: ${requestItemObject[0].responseName}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text('Requested For: ${requestItemObject[0].requestFor}'),
+                            ),
+
+
+                            Padding(padding: EdgeInsets.symmetric(vertical: 8,),
+
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                RaisedButton(onPressed:(){},
+                                  child: Text('Reject',style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
+                                  color: Colors.red,
+                                ),
+
+                                RaisedButton(onPressed:(){},
+                                  child: Text('Approve',style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
+                                  color: Colors.green,
+                                ),
+
+                              ],
+                            ),
+                            )
+
+
                           ],
                         ),
                       ),
@@ -466,6 +578,8 @@ Widget planetCard(BuildContext context, name, remark, date) {
     ),
   );
 }
+
+
 
 Widget _itemBuilder(label, textValue) {
   return Container(
