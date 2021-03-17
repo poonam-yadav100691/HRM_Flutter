@@ -354,193 +354,198 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _body() {
     Size size = MediaQuery.of(context).size;
-    return Column(children: [
-      Container(
-        height: 50,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            Container(
-              width: 120.0,
-              color: leaveCardcolor1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "SICK LEAVE",
-                      style: TextStyle(fontSize: 13, color: white),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        "3.0 / 5.0",
-                        style: TextStyle(fontSize: 13, color: white),
-                      ),
-                    ),
-                  ]),
-            ),
-            SizedBox(
-              width: 0.5,
-              child: Container(
-                color: Colors.grey,
-              ),
-            ),
-            Container(
-              width: 120.0,
-              color: leaveCardcolor1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "CASUAL LEAVE",
-                      style: TextStyle(fontSize: 13, color: white),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        "3.0 / 5.0",
-                        style: TextStyle(fontSize: 13, color: white),
-                      ),
-                    ),
-                  ]),
-            ),
-            SizedBox(
-              width: 0.5,
-              child: Container(
-                color: Colors.grey,
-              ),
-            ),
-            Container(
-              width: 120.0,
-              color: leaveCardcolor1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "PERSONAL LEAVE",
-                      style: TextStyle(fontSize: 13, color: white),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        "3.0 / 5.0",
-                        style: TextStyle(fontSize: 13, color: white),
-                      ),
-                    ),
-                  ]),
-            ),
-            SizedBox(
-              width: 0.5,
-              child: Container(
-                color: Colors.grey,
-              ),
-            ),
-            Container(
-              width: 120.0,
-              color: leaveCardcolor1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "ANNUAL LEAVE",
-                      style: TextStyle(fontSize: 13, color: white),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        "3.0 / 5.0",
-                        style: TextStyle(fontSize: 13, color: white),
-                      ),
-                    ),
-                  ]),
-            ),
-            SizedBox(
-              width: 0.5,
-              child: Container(
-                color: Colors.grey,
-              ),
-            ),
-            Container(
-              width: 120.0,
-              color: leaveCardcolor1,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "SICK LEAVE",
-                      style: TextStyle(fontSize: 13, color: white),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        "3.0 / 5.0",
-                        style: TextStyle(fontSize: 13, color: white),
-                      ),
-                    ),
-                  ]),
-            ),
-          ],
-        ),
-      ),
-      Container(
-        height: size.height * 0.70,
-        // flex: 2,
-        child: DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            appBar: PreferredSize(
-              preferredSize: Size(double.infinity, 50),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, .15), blurRadius: 16.0)
-                  ],
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height-95,
+        child: Column(children: [
+          Container(
+            height: 50,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                Container(
+                  width: 120.0,
+                  color: leaveCardcolor1,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "SICK LEAVE",
+                          style: TextStyle(fontSize: 13, color: white),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: Text(
+                            "3.0 / 5.0",
+                            style: TextStyle(fontSize: 13, color: white),
+                          ),
+                        ),
+                      ]),
                 ),
-                child: TabBar(
-                  indicatorColor: Colors.red,
-                  unselectedLabelColor: Colors.grey,
-                  labelColor: Colors.black,
-                  tabs: [
-                    Tab(
-                      icon: Text(
-                        "PENDING",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                    Tab(
-                      icon: Text(
-                        "APPROVED",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                    Tab(
-                      icon: Text(
-                        "REJECTED",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    )
-                  ],
+                SizedBox(
+                  width: 0.5,
+                  child: Container(
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
+                Container(
+                  width: 120.0,
+                  color: leaveCardcolor1,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "CASUAL LEAVE",
+                          style: TextStyle(fontSize: 13, color: white),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: Text(
+                            "3.0 / 5.0",
+                            style: TextStyle(fontSize: 13, color: white),
+                          ),
+                        ),
+                      ]),
+                ),
+                SizedBox(
+                  width: 0.5,
+                  child: Container(
+                    color: Colors.grey,
+                  ),
+                ),
+                Container(
+                  width: 120.0,
+                  color: leaveCardcolor1,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "PERSONAL LEAVE",
+                          style: TextStyle(fontSize: 13, color: white),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: Text(
+                            "3.0 / 5.0",
+                            style: TextStyle(fontSize: 13, color: white),
+                          ),
+                        ),
+                      ]),
+                ),
+                SizedBox(
+                  width: 0.5,
+                  child: Container(
+                    color: Colors.grey,
+                  ),
+                ),
+                Container(
+                  width: 120.0,
+                  color: leaveCardcolor1,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "ANNUAL LEAVE",
+                          style: TextStyle(fontSize: 13, color: white),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: Text(
+                            "3.0 / 5.0",
+                            style: TextStyle(fontSize: 13, color: white),
+                          ),
+                        ),
+                      ]),
+                ),
+                SizedBox(
+                  width: 0.5,
+                  child: Container(
+                    color: Colors.grey,
+                  ),
+                ),
+                Container(
+                  width: 120.0,
+                  color: leaveCardcolor1,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "SICK LEAVE",
+                          style: TextStyle(fontSize: 13, color: white),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: Text(
+                            "3.0 / 5.0",
+                            style: TextStyle(fontSize: 13, color: white),
+                          ),
+                        ),
+                      ]),
+                ),
+              ],
             ),
-            body: DoubleBackToCloseApp(
-              snackBar: SnackBar(
-                content: Text(getTranslated(context, 'Tapbackagaintoleave')),
-              ),
-              child: TabBarView(
-                children: [PendingHome(), ApproveHome(), RejectHome()],
+          ),
+          Container(
+            height: size.height -95,
+            // flex: 2,
+            child: DefaultTabController(
+              length: 3,
+              child: Scaffold(
+                appBar: PreferredSize(
+                  preferredSize: Size(double.infinity, 50),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, .15), blurRadius: 16.0)
+                      ],
+                    ),
+                    child: TabBar(
+                      indicatorColor: Colors.red,
+                      unselectedLabelColor: Colors.grey,
+                      labelColor: Colors.black,
+                      tabs: [
+                        Tab(
+                          icon: Text(
+                            "PENDING",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                        Tab(
+                          icon: Text(
+                            "APPROVED",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                        Tab(
+                          icon: Text(
+                            "REJECTED",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                body: DoubleBackToCloseApp(
+                  snackBar: SnackBar(
+                    content: Text(getTranslated(context, 'Tapbackagaintoleave')),
+                  ),
+                  child: TabBarView(
+                    children: [PendingHome(), ApproveHome(), RejectHome()],
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+        ]),
       ),
-    ]);
+    );
   }
 }
