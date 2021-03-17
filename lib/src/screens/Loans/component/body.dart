@@ -80,6 +80,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   }
 
   Future<void> _getLoanDetails(String id) async {
+    setState(() {
+      isLoading = true;
+    });
     loanDetails.clear();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
@@ -103,6 +106,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
               _buildPopupDialog(context, loanDetails),
         );
       } else {
+        setState(() {
+          isLoading = false;
+        });
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           print("ModelError: ${jsonResponse["ModelErrors"]}");
           await GetToken().getToken();
@@ -120,55 +126,47 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     return new AlertDialog(
       insetPadding: EdgeInsets.all(10),
       contentPadding: EdgeInsets.all(10),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
+      scrollable: true,
       title: const Text('Loans Details'),
-      content: Expanded(
-        child: Container(
-          height: size.height,
-          width: size.width * 0.9,
-          child: new Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: data.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (BuildContext context, int i) {
-                      return Container(
-                          margin: const EdgeInsets.all(2),
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.black12,
-                            border: Border.all(color: Colors.grey[200]),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Interest : " +
-                                  data[i].loanInterest.toString()),
-                              Text(data[i].paymentDate),
-                              Text(
-                                "Total Pay : " +
-                                    data[i].loanTotalPay.toString(),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                              Text(
-                                "Balance : " + data[i].loanBalance.toString(),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          ));
-                    })
-              ]),
-        ),
+      content: Container(
+        height: size.height * 0.99,
+        width: size.width,
+        padding: const EdgeInsets.only(bottom: 160),
+        child: ListView.builder(
+            shrinkWrap: true,
+            // physics: NeverScrollableScrollPhysics(),
+            itemCount: data.length,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (BuildContext context, int i) {
+              return Container(
+                  margin: const EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.black12,
+                    border: Border.all(color: Colors.grey[200]),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Interest : " + data[i].loanInterest.toString()),
+                      Text(data[i].paymentDate),
+                      Text(
+                        "Total Pay : " + data[i].loanTotalPay.toString(),
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      Text(
+                        "Balance : " + data[i].loanBalance.toString(),
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ));
+            }),
       ),
       actions: <Widget>[
         new FlatButton(

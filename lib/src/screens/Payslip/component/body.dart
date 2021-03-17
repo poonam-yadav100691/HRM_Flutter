@@ -1,7 +1,14 @@
-import 'package:HRMNew/src/models/notiList.dart';
-import 'package:HRMNew/src/screens/Payslip/PayslipDesc/payslipDesc.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:HRMNew/src/constants/AppConstant.dart';
+import 'package:HRMNew/src/constants/Services.dart';
+import 'package:HRMNew/src/screens/Payslip/PayslipDesc/payslipDesc.dart';
+import 'package:HRMNew/src/screens/Payslip/component/paySlipListPODO.dart';
+import 'package:HRMNew/src/screens/home.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import './background.dart';
 
 class Body extends StatefulWidget {
@@ -9,33 +16,71 @@ class Body extends StatefulWidget {
   _BodyState createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> {
-  List<NotiList> notiLists = [
-    NotiList(
-        title: 'SlipNo.3030',
-        profileImg: 'img/pic-1.png',
-        desc: "Short desc",
-        date: 'Jan20'),
-    NotiList(
-        title: 'PayslipNo.#030',
-        profileImg: 'img/pic-2.png',
-        desc: "Salary 20/2/20",
-        date: 'Feb20'),
-    NotiList(
-        title: 'SlipNo.3030',
-        profileImg: 'img/pic-3.png',
-        desc: "Salary 03",
-        date: 'Mar20')
-  ];
+class _BodyState extends State<Body> with TickerProviderStateMixin {
+  var _focusNode = new FocusNode();
 
-  void takeAction() {
+  _focusListener() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_focusListener);
+    super.dispose();
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  List<ResultObject> payslipList = new List();
+  AnimationController animationController;
+  Animation<dynamic> animation;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    _focusNode.addListener(_focusListener);
+    _getInsurHeader();
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
+    super.initState();
+  }
+
+  Future<void> _getInsurHeader() async {
+    payslipList.clear();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    final uri = Services.PayslipList;
+    Map body = {"Tokenkey": token, "lang": '2'};
+    http.post(uri, body: body).then((response) async {
+      var jsonResponse = jsonDecode(response.body);
+      PayslipList payslipLists = new PayslipList.fromJson(jsonResponse);
+      if (jsonResponse["StatusCode"] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+        payslipList = payslipLists.resultObject;
+        print("DDDDDDD--->>>${payslipList.toString()}");
+      } else {
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          print("ModelError: ${jsonResponse["ModelErrors"]}");
+          await GetToken().getToken();
+          _getInsurHeader();
+        } else {
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
+      }
+    });
+  }
+
+  void takeAction(id) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PayslipDesc()),
+      MaterialPageRoute(builder: (context) => PayslipDesc(payslipDetailID: id)),
     );
   }
 
-  Widget notiDetailCard(NotiList) {
+  Widget notiDetailCard(PayslipList) {
     Size size = MediaQuery.of(context).size;
     return Container(
       padding: new EdgeInsets.only(left: 10.0, right: 10.0, top: 10),
@@ -64,7 +109,7 @@ class _BodyState extends State<Body> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                NotiList.date,
+                                PayslipList.slipMonthYr,
                                 style: TextStyle(
                                   fontSize: 12.0,
                                   fontStyle: FontStyle.italic,
@@ -99,12 +144,12 @@ class _BodyState extends State<Body> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            NotiList.title,
+                            "SlipNo." + PayslipList.slipNo,
                             style: new TextStyle(
                                 fontSize: 16.0, fontWeight: FontWeight.bold),
                           ),
                           // Text(
-                          //   NotiList.date,
+                          //   PayslipList.date,
                           //   style: new TextStyle(fontSize: 14.0),
                           // ), // new Placeholder(),
                         ],
@@ -115,7 +160,7 @@ class _BodyState extends State<Body> {
                       child: new Row(
                         children: <Widget>[
                           Text(
-                            NotiList.desc,
+                            PayslipList.slipDate,
                             style: new TextStyle(fontSize: 14.0),
                           ),
                           // new Placeholder(),
@@ -128,7 +173,7 @@ class _BodyState extends State<Body> {
             ],
           ),
         ),
-        onTap: () => takeAction(),
+        onTap: () => takeAction(PayslipList.slipID),
       ),
     );
   }
@@ -138,7 +183,7 @@ class _BodyState extends State<Body> {
     return Background(
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: notiLists.map((p) {
+          children: payslipList.map((p) {
             return notiDetailCard(p);
           }).toList()
           // SizedBox(height: size.height * 0.03),

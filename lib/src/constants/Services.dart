@@ -36,5 +36,8 @@ class Services {
 
   static final String LoanDetail = BASE_URL + 'User/LoanDetail';
 
+  static final String PayslipList = BASE_URL + 'User/paymentSlipHeader';
+  static final String PayslipDetails = BASE_URL + 'User/paymentSlipDetail';
+
   //InsuranceHeader
 }

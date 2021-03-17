@@ -1,16 +1,97 @@
-import 'package:HRMNew/src/constants/colors.dart';
+import 'dart:convert';
+
+import 'package:HRMNew/src/constants/AppConstant.dart';
+import 'package:HRMNew/src/constants/Services.dart';
+import 'package:HRMNew/src/screens/Payslip/PayslipDesc/component/payslipDetailsPODO.dart';
+import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './background.dart';
 
 class Body extends StatefulWidget {
+  final String data;
+  Body({Key key, @required this.data}) : super(key: key);
+
   @override
-  _BodyState createState() => _BodyState();
+  _BodyState createState() => _BodyState(data);
 }
 
-class _BodyState extends State<Body> {
+class _BodyState extends State<Body> with TickerProviderStateMixin {
+  String data;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  List<ResultObject> payslipDetails = new List();
+  AnimationController animationController;
+  Animation<dynamic> animation;
+  bool isLoading = true;
+
+  _BodyState(this.data);
+
+  @override
+  void initState() {
+    _focusNode.addListener(_focusListener);
+    String id = widget.data;
+    _getpayslipDetails(id);
+    super.initState();
+  }
+
+  var _focusNode = new FocusNode();
+
+  _focusListener() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_focusListener);
+    super.dispose();
+  }
+
+  Future<void> _getpayslipDetails(String id) async {
+    setState(() {
+      isLoading = true;
+    });
+    payslipDetails.clear();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    Map body = {"Tokenkey": token, "salaryID": id, "lang": '2'};
+    print(body);
+
+    final uri1 = Services.PayslipDetails;
+    print(uri1);
+    http.post(uri1, body: body).then((response) async {
+      var jsonResponse = jsonDecode(response.body);
+      PayslipDetails payslipDetailsLst =
+          new PayslipDetails.fromJson(jsonResponse);
+      if (jsonResponse["StatusCode"] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+        payslipDetails = payslipDetailsLst.resultObject;
+
+        print("DD--->>>${payslipDetails[0].earningObject}");
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          print("ModelError: ${jsonResponse["ModelErrors"]}");
+          await GetToken().getToken();
+          _getpayslipDetails(id);
+        } else {
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(payslipDetails[0]);
     Size size = MediaQuery.of(context).size;
     return Background(
       child: Column(
@@ -112,10 +193,8 @@ class _BodyState extends State<Body> {
                         border: Border.all(color: Colors.blueAccent)),
                     child: Column(
                       children: [
-                        _itemBuilder("Basic Salary", "\$5000"),
-                        _itemBuilder("House Rent Allowance", "\$50"),
-                        _itemBuilder("Other Allowance", "\$55"),
-                        _itemBuilder("Total Earnings", "\$55"),
+                        _itemBuilder(
+                            payslipDetails[0].earningObject, 'earning'),
                       ],
                     ),
                   ),
@@ -138,10 +217,12 @@ class _BodyState extends State<Body> {
                         border: Border.all(color: Colors.blueAccent)),
                     child: Column(
                       children: [
-                        _itemBuilder("Tax Deducted", "\$0"),
-                        _itemBuilder("Provident Fund", "\$0"),
-                        _itemBuilder("Loan", "\$550"),
-                        _itemBuilder("Total Deductions", "\$53935"),
+                        _itemBuilder(
+                            payslipDetails[0].deductionObject, 'deduction'),
+                        // _itemBuilder("Tax Deducted", "\$0"),
+                        // _itemBuilder("Provident Fund", "\$0"),
+                        // _itemBuilder("Loan", "\$550"),
+                        // _itemBuilder("Total Deductions", "\$53935"),
                       ],
                     ),
                   ),
@@ -177,23 +258,51 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Widget _itemBuilder(label, textValue) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            textAlign: TextAlign.left,
-            style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+  Widget _itemBuilder(payslipDetail, sectionLable) {
+    final children = <Widget>[];
+    if (payslipDetail != null) {
+      for (var i = 0; i < payslipDetail.length; i++) {
+        children.add(new Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              sectionLable != 'deduction'
+                  ? Text(
+                      payslipDetail[i].earningDescrip,
+                      textAlign: TextAlign.left,
+                      style: new TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14),
+                    )
+                  : Text(
+                      payslipDetail[i].deductionDescrip,
+                      textAlign: TextAlign.left,
+                      style: new TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+              sectionLable != 'deduction'
+                  ? Text(
+                      payslipDetail[i].earningValues.toString(),
+                      textAlign: TextAlign.left,
+                      style: new TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14),
+                    )
+                  : Text(
+                      payslipDetail[i].deductionValues.toString(),
+                      textAlign: TextAlign.left,
+                      style: new TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+            ],
           ),
-          Text(
-            textValue,
-            style: new TextStyle(fontSize: 14),
-          ),
-        ],
-      ),
-    );
+        ));
+      }
+    } else {
+      children.add(Container());
+    }
+
+    return Expanded(
+        child:
+            SizedBox(height: 200.0, child: new ListView(children: children)));
   }
 }
