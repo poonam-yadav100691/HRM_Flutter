@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:HRMNew/src/screens/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -141,7 +142,10 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          // Future<String> token = getToken();
+          GetToken().getToken().then((value) {
+            _getRequests();
+          });
+
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

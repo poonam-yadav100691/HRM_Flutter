@@ -187,14 +187,16 @@ class _BodyState extends State<Body> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             RaisedButton(
-                child: Text("Submit"),
+                child: Text("Submit",style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
+                color: Colors.green,
                 onPressed: () {
                   if (_fbKey.currentState.saveAndValidate()) {
                     print(_fbKey.currentState.value);
                   }
                 }),
             RaisedButton(
-                child: Text("Reset"),
+                child: Text("Reset",style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
+                color: Colors.red,
                 onPressed: () {
                   _fbKey.currentState.reset();
                 })

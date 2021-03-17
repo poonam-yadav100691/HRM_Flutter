@@ -1,8 +1,12 @@
+
+
 import 'package:HRMNew/components/approvalAction.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/empReqDetailPODO.dart';
+import 'package:HRMNew/src/screens/home.dart';
+import 'package:HRMNew/utils/UIhelper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,12 +29,13 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
 
   List<RequestTitleObject> myReqTitleObj = new List();
-  List<ApprovedObject> approvedObject = new List();
+  List<ApprovedObject> approvedObject = [];
   List<RequestItemObject> requestItemObject = new List();
   bool isLoading = true;
 
   int totalDays;
 
+  String errortext;
   _BodyState(this.data);
 
   @override
@@ -89,9 +94,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       print("R2 : $jsonResponse");
       EmpReqDetails getLevReqDetails = new EmpReqDetails.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
-        myReqTitleObj = getLevReqDetails.requestTitleObject;
-        approvedObject = getLevReqDetails.approvedObject;
-        requestItemObject = getLevReqDetails.requestItemObject;
+        myReqTitleObj = getLevReqDetails.requestTitleObject??[];
+        approvedObject = getLevReqDetails.approvedObject??[];
+        requestItemObject = getLevReqDetails.requestItemObject??[];
 
         setState(() {
           isLoading = false;
@@ -110,6 +115,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       }
     });
   }
+
+  TextEditingController resoneController=TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -287,26 +294,143 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               child: Text('Requested For: ${requestItemObject[0].requestFor}'),
                             ),
 
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: TextFormField(
+                                decoration: new InputDecoration(
+                                  fillColor: Colors.white,
+                                  border:OutlineInputBorder(),
+                                  filled: true,
+                                  contentPadding: EdgeInsets.only(
+                                      bottom: 10.0, left: 10.0, right: 10.0),
+                                  // suffixIcon: Icon(Icons.keyboard_arrow_down),
+                                  labelText: 'Comment',
+                                  errorText: errortext,
+                                ),
+                                controller: resoneController,
+                                onChanged: (str){
+                                  setState(() {
+                                    errortext=null;
+                                  });
+                                },
+
+
+                              ),
+                            ),
 
                             Padding(padding: EdgeInsets.symmetric(vertical: 8,),
+
 
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                RaisedButton(onPressed:(){},
+                                RaisedButton(onPressed:() async{
+
+                                  if(resoneController.text!="") {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+
+                                    SharedPreferences sharedPreferences = await SharedPreferences
+                                        .getInstance();
+                                    String token = sharedPreferences.getString(
+                                        AppConstant.ACCESS_TOKEN);
+                                    final uri = Services.RejectLeave;
+                                    Map body = {
+                                      "TokenKey": token,
+                                      "lang": '2',
+                                      "requestID": myReqTitleObj[0].requestID,
+                                      "rejectDescription": resoneController
+                                          .text ?? " ",
+                                    };
+
+                                    print('$body');
+                                    http.post(uri, body: body).then((response) {
+                                      var jsonResponse = jsonDecode(
+                                          response.body);
+                                      // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+                                      if (jsonResponse["StatusCode"] == 200) {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+
+                                        print("j&&& $jsonResponse");
+                                        Navigator.pop(context);
+                                      } else {
+                                        print(
+                                            "ModelError: ${jsonResponse["ModelErrors"]}");
+                                        if (jsonResponse["ModelErrors"] ==
+                                            'Unauthorized') {
+                                          Future<String> token = GetToken()
+                                              .getToken();
+                                        } else {
+                                          // .showSnackBar(
+                                          //     currentState   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+                                        }
+                                      }
+                                    });
+                                  }else{
+                                    setState(() {
+                                      errortext="Please Enter Comment";
+                                    });
+                                  }
+
+                                },
                                   child: Text('Reject',style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
                                   color: Colors.red,
                                 ),
 
-                                RaisedButton(onPressed:(){},
+                                RaisedButton(onPressed:()async{
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+
+                                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                  String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+                                  final uri = Services.ApproveLeave;
+                                  Map body = {
+                                    "TokenKey": token,
+                                    "lang": '2',
+                                    "requestID": myReqTitleObj[0].requestID,
+                                    "rejectDescription":resoneController.text??" ",
+                                    "approveby": sharedPreferences.getString(AppConstant.EMP_ID),
+                                    "approvedescription":resoneController.text??" ",
+                                  };
+
+                                  print('$body');
+                                  http.post(uri, body: body).then((response) {
+                                    var jsonResponse = jsonDecode(response.body);
+                                    // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+                                    if (jsonResponse["StatusCode"] == 200) {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+
+                                      print("j&&& $jsonResponse");
+                                      Navigator.pop(context);
+
+
+
+                                    } else {
+                                      print("ModelError: ${jsonResponse["ModelErrors"]}");
+                                      if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+                                        Future<String> token = GetToken().getToken();
+                                      } else {
+                                        // .showSnackBar(
+                                        //     currentState   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+                                      }
+                                    }
+                                  });
+
+                                },
                                   child: Text('Approve',style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
                                   color: Colors.green,
                                 ),
 
                               ],
                             ),
-                            )
-
+                            ),
+                            isLoading?LinearProgressIndicator():Container(),
 
                           ],
                         ),
@@ -324,17 +448,31 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 70),
-                      child: planetCard(
-                          context,
-                          "Team Lead",
-                          "Remark here... text remark here..",
-                          '04/09/2020 10:30AM'),
+                      child: Column(
+                        children: getApproveObjects(),
+                      )
                     ),
                   ],
                 ),
               ),
             ),
     );
+  }
+
+
+  List<Widget> getApproveObjects(){
+    List<Widget> list=[];
+
+    if(approvedObject.isNotEmpty){
+      approvedObject.forEach((element) {
+        list.add( planetCard(
+            context,
+            element.approvedName,
+            element.comment ,
+            element.approvedDate));
+      });
+    }
+    return list;
   }
 
   List<Widget> getRequestedLeaves() {
@@ -539,7 +677,7 @@ Widget planetCard(BuildContext context, name, remark, date) {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Container(
-                              width: size.width * 0.65,
+                              width: size.width * 0.7,
                               padding: EdgeInsets.only(bottom: 5),
                               child: Row(
                                 mainAxisAlignment:
