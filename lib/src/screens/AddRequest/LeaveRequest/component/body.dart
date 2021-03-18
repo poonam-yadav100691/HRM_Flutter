@@ -732,7 +732,10 @@ DateTime returnDate;
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          GetToken().getToken();
+       
+           GetToken().getToken().then((value) {
+            getTypeOfLeave();
+          });
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -851,6 +854,9 @@ DateTime returnDate;
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+           GetToken().getToken().then((value) {
+           _placeRequests();
+          });
           // Future<String> token = getToken();
         } else {
           // currentState.showSnackBar(
@@ -911,7 +917,9 @@ DateTime returnDate;
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          getToken();
+           GetToken().getToken().then((value) {
+           getResponsiblePerson();
+          });
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

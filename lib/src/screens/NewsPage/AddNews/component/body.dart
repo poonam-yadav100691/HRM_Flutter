@@ -82,10 +82,9 @@ class _BodyState extends State<Body> {
         });
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          print("unauthro");
-          GetToken();
-          // _getNewsList();
-          // Future<String> token = getToken();
+          GetToken().getToken().then((value) {
+            addNews(body);
+          });
         } else {
           _scaffoldKey.currentState.showSnackBar(
               UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

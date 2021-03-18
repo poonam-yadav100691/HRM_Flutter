@@ -70,15 +70,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             myTaskPenList.add(myTaskAllList[i]);
           }
         }
-
-        print(myTaskPenList.toString());
-        print(myTaskCompList.toString());
-        print(myTaskAllList.toString());
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          setState(() {
-            isLoading = false;
+         
+           GetToken().getToken().then((value) {
+           _getTaskList();
           });
         } else {
           setState(() {

@@ -62,13 +62,12 @@ class _MyHomePageState extends State<MyHomePage> {
     _fabHeight = _initFabHeight;
   }
 
-  Future _register() async {
+  Future<void> _register() async {
     setState(() {
       isLoading = true;
     });
     sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
-    print("Token Access: $token");
     try {
       final uri = Services.GetPermissions;
       Map body = {
@@ -79,12 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
         if (response.statusCode == 200) {
           var jsonResponse = jsonDecode(response.body);
           if (jsonResponse["StatusCode"] == 200) {
-            // sharedPreferences.setString(
-            //     AppConstant.PERMISSIONS, jsonResponse['ResultObject']);
             final List parsed = jsonResponse['ResultObject'];
             List<Permission> _permissions =
                 new PermissionResponse.fromJson(parsed).list;
-            // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
             getLeaveCounts();
           } else {
             setState(() {
@@ -92,14 +88,15 @@ class _MyHomePageState extends State<MyHomePage> {
             });
             print("ModelError: ${jsonResponse["ModelErrors"]}");
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-              getToken();
+              GetToken().getToken().then((value) {
+                _register();
+              });
             } else {
               _scaffoldKey.currentState.showSnackBar(
                   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
             }
           }
         } else {
-          print("response.statusCode.." + response.statusCode.toString());
           _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
               "Something wnet wrong.. Please try again later."));
         }
@@ -117,8 +114,6 @@ class _MyHomePageState extends State<MyHomePage> {
         String username = sharedPreferences.getString(AppConstant.LoginGmailID);
         String password = sharedPreferences.getString(AppConstant.PASSWORD);
         String urname = sharedPreferences.getString(AppConstant.USERNAME);
-        print("username---2 : $username");
-        print("urname---2 : $urname");
 
         try {
           final uri = Services.LOGIN;
@@ -181,9 +176,6 @@ class _MyHomePageState extends State<MyHomePage> {
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.LeaveBalance;
 
-    setState(() {
-      isLoading = true;
-    });
     Map body = {"Tokenkey": token, "lang": '2'};
     http.post(uri, body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
@@ -191,12 +183,6 @@ class _MyHomePageState extends State<MyHomePage> {
       GetBalance balance = new GetBalance.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
         balanceList = balance.resultObject;
-
-        // for (int i = 0; i < balanceList.length; i++) {
-        //   leaveTypeList.add(balanceList[i]);
-        // }
-        // });
-        print(balanceList.toString());
         setState(() {
           isLoading = false;
           username = sharedPreferences.getString(AppConstant.USERNAME);
@@ -206,7 +192,9 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          // Future<String> token = getToken();
+          GetToken().getToken().then((value) {
+            getLeaveCounts();
+          });
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -216,6 +204,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _changeLanguage(Language language) async {
+    print(language.languageCode);
+
     Locale _locale = await setLocale(language.languageCode);
     MyApp.setLocale(context, _locale);
   }
@@ -382,7 +372,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(username??"",
+                          Text(username ?? "",
                               style: TextStyle(
                                   fontSize: 16.0, fontWeight: FontWeight.bold)),
                           Padding(padding: EdgeInsets.only(top: 6)),
@@ -429,19 +419,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 _cardList(
                     "PROFILE",
                     "lib/assets/images/viewProfile.png",
-                    "View your profile details",
+                    "Viewyourprofiledetails",
                     Icons.arrow_forward_ios,
                     accountRoute),
                 _cardList(
                     "FY 2020 Holiday Sheet",
                     "lib/assets/images/vector-holiday.jpg",
-                    "Get holidays list of this finalcial year",
+                    "GetHolidayslistofthisfinancialyear",
                     Icons.arrow_forward_ios,
                     calendarViewRoute),
                 _cardList(
                     "NOTES / RULES",
                     "lib/assets/images/rules.png",
-                    "Get list of all notes/rule of company",
+                    "Getlistofallnotes/ruleofcompany",
                     Icons.arrow_forward_ios,
                     rulesRoute),
               ],
@@ -482,8 +472,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   size: 15,
                 ),
                 title: Text(title),
-                subtitle: Text(subtitle,
-                    style: TextStyle(color: Color(0xFF797777), fontSize: 12.0)),
+                subtitle: getTranslated(context, subtitle) != null
+                    ? Text(getTranslated(context, subtitle),
+                        style:
+                            TextStyle(color: Color(0xFF797777), fontSize: 12.0))
+                    : Container(),
               ),
             ],
           ),
@@ -552,10 +545,13 @@ class _MyHomePageState extends State<MyHomePage> {
               countTxt == null
                   ? Padding(padding: EdgeInsets.only(bottom: 10))
                   : Padding(padding: EdgeInsets.only(bottom: 3)),
-              Text(
-                title,
-                style: TextStyle(fontSize: 13, color: Colors.grey),
-              ),
+              getTranslated(context, title) != null
+                  ? Text(
+                      // title,
+                      getTranslated(context, title),
+                      style: TextStyle(fontSize: 13, color: Colors.grey),
+                    )
+                  : Container(),
               Padding(padding: EdgeInsets.only(top: 5))
             ]),
       ),
@@ -647,11 +643,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     notificationRoute, '20'),
                 _homeGrid(
                     "Tasks", "lib/assets/images/task.png", taskRoute, '3'),
-                _homeGrid("Emp Request", "lib/assets/images/empReuest.png",
+                _homeGrid("EmpRequest", "lib/assets/images/empReuest.png",
                     empRequestRoute, '2'),
                 _homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
                     delegateRoute, '6'),
-                _homeGrid("My Request", "lib/assets/images/images.png",
+                _homeGrid("MyRequest", "lib/assets/images/images.png",
                     myRequestRoute, '4'),
                 _homeGrid("Attendance", "lib/assets/images/attendance.png",
                     attendanceRoute, null),
@@ -661,7 +657,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     insuranceRoute, null),
                 _homeGrid("Payslip", "lib/assets/images/payslip.png",
                     payslipRoute, null),
-                _homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
+                _homeGrid("Holidays", "lib/assets/images/holiday-icon.png",
                     calendarViewRoute, null),
                 // _homeGrid(
                 //     "Check-In", "lib/assets/images/XSgklyxE.jpg", '', null),

@@ -104,16 +104,11 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
   }
 
   Future<void> _getEmpRequests() async {
-    // setState(() {
-    //   isLoading = true;
-    // });
     empRequestList.clear();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.EmpRequest;
     Map body = {"Tokenkey": token, "lang": '2'};
-        print("j&&&body: $body");
-        print("uri::: $uri");
     http.post(uri, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       EmpRequestList myRequest = new EmpRequestList.fromJson(jsonResponse);
@@ -129,15 +124,13 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
         setState(() {
           isLoading = false;
         });
-        // print("DDDDDDDDDDDDDDDDDDDDD--->>>${empRequestList.toString()}");
-        // print("FFFFFFFFFFFFFFFFFFFFF--->>>>${empLeaveReqList.toString()}");
-        // print("CCCCCCCCCCCCCCCCCCCCF--->>>>${empOtReqList.toString()}");
       } else {
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           print("ModelError: ${jsonResponse["ModelErrors"]}");
-          await GetToken().getToken();
-          print("token new token:: $token");
-          _getEmpRequests();
+           GetToken().getToken().then((value) {
+           _getEmpRequests();
+          });
+          
           // Future<String> token = getToken();
         } else {
              setState(() {

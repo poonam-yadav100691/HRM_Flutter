@@ -10,6 +10,7 @@ import 'package:HRMNew/src/constants/select_single_item_dialog.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetLeaveType.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetResponsiblePerson.dart';
 import 'package:HRMNew/src/screens/Login/PODO/loginResponse.dart';
+import 'package:HRMNew/src/screens/home.dart';
 import 'package:HRMNew/utils/UIhelper.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -484,7 +485,9 @@ class _BodyState extends State<Body> {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          Future<String> token = getToken();
+          GetToken().getToken().then((value) {
+            getTypeOfLeave();
+          });
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -591,7 +594,9 @@ class _BodyState extends State<Body> {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          getToken();
+          GetToken().getToken().then((value) {
+            getResponsiblePerson();
+          });
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

@@ -45,13 +45,13 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   @override
   void initState() {
     _focusNode.addListener(_focusListener);
-    _getInsurHeader();
+    _getLoanHeader();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     super.initState();
   }
 
-  Future<void> _getInsurHeader() async {
+  Future<void> _getLoanHeader() async {
     loanHeader.clear();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
@@ -69,8 +69,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           print("ModelError: ${jsonResponse["ModelErrors"]}");
-          await GetToken().getToken();
-          _getInsurHeader();
+         GetToken().getToken().then((value) {
+           _getLoanHeader();
+          });
+         
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -87,10 +89,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     Map body = {"Tokenkey": token, "loanID": id, "lang": '2'};
-    print(body);
-
+    
     final uri1 = Services.LoanDetail;
-    print(uri1);
     http.post(uri1, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       LoanDetails loanDetailsLst = new LoanDetails.fromJson(jsonResponse);
@@ -111,8 +111,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         });
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           print("ModelError: ${jsonResponse["ModelErrors"]}");
-          await GetToken().getToken();
-          _getInsurHeader();
+         GetToken().getToken().then((value) {
+           _getLoanDetails(id);
+          });
+         
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

@@ -71,8 +71,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           } else {
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
               print("ModelError: ${jsonResponse["ModelErrors"]}");
-              await GetToken().getToken();
-              _getInsurHeader();
+             GetToken().getToken().then((value) {
+           _getInsurHeader();
+          });
+              
             } else {
               // currentState.showSnackBar(
               //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -82,8 +84,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           print("ModelError: ${jsonResponse["ModelErrors"]}");
-          await GetToken().getToken();
-          _getInsurHeader();
+         GetToken().getToken().then((value) {
+           _getInsurHeader();
+          });
+          
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
