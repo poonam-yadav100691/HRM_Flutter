@@ -1,4 +1,4 @@
-class loginResponse {
+class LoginResponse {
   String tokenKey;
   int userId;
   String emp_no;
@@ -11,7 +11,7 @@ class loginResponse {
   String emp_dep;
   String emp_company;
 
-  loginResponse(
+  LoginResponse(
       {this.tokenKey,
       this.userId,
       this.emp_no,
@@ -24,7 +24,7 @@ class loginResponse {
       this.emp_dep,
       this.emp_company});
 
-  loginResponse.fromJson(Map<String, dynamic> json) {
+  LoginResponse.fromJson(Map<String, dynamic> json) {
     tokenKey = json['TokenKey'];
     userId = json['UserId'];
     emp_no = json['emp_no'];

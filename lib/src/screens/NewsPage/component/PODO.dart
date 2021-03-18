@@ -45,6 +45,7 @@ class ResultObject {
   String filePath;
   String newAttachedfile;
   String expDate;
+  int createBy;
 
   ResultObject(
       {this.newsID,
@@ -52,7 +53,8 @@ class ResultObject {
       this.newContent,
       this.filePath,
       this.newAttachedfile,
-      this.expDate});
+      this.expDate,
+      this.createBy});
 
   ResultObject.fromJson(Map<String, dynamic> json) {
     newsID = json['newsID'];
@@ -61,6 +63,7 @@ class ResultObject {
     filePath = json['file_path'];
     newAttachedfile = json['newAttachedfile'];
     expDate = json['expDate'];
+    createBy = json['createBy'];
   }
 
   Map<String, dynamic> toJson() {
@@ -71,6 +74,7 @@ class ResultObject {
     data['file_path'] = this.filePath;
     data['newAttachedfile'] = this.newAttachedfile;
     data['expDate'] = this.expDate;
+    data['createBy'] = this.createBy;
     return data;
   }
 }

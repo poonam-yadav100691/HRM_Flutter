@@ -53,7 +53,7 @@ class CustomRouter {
         return MaterialPageRoute(builder: (_) => AddRequest());
       case loginRoute:
         return MaterialPageRoute(builder: (_) => Login());
-      case notificationRoute:
+      case newsList:
         return MaterialPageRoute(builder: (_) => NewsPage());
       case delegateRoute:
         return MaterialPageRoute(builder: (_) => Delegate());
@@ -72,7 +72,7 @@ class CustomRouter {
       case empLeaveRequestRoute:
         return MaterialPageRoute(builder: (_) => EmpOTRequest());
       case requestDetailsRoute:
-        return MaterialPageRoute(builder: (_) =>      RequestDetails());
+        return MaterialPageRoute(builder: (_) => RequestDetails());
       case calendarViewRoute:
         return MaterialPageRoute(builder: (_) => CalendarView());
 

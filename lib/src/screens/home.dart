@@ -68,6 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    // print(
+    //     "UserID==----${sharedPreferences.getString(AppConstant.USER_ID.toString())}");
     try {
       final uri = Services.GetPermissions;
       Map body = {
@@ -107,68 +109,68 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> getToken() async {
-    Network().check().then((intenet) async {
-      if (intenet != null && intenet) {
-        sharedPreferences = await SharedPreferences.getInstance();
-        String username = sharedPreferences.getString(AppConstant.LoginGmailID);
-        String password = sharedPreferences.getString(AppConstant.PASSWORD);
-        String urname = sharedPreferences.getString(AppConstant.USERNAME);
+  // Future<void> getToken() async {
+  //   Network().check().then((intenet) async {
+  //     if (intenet != null && intenet) {
+  //       sharedPreferences = await SharedPreferences.getInstance();
+  //       String username = sharedPreferences.getString(AppConstant.LoginGmailID);
+  //       String password = sharedPreferences.getString(AppConstant.PASSWORD);
+  //       String urname = sharedPreferences.getString(AppConstant.USERNAME);
 
-        try {
-          final uri = Services.LOGIN;
-          Map body = {
-            "PassKey": "a486f489-76c0-4c49-8ff0-d0fdec0a162b",
-            "UserName": username,
-            "UserPassword": password
-          };
+  //       try {
+  //         final uri = Services.LOGIN;
+  //         Map body = {
+  //           "PassKey": "a486f489-76c0-4c49-8ff0-d0fdec0a162b",
+  //           "UserName": username,
+  //           "UserPassword": password
+  //         };
 
-          http.post(uri, body: body).then((response) {
-            if (response.statusCode == 200) {
-              var jsonResponse = jsonDecode(response.body);
-              print("Reponse---2 : $jsonResponse");
-              if (jsonResponse["StatusCode"] == 200) {
-                loginResponse login =
-                    new loginResponse.fromJson(jsonResponse["ResultObject"][0]);
+  //         http.post(uri, body: body).then((response) {
+  //           if (response.statusCode == 200) {
+  //             var jsonResponse = jsonDecode(response.body);
+  //             print("Reponse---2 : $jsonResponse");
+  //             if (jsonResponse["StatusCode"] == 200) {
+  //               loginResponse login =
+  //                   new loginResponse.fromJson(jsonResponse["ResultObject"][0]);
 
-                sharedPreferences.setInt(
-                    AppConstant.USER_ID.toString(), login.userId);
-                sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
-                sharedPreferences.setString(
-                    AppConstant.ACCESS_TOKEN, login.tokenKey);
-                sharedPreferences.setString(
-                    AppConstant.USERNAME, login.eng_fullname);
-                sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);
-                sharedPreferences.setString(
-                    AppConstant.PHONENO, login.emp_mobile);
-                sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
-                sharedPreferences.setString(
-                    AppConstant.DEPARTMENT, login.emp_dep);
-                sharedPreferences.setString(
-                    AppConstant.COMPANY, login.emp_company);
-                _register();
-              } else {
-                _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
-                    "Something wnet wrong.. Please try again later."));
-              }
-            } else {
-              print("response.statusCode.." + response.statusCode.toString());
+  //               sharedPreferences.setInt(
+  //                   AppConstant.USER_ID.toString(), login.userId);
+  //               sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
+  //               sharedPreferences.setString(
+  //                   AppConstant.ACCESS_TOKEN, login.tokenKey);
+  //               sharedPreferences.setString(
+  //                   AppConstant.USERNAME, login.eng_fullname);
+  //               sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);
+  //               sharedPreferences.setString(
+  //                   AppConstant.PHONENO, login.emp_mobile);
+  //               sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
+  //               sharedPreferences.setString(
+  //                   AppConstant.DEPARTMENT, login.emp_dep);
+  //               sharedPreferences.setString(
+  //                   AppConstant.COMPANY, login.emp_company);
+  //               _register();
+  //             } else {
+  //               _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
+  //                   "Something wnet wrong.. Please try again later."));
+  //             }
+  //           } else {
+  //             print("response.statusCode.." + response.statusCode.toString());
 
-              _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
-                  "Something wnet wrong.. Please try again later."));
-            }
-          });
-        } catch (e) {
-          print("Error: $e");
-          return (e);
-        }
-      } else {
-        Navigator.pop(context);
-        Toast.show("Please check internet connection", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      }
-    });
-  }
+  //             _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
+  //                 "Something wnet wrong.. Please try again later."));
+  //           }
+  //         });
+  //       } catch (e) {
+  //         print("Error: $e");
+  //         return (e);
+  //       }
+  //     } else {
+  //       Navigator.pop(context);
+  //       Toast.show("Please check internet connection", context,
+  //           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+  //     }
+  //   });
+  // }
 
   Future<void> getLeaveCounts() async {
     balanceList.clear();
@@ -639,8 +641,8 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisSpacing: 15,
               crossAxisCount: 3,
               children: <Widget>[
-                _homeGrid("News", "lib/assets/images/news12.jpg",
-                    notificationRoute, '20'),
+                _homeGrid(
+                    "News", "lib/assets/images/news12.jpg", newsList, '20'),
                 _homeGrid(
                     "Tasks", "lib/assets/images/task.png", taskRoute, '3'),
                 _homeGrid("EmpRequest", "lib/assets/images/empReuest.png",
@@ -678,8 +680,7 @@ class GetToken {
         sharedPreferences = await SharedPreferences.getInstance();
         String username = sharedPreferences.getString(AppConstant.LoginGmailID);
         String password = sharedPreferences.getString(AppConstant.PASSWORD);
-        String urname = sharedPreferences.getString(AppConstant.USERNAME);
-
+      
         print("Here--In Token-----$username");
         try {
           final uri = Services.LOGIN;
@@ -695,12 +696,12 @@ class GetToken {
               var jsonResponse = jsonDecode(response.body);
               print("Here--In Token-----$jsonResponse");
               if (jsonResponse["StatusCode"] == 200) {
-                loginResponse login =
-                    new loginResponse.fromJson(jsonResponse["ResultObject"][0]);
+                LoginResponse login =
+                    new LoginResponse.fromJson(jsonResponse["ResultObject"][0]);
 
                 sharedPreferences.setInt(
                     AppConstant.USER_ID.toString(), login.userId);
-                sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
+                // sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
                 sharedPreferences.setString(
                     AppConstant.ACCESS_TOKEN, login.tokenKey);
                 print("New token : ${login.tokenKey}");
