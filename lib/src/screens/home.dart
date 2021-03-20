@@ -25,6 +25,22 @@ import 'dart:typed_data';
 
 import 'package:toast/toast.dart';
 
+
+List<Permission> listOfPermission=[];
+
+
+Permission getPermissionObject(String type){
+  Permission _permission;
+  listOfPermission.forEach((element) {
+    if(element.app_permissionName==type)
+    {
+      _permission= element;
+    }
+  });
+
+  return _permission;
+}
+
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -59,13 +75,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _register();
+
     _fabHeight = _initFabHeight;
   }
 
   Future _register() async {
-    setState(() {
-      isLoading = true;
-    });
     sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     print("Token Access: $token");
@@ -77,14 +91,32 @@ class _MyHomePageState extends State<MyHomePage> {
 
       http.post(uri, body: body).then((response) {
         if (response.statusCode == 200) {
+
+          print('response body'+response.body);
           var jsonResponse = jsonDecode(response.body);
           if (jsonResponse["StatusCode"] == 200) {
             // sharedPreferences.setString(
             //     AppConstant.PERMISSIONS, jsonResponse['ResultObject']);
             final List parsed = jsonResponse['ResultObject'];
-            List<Permission> _permissions =
-                new PermissionResponse.fromJson(parsed).list;
-            // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
+
+
+
+            List<Permission> _permissions =[];
+
+            parsed.forEach((element) {
+              _permissions.add(
+                  Permission.fromJson(element)
+              );
+            });
+
+
+            setState(() {
+              listOfPermission=_permissions;
+            });
+
+             // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0]}");
+
+            // getPermission();
             getLeaveCounts();
           } else {
             setState(() {
@@ -109,6 +141,57 @@ class _MyHomePageState extends State<MyHomePage> {
       return (e);
     }
   }
+
+
+  //  getPermission()  async{
+  //    setState(() {
+  //      isLoading = true;
+  //    });
+  //    sharedPreferences = await SharedPreferences.getInstance();
+  //    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+  //    print("Token Access: $token");
+  //    try {
+  //      final uri = Services.GetPermissions;
+  //      Map body = {
+  //        "Tokenkey": token,
+  //      };
+  //
+  //      http.post(uri, body: body).then((response) {
+  //        if (response.statusCode == 200) {
+  //          var jsonResponse = jsonDecode(response.body);
+  //          if (jsonResponse["StatusCode"] == 200) {
+  //            // sharedPreferences.setString(
+  //            //     AppConstant.PERMISSIONS, jsonResponse['ResultObject']);
+  //            final List parsed = jsonResponse['ResultObject'];
+  //            List<Permission> _permissions =
+  //                new PermissionResponse.fromJson(parsed).list;
+  //            // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
+  //
+  //            getPermission();
+  //            getLeaveCounts();
+  //          } else {
+  //            setState(() {
+  //              isLoading = false;
+  //            });
+  //            print("ModelError: ${jsonResponse["ModelErrors"]}");
+  //            if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+  //              getToken();
+  //            } else {
+  //              _scaffoldKey.currentState.showSnackBar(
+  //                  UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+  //            }
+  //          }
+  //        } else {
+  //          print("response.statusCode.." + response.statusCode.toString());
+  //          _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
+  //              "Something wnet wrong.. Please try again later."));
+  //        }
+  //      });
+  //    } catch (e) {
+  //      print("Error: $e");
+  //      return (e);
+  //    }
+  // }
 
   Future<void> getToken() async {
     Network().check().then((intenet) async {
@@ -606,7 +689,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _body() {
-    print("in body---");
+
     Size size = MediaQuery.of(context).size;
     return Container(
       color: leaveCardcolor,
@@ -634,45 +717,110 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         SingleChildScrollView(
-          child: Container(
-            height: size.height * 0.67,
-            child: GridView.count(
-              primary: false,
-              padding: const EdgeInsets.all(10),
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-              crossAxisCount: 3,
-              children: <Widget>[
-                _homeGrid("News", "lib/assets/images/news12.jpg",
-                    notificationRoute, '20'),
-                _homeGrid(
-                    "Tasks", "lib/assets/images/task.png", taskRoute, '3'),
-                _homeGrid("Emp Request", "lib/assets/images/empReuest.png",
-                    empRequestRoute, '2'),
-                _homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
-                    delegateRoute, '6'),
-                _homeGrid("My Request", "lib/assets/images/images.png",
-                    myRequestRoute, '4'),
-                _homeGrid("Attendance", "lib/assets/images/attendance.png",
-                    attendanceRoute, null),
-                _homeGrid(
-                    "Loans", "lib/assets/images/loan.png", loansRoute, null),
-                _homeGrid("Insurance", "lib/assets/images/insurance.png",
-                    insuranceRoute, null),
-                _homeGrid("Payslip", "lib/assets/images/payslip.png",
-                    payslipRoute, null),
-                _homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
-                    calendarViewRoute, null),
-                // _homeGrid(
-                //     "Check-In", "lib/assets/images/XSgklyxE.jpg", '', null),
-              ],
+          child: Scrollbar(
+            thickness: 2,
+            isAlwaysShown: true,
+            controller: ScrollController(),
+            child: Container(
+              height: size.height * 0.62,
+              child: GridView.count(
+                primary: false,
+                padding: const EdgeInsets.all(10),
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                crossAxisCount: 3,
+                children: getChilderns(),
+              ),
             ),
           ),
         ),
       ]),
     );
   }
+
+
+  List<Widget>  getChilderns(){
+
+    List<Widget> list=[];
+    if(getPermissionObject('News')?.app_view=='1')
+ {
+   list.add(_homeGrid("News", "lib/assets/images/news12.jpg",
+       notificationRoute, getPermissionObject('News')?.CountItem??'0'));
+ }
+
+    if(getPermissionObject('Task')?.app_view=='1')  {
+      list.add(_homeGrid(
+          "Tasks", "lib/assets/images/task.png", taskRoute, getPermissionObject('Task')?.CountItem??'0'));
+    }
+
+
+
+    if(getPermissionObject('Emp Request')?.app_view=="1"){
+
+      list.add(_homeGrid("Emp Request", "lib/assets/images/empReuest.png",
+          empRequestRoute, getPermissionObject('Emp Request')?.CountItem??'0'));
+    }
+
+
+    if(getPermissionObject('Delegates')?.app_view=="1"){
+    list.add(_homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
+        delegateRoute, getPermissionObject('Delegates')?.CountItem??'0')
+    );
+    }
+
+
+
+    if(getPermissionObject('My Request')?.app_view=="1"){
+      list.add(_homeGrid("My Request", "lib/assets/images/images.png",
+          myRequestRoute, getPermissionObject('My Request')?.CountItem??'0'));
+    }
+
+
+    if(getPermissionObject('Attendance')?.app_view=="1") {
+     list.add( _homeGrid("Attendance", "lib/assets/images/attendance.png",
+          attendanceRoute, null));
+    }
+
+
+    if(getPermissionObject('Loans')?.app_view=="1")
+    {
+      list.add(_homeGrid(
+          "Loans", "lib/assets/images/loan.png", loansRoute, null));
+    }
+
+
+    if(getPermissionObject('Insurance')?.app_view=="1")
+    {
+      list.add(_homeGrid("Insurance", "lib/assets/images/insurance.png",
+          insuranceRoute, null));
+    }
+
+
+    list.add(
+    _homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
+    calendarViewRoute, null));
+
+
+    return list;
+
+  }
+
+
 }
+
+
+// Permission getPermissionObject(String type){
+// Permission _permission;
+//   listOfPermission.forEach((element) {
+//     if(element.app_permissionName==type)
+//       {
+//         _permission= element;
+//       }
+//   });
+//
+//   return _permission;
+// }
+
 
 class GetToken {
   SharedPreferences sharedPreferences;

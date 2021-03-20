@@ -1,6 +1,7 @@
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:HRMNew/src/screens/Delegates/component/body.dart';
 
@@ -15,7 +16,7 @@ class Delegate extends StatelessWidget {
         backgroundColor: leaveCardcolor,
       ),
       body: Body(),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: getPermissionObject('Delegates').app_add=="1"?FloatingActionButton.extended(
         onPressed: () {
           Navigator.pushNamed(context, addDelegateRoute);
           // Add your onPressed code here!
@@ -26,7 +27,7 @@ class Delegate extends StatelessWidget {
           Icons.add,
         ),
         backgroundColor: Colors.pink,
-      ),
+      ):null,
     );
   }
 }

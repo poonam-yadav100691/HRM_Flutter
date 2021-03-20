@@ -294,7 +294,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               child: Text('Requested For: ${requestItemObject[0].requestFor}'),
                             ),
 
-                            Container(
+                            getPermissionObject('Emp Request').app_action=="1"?   Container(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: TextFormField(
                                 decoration: new InputDecoration(
@@ -316,9 +316,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
 
                               ),
-                            ),
+                            ):Container(),
 
-                            Padding(padding: EdgeInsets.symmetric(vertical: 8,),
+                            getPermissionObject('Emp Request').app_action=="1"? Padding(padding: EdgeInsets.symmetric(vertical: 8,),
 
 
                             child: Row(
@@ -429,7 +429,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
                               ],
                             ),
-                            ),
+                            ):Container(),
                             isLoading?LinearProgressIndicator():Container(),
 
                           ],
