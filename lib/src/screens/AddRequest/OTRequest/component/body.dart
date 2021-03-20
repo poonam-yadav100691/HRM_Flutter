@@ -6,6 +6,7 @@ import 'package:HRMNew/components/MyCustomTextField.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:HRMNew/src/screens/home.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,29 +43,28 @@ class _BodyState extends State<Body> {
     super.dispose();
   }
 
+  TextEditingController reasonController = TextEditingController();
+  TextEditingController subjectController = TextEditingController();
+  TextEditingController managerController = TextEditingController();
 
-  TextEditingController reasonController=TextEditingController();
-  TextEditingController subjectController=TextEditingController();
-  TextEditingController managerController=TextEditingController();
+  String date, startFrom, endOn;
 
-  String date,startFrom,endOn;
-
-  ValueChanged _onDateTimeChanged  (val) {
-    date=val.toString();
-  }
-  ValueChanged _onstrDateChanged  (val) {
-    startFrom=val.toString();
+  ValueChanged _onDateTimeChanged(val) {
+    date = val.toString();
   }
 
-  ValueChanged _onendDateChanged  (val) {
-    endOn=val.toString();
+  ValueChanged _onstrDateChanged(val) {
+    startFrom = val.toString();
   }
 
-  DateTime selecteddate=DateTime.now();
-  bool dateSelectedselect=false;
+  ValueChanged _onendDateChanged(val) {
+    endOn = val.toString();
+  }
+
+  DateTime selecteddate = DateTime.now();
+  bool dateSelectedselect = false;
   String selectedenddateTime = '${DateTime.now().add(Duration(minutes: 40))}';
   String selectedstartdateTime = '${DateTime.now().add(Duration(minutes: 40))}';
-
 
   bool isLoading = true;
   @override
@@ -85,19 +85,18 @@ class _BodyState extends State<Body> {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
-
                           GestureDetector(
-                            onTap: () async{
+                            onTap: () async {
                               final DateTime pickedDate = await showDatePicker(
                                   context: context,
                                   initialDate: DateTime.now(),
                                   firstDate: DateTime.now(),
-                                  lastDate: DateTime(DateTime.now().year+1));
-                              if (pickedDate != null && pickedDate != selecteddate)
+                                  lastDate: DateTime(DateTime.now().year + 1));
+                              if (pickedDate != null &&
+                                  pickedDate != selecteddate)
                                 setState(() {
                                   selecteddate = pickedDate;
-                                  dateSelectedselect=true;
-
+                                  dateSelectedselect = true;
                                 });
                             },
                             child: Container(
@@ -108,14 +107,13 @@ class _BodyState extends State<Body> {
                                     border: Border.all(
                                       color: Colors.grey,
                                     ),
-
                                     shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.all(Radius.circular(8))
-
-                                ),
-                                child: Text(dateSelectedselect?'Selected OT Date : $selecteddate':'Select OT Date ')),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
+                                child: Text(dateSelectedselect
+                                    ? 'Selected OT Date : $selecteddate'
+                                    : 'Select OT Date ')),
                           ),
-
 
                           Container(
                             child: Padding(
@@ -126,20 +124,19 @@ class _BodyState extends State<Body> {
                                   type: DateTimePickerType.dateTime,
                                   use24HourFormat: false,
                                   decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
+                                      border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.calendar_today),
                                       labelText: 'OT Start From'),
                                   initialValue:
-                                  '${DateTime.now().add(Duration(minutes: 40))}',
-                                  firstDate: DateTime.now()
-                                      .add(Duration(minutes: 40)),
+                                      '${DateTime.now().add(Duration(minutes: 40))}',
+                                  firstDate:
+                                      DateTime.now().add(Duration(minutes: 40)),
                                   lastDate:
-                                  DateTime.now().add(Duration(days: 8)),
+                                      DateTime.now().add(Duration(days: 8)),
                                   dateLabelText: ' OT Start From',
                                   style: Theme.of(context).textTheme.caption,
                                   onChanged: (val) {
-                                        selectedstartdateTime = val;
-
+                                    selectedstartdateTime = val;
                                   },
                                   validator: (val) {
                                     print(val);
@@ -190,16 +187,15 @@ class _BodyState extends State<Body> {
                                       prefixIcon: Icon(Icons.calendar_today),
                                       labelText: 'OT Ends On'),
                                   initialValue:
-                                  '${DateTime.now().add(Duration(minutes: 40))}',
-                                  firstDate: DateTime.now()
-                                      .add(Duration(minutes: 40)),
+                                      '${DateTime.now().add(Duration(minutes: 40))}',
+                                  firstDate:
+                                      DateTime.now().add(Duration(minutes: 40)),
                                   lastDate:
-                                  DateTime.now().add(Duration(days: 8)),
+                                      DateTime.now().add(Duration(days: 8)),
                                   dateLabelText: 'OT Ends On',
                                   style: Theme.of(context).textTheme.caption,
                                   onChanged: (val) {
                                     selectedenddateTime = val;
-
                                   },
                                   validator: (val) {
                                     print(val);
@@ -237,8 +233,6 @@ class _BodyState extends State<Body> {
                           //   ),
                           // ),
 
-
-
                           Container(
                             padding: const EdgeInsets.all(9),
                             child: TextFormField(
@@ -246,15 +240,15 @@ class _BodyState extends State<Body> {
                                 fillColor: Colors.white,
                                 border: _focusNode.hasFocus
                                     ? OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(5.0)),
-                                    borderSide:
-                                    BorderSide(color: leaveCardcolor))
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)),
+                                        borderSide:
+                                            BorderSide(color: leaveCardcolor))
                                     : OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(5.0)),
-                                    borderSide:
-                                    BorderSide(color: Colors.grey)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)),
+                                        borderSide:
+                                            BorderSide(color: Colors.grey)),
                                 filled: true,
                                 contentPadding: EdgeInsets.only(
                                     bottom: 10.0, left: 10.0, right: 10.0),
@@ -269,7 +263,6 @@ class _BodyState extends State<Body> {
                                   return null;
                                 }
                               },
-
                             ),
                           ),
                           Container(
@@ -279,15 +272,15 @@ class _BodyState extends State<Body> {
                                 fillColor: Colors.white,
                                 border: _focusNode.hasFocus
                                     ? OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(5.0)),
-                                    borderSide:
-                                    BorderSide(color: leaveCardcolor))
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)),
+                                        borderSide:
+                                            BorderSide(color: leaveCardcolor))
                                     : OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(5.0)),
-                                    borderSide:
-                                    BorderSide(color: Colors.grey)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)),
+                                        borderSide:
+                                            BorderSide(color: Colors.grey)),
                                 filled: true,
                                 contentPadding: EdgeInsets.only(
                                     bottom: 10.0, left: 10.0, right: 10.0),
@@ -302,42 +295,40 @@ class _BodyState extends State<Body> {
                                   return null;
                                 }
                               },
-
                             ),
                           ),
-              Container(
-                padding: const EdgeInsets.all(9),
-                child: TextFormField(
-                  decoration: new InputDecoration(
-                    fillColor: Colors.white,
-                    border: _focusNode.hasFocus
-                        ? OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(5.0)),
-                        borderSide:
-                        BorderSide(color: leaveCardcolor))
-                        : OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(5.0)),
-                        borderSide:
-                        BorderSide(color: Colors.grey)),
-                    filled: true,
-                    contentPadding: EdgeInsets.only(
-                        bottom: 10.0, left: 10.0, right: 10.0),
-                    // suffixIcon: Icon(Icons.keyboard_arrow_down),
-                    labelText: 'Reason',
-                  ),
-                  controller: reasonController,
-                  validator: (String value) {
-                    if (value.isEmpty) {
-                      return 'Please Enter Reason';
-                    } else {
-                      return null;
-                    }
-                  },
-
-                ),
-              ),
+                          Container(
+                            padding: const EdgeInsets.all(9),
+                            child: TextFormField(
+                              decoration: new InputDecoration(
+                                fillColor: Colors.white,
+                                border: _focusNode.hasFocus
+                                    ? OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)),
+                                        borderSide:
+                                            BorderSide(color: leaveCardcolor))
+                                    : OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0)),
+                                        borderSide:
+                                            BorderSide(color: Colors.grey)),
+                                filled: true,
+                                contentPadding: EdgeInsets.only(
+                                    bottom: 10.0, left: 10.0, right: 10.0),
+                                // suffixIcon: Icon(Icons.keyboard_arrow_down),
+                                labelText: 'Reason',
+                              ),
+                              controller: reasonController,
+                              validator: (String value) {
+                                if (value.isEmpty) {
+                                  return 'Please Enter Reason';
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                          ),
                           // MyCustomFileUpload(),
                         ],
                       ),
@@ -352,7 +343,7 @@ class _BodyState extends State<Body> {
                             "Send",
                             style: TextStyle(fontSize: 20),
                           ),
-                          onPressed: () async{
+                          onPressed: () async {
                             if (_fbKey.currentState.saveAndValidate()) {
                               print(_fbKey.currentState.value);
 
@@ -360,11 +351,13 @@ class _BodyState extends State<Body> {
                                 isLoading = true;
                               });
 
-                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                              String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
-                              String id = sharedPreferences.getString(AppConstant.EMP_ID);
+                              SharedPreferences sharedPreferences =
+                                  await SharedPreferences.getInstance();
+                              String token = sharedPreferences
+                                  .getString(AppConstant.ACCESS_TOKEN);
+                              String id = sharedPreferences
+                                  .getString(AppConstant.EMP_ID);
                               final uri = Services.AddNewOT;
-
 
                               Map body = {
                                 "TokenKey": token,
@@ -378,7 +371,6 @@ class _BodyState extends State<Body> {
                                 "empId": id,
                               };
 
-
                               print(body);
 
                               http.post(uri, body: body).then((response) {
@@ -391,12 +383,12 @@ class _BodyState extends State<Body> {
 
                                   print("j&&& $jsonResponse");
                                   Navigator.pop(context);
-
-
-
                                 } else {
-                                  print("ModelError: ${jsonResponse["ModelErrors"]}");
-                                  if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+                                  print(
+                                      "ModelError: ${jsonResponse["ModelErrors"]}");
+                                  if (jsonResponse["ModelErrors"] ==
+                                      'Unauthorized') {
+                                    GetToken().getToken().then((value) {});
                                     // Future<String> token = getToken();
                                   } else {
                                     // currentState.showSnackBar(

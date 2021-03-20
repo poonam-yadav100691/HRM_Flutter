@@ -130,8 +130,7 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> submitAttendance(checkinout) async {
-    print("checkinout:::$checkinout");
-    setState(() {
+   setState(() {
       isLoading = true;
     });
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -145,7 +144,6 @@ class _BodyState extends State<Body> {
       "checkInOut": checkinout ? "checkin" : "checkout",
       "picture": result1
     };
-    print("body : $body");
     http.post(uri, body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse : $jsonResponse");
@@ -161,9 +159,10 @@ class _BodyState extends State<Body> {
         });
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          GetToken().getToken();
+           GetToken().getToken().then((value) {
           submitAttendance(checkinout);
-          // Future<String> token = getToken();
+          });
+          
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

@@ -90,7 +90,10 @@ class _BodyState extends State<Body> {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          GetToken().getToken();
+            GetToken().getToken().then((value) {
+           getDelegatePerson();
+          });
+         
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

@@ -127,15 +127,15 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
               var jsonResponse = jsonDecode(response.body);
               print("Reponse---2 : $jsonResponse");
               if (jsonResponse["StatusCode"] == 200) {
-                loginResponse login =
-                    new loginResponse.fromJson(jsonResponse["ResultObject"][0]);
+                LoginResponse login =
+                    new LoginResponse.fromJson(jsonResponse["ResultObject"][0]);
                 // print(login.toString());
                 print("login.tokenKey: ${login.tokenKey}");
-                print("Reponse---3 : ${login.emp_company}");
+                print("userId---3 : ${login.userId}");
 
                 sharedPreferences.setInt(
                     AppConstant.USER_ID.toString(), login.userId);
-                sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
+                
                 sharedPreferences.setString(
                     AppConstant.ACCESS_TOKEN, login.tokenKey);
                 sharedPreferences.setString(
@@ -154,6 +154,10 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                     AppConstant.LoginGmailID, usernameController.text.trim());
                 sharedPreferences.setString(
                     AppConstant.PASSWORD, passwordController.text.trim());
+                
+                // sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
+                print(
+                    "Ge ${sharedPreferences.get(AppConstant.USER_ID.toString())}");
 
                 setState(() {
                   _state = 2;

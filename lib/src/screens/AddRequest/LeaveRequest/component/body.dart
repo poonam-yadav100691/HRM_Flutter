@@ -55,13 +55,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   String respPerLable = "Leave";
   String respPerId;
 
-  DateTime returndate=DateTime.now();
-  bool dateSelectedreturn=false;
+  DateTime returndate = DateTime.now();
+  bool dateSelectedreturn = false;
 
-
-  DateTime selecteddate=DateTime.now();
-  bool dateSelectedselect=false;
-
+  DateTime selecteddate = DateTime.now();
+  bool dateSelectedselect = false;
 
   _focusListener() {
     setState(() {});
@@ -96,35 +94,28 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     }
   }
 
-  DateTime strDate,endDate;
+  DateTime strDate, endDate;
   void _onDateRangeSelect(DateTimeRange val) {
-     strDate = val.start;
-     endDate = val.end;
+    strDate = val.start;
+    endDate = val.end;
 
-     print('$strDate  $endDate ');
+    print('$strDate  $endDate ');
     final difference = this.endDate.difference(strDate).inDays;
     setState(() {
       totalDays = difference;
     });
-
   }
 
-
-  String selectedDateRange='Select Date Range';
-  int selectedLeaveRadio=1;
-  int selectedLeaveStartRadio=1;
-DateTime returnDate;
+  String selectedDateRange = 'Select Date Range';
+  int selectedLeaveRadio = 1;
+  int selectedLeaveStartRadio = 1;
+  DateTime returnDate;
   void _onReturnDateSelect(val) {
-    returnDate=val;
-
+    returnDate = val;
   }
 
   ValueChanged _onhalfChanged = (val) => print(val);
-  ValueChanged _onLeaveChanged = (val){
-
-
-
-  };
+  ValueChanged _onLeaveChanged = (val) {};
   // ValueChanged _onRadioChanged = (val) => print(val);
 
   @override
@@ -199,47 +190,50 @@ DateTime returnDate;
                           //
                           // )
 
-                         child:Container(
-                           width: MediaQuery.of(context).size.width,
-                           padding: EdgeInsets.symmetric(horizontal: 8),
-                           decoration: BoxDecoration(
-                               border: Border.all(
-                                 color: Colors.grey,
-                               ),
-                               shape: BoxShape.rectangle,
-                               borderRadius: BorderRadius.all(Radius.circular(8))
-
-                           ),
-                           child: Row(
-                             children: [
-                               Row(
-                                 children: [
-                                   Text('Leave Apply For'),
-                                   Radio(value: selectedLeaveRadio, groupValue: 1, onChanged:(flag){
-                                     setState(() {
-                                                selectedLeaveRadio=1;
-                                                showHalf = false;
-                                              });
-
-
-                                   }),
-                                   Text('Full Day')
-                                 ],
-                               ),
-                               Row(
-                                 children: [
-                                   Radio(value: selectedLeaveRadio, groupValue: 2, onChanged:(flag){
-                                     setState(() {
-                                       selectedLeaveRadio=2;
-                                       showHalf = true;
-                                     });
-                                   }),
-                                   Text('Half Day')
-                                 ],
-                               ), ],
-                           ),
-                         )
-                          ,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                shape: BoxShape.rectangle,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text('Leave Apply For'),
+                                    Radio(
+                                        value: selectedLeaveRadio,
+                                        groupValue: 1,
+                                        onChanged: (flag) {
+                                          setState(() {
+                                            selectedLeaveRadio = 1;
+                                            showHalf = false;
+                                          });
+                                        }),
+                                    Text('Full Day')
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Radio(
+                                        value: selectedLeaveRadio,
+                                        groupValue: 2,
+                                        onChanged: (flag) {
+                                          setState(() {
+                                            selectedLeaveRadio = 2;
+                                            showHalf = true;
+                                          });
+                                        }),
+                                    Text('Half Day')
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                         showHalf
                             ? Padding(
@@ -252,42 +246,53 @@ DateTime returnDate;
                                         color: Colors.grey,
                                       ),
                                       shape: BoxShape.rectangle,
-                                      borderRadius: BorderRadius.all(Radius.circular(8))
-
-                                  ),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(8))),
                                   child: Row(
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text('Leave Start From : '),
                                       ),
-
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-
-                                              Radio( value: selectedLeaveStartRadio, groupValue: 1, onChanged:(flag){
-                                                setState(() {
-                                                  selectedLeaveStartRadio=1;
-                                                });
-                                              }),
+                                              Radio(
+                                                  value:
+                                                      selectedLeaveStartRadio,
+                                                  groupValue: 1,
+                                                  onChanged: (flag) {
+                                                    setState(() {
+                                                      selectedLeaveStartRadio =
+                                                          1;
+                                                    });
+                                                  }),
                                               Text('First Half')
                                             ],
                                           ),
                                           Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              Radio(value: selectedLeaveStartRadio, groupValue: 2, onChanged:(flag){
-                                                setState(() {
-                                                  selectedLeaveStartRadio=2;
-                                                });
-                                              }),
+                                              Radio(
+                                                  value:
+                                                      selectedLeaveStartRadio,
+                                                  groupValue: 2,
+                                                  onChanged: (flag) {
+                                                    setState(() {
+                                                      selectedLeaveStartRadio =
+                                                          2;
+                                                    });
+                                                  }),
                                               Text('Second Half')
                                             ],
-                                          ), ],
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -324,7 +329,7 @@ DateTime returnDate;
                                 //           ))
                                 //       .toList(growable: false),
                                 // ),
-                              )
+                                )
                             : Container(),
                         // MyCustomDateRange(
                         //   onChanged: _onChanged,
@@ -335,126 +340,126 @@ DateTime returnDate;
                         //   },
                         // ),
 
-                        selectedLeaveRadio==2?GestureDetector(
-                          onTap: () async{
-                            final DateTime pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime(DateTime.now().year+1));
-                            if (pickedDate != null && pickedDate != selecteddate)
-                              setState(() {
-                                selecteddate = pickedDate;
-                                dateSelectedselect=true;
-
-                              });
-                          },
-                          child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.all(16),
-                              margin: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                  ),
-
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.all(Radius.circular(8))
-
+                        selectedLeaveRadio == 2
+                            ? GestureDetector(
+                                onTap: () async {
+                                  final DateTime pickedDate =
+                                      await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime.now(),
+                                          lastDate: DateTime(
+                                              DateTime.now().year + 1));
+                                  if (pickedDate != null &&
+                                      pickedDate != selecteddate)
+                                    setState(() {
+                                      selecteddate = pickedDate;
+                                      dateSelectedselect = true;
+                                    });
+                                },
+                                child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.all(16),
+                                    margin: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                        ),
+                                        shape: BoxShape.rectangle,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(8))),
+                                    child: Text(dateSelectedselect
+                                        ? 'Selected Date: $selecteddate'
+                                        : 'Select Date')),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  dateTimeRangePicker();
+                                },
+                                child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.all(16),
+                                    margin: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                        ),
+                                        shape: BoxShape.rectangle,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(8))),
+                                    child: Text('$selectedDateRange')),
                               ),
-                              child: Text(dateSelectedselect?'Selected Date: $selecteddate':'Select Date')),
-                        ): GestureDetector(
-                          onTap: (){
-                            dateTimeRangePicker();
-                          },
-                          child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.all(16),
-                              margin: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                  ),
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.all(Radius.circular(8))
-
-                              ),
-                              child: Text( '$selectedDateRange' )),
-                        ),
-
 
                         // FormBuilderDateRangePicker(
-                          //   controller: rangeDateSelected,
-                          //   attribute: 'date_range',
-                          //   onChanged: _onDateRangeSelect,
-                          //   firstDate: DateTime.now(),
-                          //   lastDate: DateTime(2030),
-                          //   format: DateFormat('dd-MM-yyyy'),
-                          //   decoration: new InputDecoration(
-                          //     fillColor: Colors.white,
-                          //     border: _focusNode.hasFocus
-                          //         ? OutlineInputBorder(
-                          //             borderRadius: BorderRadius.all(
-                          //                 Radius.circular(5.0)),
-                          //             borderSide:
-                          //                 BorderSide(color: leaveCardcolor))
-                          //         : OutlineInputBorder(
-                          //             borderRadius: BorderRadius.all(
-                          //                 Radius.circular(5.0)),
-                          //             borderSide:
-                          //                 BorderSide(color: Colors.grey)),
-                          //     filled: true,
-                          //     contentPadding: EdgeInsets.only(
-                          //         bottom: 10.0, left: 10.0, right: 10.0),
-                          //     labelText: "Select Leave Date Range",
-                          //   ),
-                          // ),
+                        //   controller: rangeDateSelected,
+                        //   attribute: 'date_range',
+                        //   onChanged: _onDateRangeSelect,
+                        //   firstDate: DateTime.now(),
+                        //   lastDate: DateTime(2030),
+                        //   format: DateFormat('dd-MM-yyyy'),
+                        //   decoration: new InputDecoration(
+                        //     fillColor: Colors.white,
+                        //     border: _focusNode.hasFocus
+                        //         ? OutlineInputBorder(
+                        //             borderRadius: BorderRadius.all(
+                        //                 Radius.circular(5.0)),
+                        //             borderSide:
+                        //                 BorderSide(color: leaveCardcolor))
+                        //         : OutlineInputBorder(
+                        //             borderRadius: BorderRadius.all(
+                        //                 Radius.circular(5.0)),
+                        //             borderSide:
+                        //                 BorderSide(color: Colors.grey)),
+                        //     filled: true,
+                        //     contentPadding: EdgeInsets.only(
+                        //         bottom: 10.0, left: 10.0, right: 10.0),
+                        //     labelText: "Select Leave Date Range",
+                        //   ),
+                        // ),
 
-
-
-                        selectedLeaveRadio==2?Container():  Container(
-                          width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.all(16),
-                            margin: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey,
-                              ),
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.all(Radius.circular(8))
-
-                            ),
-                            child: Text( 'Applying for  ${totalDays.toString()} days' )),
-
+                        selectedLeaveRadio == 2
+                            ? Container()
+                            : Container(
+                                width: MediaQuery.of(context).size.width,
+                                padding: EdgeInsets.all(16),
+                                margin: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                    ),
+                                    shape: BoxShape.rectangle,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
+                                child: Text(
+                                    'Applying for  ${totalDays.toString()} days')),
 
                         GestureDetector(
-                          onTap: () async{
+                          onTap: () async {
                             final DateTime pickedDate = await showDatePicker(
                                 context: context,
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime.now(),
-                                lastDate: DateTime(DateTime.now().year+1));
+                                lastDate: DateTime(DateTime.now().year + 1));
                             if (pickedDate != null && pickedDate != returndate)
                               setState(() {
                                 returndate = pickedDate;
-                                dateSelectedreturn=true;
-
+                                dateSelectedreturn = true;
                               });
                           },
                           child: Container(
-                            width: MediaQuery.of(context).size.width,
+                              width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.all(16),
                               margin: EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey,
-                                ),
-
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.all(Radius.circular(8))
-
-                              ),
-                              child: Text(dateSelectedreturn?'Return Date: $returndate':'Return to Work date')),
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                  ),
+                                  shape: BoxShape.rectangle,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              child: Text(dateSelectedreturn
+                                  ? 'Return Date: $returndate'
+                                  : 'Return to Work date')),
                         ),
 
                         // MyCustomTextField(
@@ -503,9 +508,6 @@ DateTime returnDate;
                         //     ),
                         //   ),
                         // ),
-
-
-
 
                         Container(
                           padding: const EdgeInsets.all(9),
@@ -645,15 +647,15 @@ DateTime returnDate;
                               fillColor: Colors.white,
                               border: _focusNode.hasFocus
                                   ? OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(5.0)),
-                                  borderSide:
-                                  BorderSide(color: leaveCardcolor))
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0)),
+                                      borderSide:
+                                          BorderSide(color: leaveCardcolor))
                                   : OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(5.0)),
-                                  borderSide:
-                                  BorderSide(color: Colors.grey)),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0)),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey)),
                               filled: true,
                               contentPadding: EdgeInsets.only(
                                   bottom: 10.0, left: 10.0, right: 10.0),
@@ -668,7 +670,6 @@ DateTime returnDate;
                                 return null;
                               }
                             },
-
                           ),
                         ),
 
@@ -688,7 +689,6 @@ DateTime returnDate;
                                 if (_fbKey.currentState.saveAndValidate()) {
                                   print(_fbKey.currentState.value);
                                   _placeRequests();
-
                                 }
                               }),
                         ),
@@ -732,7 +732,9 @@ DateTime returnDate;
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          GetToken().getToken();
+          GetToken().getToken().then((value) {
+            getTypeOfLeave();
+          });
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -740,78 +742,6 @@ DateTime returnDate;
       }
     });
   }
-
-
-
-  Future<String> getToken() async {
-    Network().check().then((intenet) async {
-      if (intenet != null && intenet) {
-        sharedPreferences = await SharedPreferences.getInstance();
-        String username = sharedPreferences.getString(AppConstant.LoginGmailID);
-        String password = sharedPreferences.getString(AppConstant.PASSWORD);
-        String urname = sharedPreferences.getString(AppConstant.USERNAME);
-        print("username---2 : $username");
-        print("urname---2 : $urname");
-
-        try {
-          final uri = Services.LOGIN;
-          Map body = {
-            "PassKey": "a486f489-76c0-4c49-8ff0-d0fdec0a162b",
-            "UserName": username,
-            "UserPassword": password
-          };
-
-          http.post(uri, body: body).then((response) {
-            if (response.statusCode == 200) {
-              var jsonResponse = jsonDecode(response.body);
-              print("Reponse---2 : $jsonResponse");
-              if (jsonResponse["StatusCode"] == 200) {
-                loginResponse login =
-                    new loginResponse.fromJson(jsonResponse["ResultObject"][0]);
-
-                sharedPreferences.setInt(
-                    AppConstant.USER_ID.toString(), login.userId);
-                sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
-                sharedPreferences.setString(
-                    AppConstant.ACCESS_TOKEN, login.tokenKey);
-                sharedPreferences.setString(
-                    AppConstant.USERNAME, login.eng_fullname);
-                sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);
-                sharedPreferences.setString(
-                    AppConstant.PHONENO, login.emp_mobile);
-                sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
-                sharedPreferences.setString(
-                    AppConstant.DEPARTMENT, login.emp_dep);
-                sharedPreferences.setString(
-                    AppConstant.COMPANY, login.emp_company);
-                return sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
-              } else {
-                Toast.show(
-                    "Something wnet wrong.. Please try again later.", context,
-                    duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-                return "Something wnet wrong.. Please try again later.";
-              }
-            } else {
-              print("response.statusCode.." + response.statusCode.toString());
-              Toast.show(
-                  "Something wnet wrong.. Please try again later.", context,
-                  duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-              return "Something wnet wrong.. Please try again later.";
-            }
-          });
-        } catch (e) {
-          print("Error: $e");
-
-          return (e);
-        }
-      } else {
-        Navigator.pop(context);
-        Toast.show("Please check internet connection", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      }
-    });
-  }
-
 
   Future<void> _placeRequests() async {
     setState(() {
@@ -822,16 +752,18 @@ DateTime returnDate;
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.AddNewLeave;
     Map body = {
-                "TokenKey": token,
-                "lang": '2',
-                "LeaveTypeId": leaveId,
-                 "strDate":selectedLeaveStartRadio==2?leaveController.text:strDate.toString(),
-                "endDate": endDate.toString(),
-                "ReturnDate": returnDate.toString(),
-                "TotalDays": totalDays.toString(),
-                "reasone": resoneController.text,
-                "responsiblePersonID": respPerId,
-                "LeaveFor": "",
+      "TokenKey": token,
+      "lang": '2',
+      "LeaveTypeId": leaveId,
+      "strDate": selectedLeaveStartRadio == 2
+          ? leaveController.text
+          : strDate.toString(),
+      "endDate": endDate.toString(),
+      "ReturnDate": returnDate.toString(),
+      "TotalDays": totalDays.toString(),
+      "reasone": resoneController.text,
+      "responsiblePersonID": respPerId,
+      "LeaveFor": "",
     };
 
     print('$body');
@@ -845,12 +777,12 @@ DateTime returnDate;
 
         print("j&&& $jsonResponse");
         Navigator.pop(context);
-
-
-
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          GetToken().getToken().then((value) {
+            _placeRequests();
+          });
           // Future<String> token = getToken();
         } else {
           // currentState.showSnackBar(
@@ -860,27 +792,25 @@ DateTime returnDate;
     });
   }
 
+  dateTimeRangePicker() async {
+    DateTimeRange picked = await showDateRangePicker(
+      initialEntryMode: DatePickerEntryMode.input,
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 1),
+      initialDateRange: DateTimeRange(
+        end: DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day + 13),
+        start: DateTime.now(),
+      ),
+    );
 
-    dateTimeRangePicker() async {
-      DateTimeRange picked = await showDateRangePicker(
-        initialEntryMode: DatePickerEntryMode.input,
-        context: context,
-        firstDate: DateTime.now(),
-        lastDate: DateTime(DateTime.now().year +1),
-        initialDateRange: DateTimeRange(
-          end: DateTime(
-              DateTime.now().year, DateTime.now().month, DateTime.now().day + 13),
-          start: DateTime.now(),
-        ),
-      );
+    setState(() {
+      selectedDateRange = '${picked.start.toUtc()}-${picked.end.toUtc()}';
+    });
 
-      setState(() {
-        selectedDateRange='${picked.start.toUtc()}-${picked.end.toUtc()}';
-      });
-
-      _onDateRangeSelect(picked);
-    }
-
+    _onDateRangeSelect(picked);
+  }
 
   Future<void> getResponsiblePerson() async {
     setState(() {
@@ -911,7 +841,9 @@ DateTime returnDate;
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          getToken();
+          GetToken().getToken().then((value) {
+            getResponsiblePerson();
+          });
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

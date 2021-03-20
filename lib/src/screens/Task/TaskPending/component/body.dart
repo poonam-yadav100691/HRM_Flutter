@@ -77,8 +77,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          setState(() {
-            isLoading = false;
+          GetToken().getToken().then((value) {
+            apiCallMark(index);
           });
         } else {
           setState(() {
@@ -209,8 +209,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         });
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          var token = GetToken().getToken();
-          deleteItem(index);
+          GetToken().getToken().then((value) {
+            deleteItem(index);
+          });
+
           // Future<String> token = getToken();
         } else {
           // currentState.showSnackBar(

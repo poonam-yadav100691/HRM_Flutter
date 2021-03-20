@@ -51,13 +51,22 @@
   "AddRequest":"ເພີ່ມ ຄຳ ຮ້ອງຂໍ",
   "AddLeave":"ຂໍພັກຜ່ອນ",
   "AddOT":"ໃຊ້ເວລາພັກວຽກ",
-  "MyRequest":"ຄຳ ຂໍຂອງຂ້ອຍ",
   "TKRules":"ກົດລະບຽບຂອງ TK",
   "News":"ຂ່າວ",
-  "Loans":"ເງິນກູ້",
+  "Loans":"ກູ້ຢືມ",
   "Insurance":"ປະກັນໄພ",
   "MyTask":"ວຽກຂອງຂ້ອຍ",
   "AddTask":"ເພີ່ມວຽກ",
   "MyAttendance":"ການມີສ່ວນຮ່ວມຂອງຂ້ອຍ",
-  "Delegates":"ບັນດາຄະນະຜູ້ແທນ"
+  "Delegates":"ມອບວຽກ",
+  "Tasks":"ໜ້າວຽກ",
+  "EmpRequest":"ພະນັກຮ້ອງຂໍ",
+  "MyRequest":"ຮ້ອງຂໍ",
+  "Attendance":"ການວຽກ",
+  "Payslip":"ເງິນເດືອນ",
+  "Holidays":"ວັນພັກ",
+  "Viewyourprofiledetails":"ເບິ່ງລາຍລະອຽດໂປຣໄຟລ໌ຂອງທ່ານ",
+  "GetHolidayslistofthisfinancialyear":"ຂໍເອົາລາຍຊື່ວັນພັກຜ່ອນໃນປີງົບປະມານນີ້",
+  "Getlistofallnotes/ruleofcompany":"ເອົາບັນຊີທັງ ໝົດ ຂອງກົດລະບຽບຂອງບໍລິສັດ"
+
 }

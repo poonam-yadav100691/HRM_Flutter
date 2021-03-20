@@ -79,8 +79,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         });
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           print("ModelError: ${jsonResponse["ModelErrors"]}");
-          await GetToken().getToken();
-          _getpayslipDetails(id);
+          GetToken().getToken().then((value) {
+            _getpayslipDetails(id);
+          });
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -259,6 +260,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   }
 
   Widget _itemBuilder(payslipDetail, sectionLable) {
+    print(payslipDetail);
     final children = <Widget>[];
     if (payslipDetail != null) {
       for (var i = 0; i < payslipDetail.length; i++) {

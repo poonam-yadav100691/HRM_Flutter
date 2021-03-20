@@ -106,6 +106,9 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          GetToken().getToken().then((value) {
+            _getReqDetails(reqID);
+          });
           // Future<String> token = getToken();
         } else {
           // currentState.showSnackBar(
@@ -139,8 +142,10 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
         });
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          var token = GetToken().getToken();
-          cancelMyRequest(reqID);
+          GetToken().getToken().then((value) {
+            cancelMyRequest(reqID);
+          });
+
           // Future<String> token = getToken();
         } else {
           // currentState.showSnackBar(
@@ -315,11 +320,11 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
         ),
       );
     } else {
-     return  Scaffold(appBar: AppBar(
-       title: Text('Request Details'),
-     ),
-         body: Background(
-             child: Center(child: CircularProgressIndicator())));
+      return Scaffold(
+          appBar: AppBar(
+            title: Text('Request Details'),
+          ),
+          body: Background(child: Center(child: CircularProgressIndicator())));
     }
   }
 

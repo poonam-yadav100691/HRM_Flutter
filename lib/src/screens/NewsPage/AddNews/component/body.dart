@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:HRMNew/components/MyCustomDateRange.dart';
 import 'package:HRMNew/components/MyCustomFileUpload.dart';
 import 'package:HRMNew/components/MyCustomTextField.dart';
+import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
@@ -73,7 +74,7 @@ class _BodyState extends State<Body> {
         setState(() {
           isLoading = false;
         });
-        Navigator.pop(context);
+        Navigator.pushNamed(context, newsList);
         _scaffoldKey.currentState
             .showSnackBar(UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
       } else {
@@ -82,10 +83,9 @@ class _BodyState extends State<Body> {
         });
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          print("unauthro");
-          GetToken();
-          // _getNewsList();
-          // Future<String> token = getToken();
+          GetToken().getToken().then((value) {
+            addNews(body);
+          });
         } else {
           _scaffoldKey.currentState.showSnackBar(
               UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

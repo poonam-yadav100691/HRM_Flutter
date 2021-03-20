@@ -51,7 +51,6 @@
   "AddRequest":"Add Request",
   "AddLeave":"Add Leave Request",
   "AddOT":"Add OT Request",
-  "MyRequest":"My Request",
   "TKRules":"TK Rules",
   "News":"News",
   "Loans":"Loans",
@@ -59,5 +58,16 @@
   "MyTask":"My Task",
   "AddTask":"Add Task",
   "MyAttendance":"My Attendance",
-  "Delegates":"Delegates"
+  "Delegates":"Delegates",
+  "Tasks":"Tasks",
+  "EmpRequest":"Emp Request",
+  "MyRequest":"My Request",
+  "Attendance":"Attendance",
+  "Payslip":"Payslip",
+  "Holidays":"Holidays",
+  "Viewyourprofiledetails":"View your profile details",
+  "GetHolidayslistofthisfinancialyear":"Get Holidays list of this financial year",
+  "Getlistofallnotes/ruleofcompany":"Get list of all notes/rule of company"
+
+
 }

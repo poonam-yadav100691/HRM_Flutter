@@ -2,7 +2,6 @@ const String homeRoute = '/home';
 const String accountRoute = '/account';
 const String dashboardRoute = '/dashboard';
 const String loginRoute = '/login';
-const String notificationRoute = '/notification';
 const String landingRoute = '/landing';
 const String pendingHomeRoute = '/pendingHome';
 const String approveHomeRoute = '/approveHome';
@@ -35,3 +34,4 @@ const String delegateRoute = '/delegateRoute';
 
 const String addDelegateRoute = '/addDelegateRoute';
 const String myLeaveReqDetails = '/myLeaveReqDetails';
+const String newsList = '/newsList';
