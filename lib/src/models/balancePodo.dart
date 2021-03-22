@@ -1,6 +1,6 @@
 class GetBalance {
   Null modelErrors;
-  List<ResultObject> resultObject;
+  List<ResultObject1> resultObject;
   int statusCode;
   bool isSuccess;
   Null commonErrors;
@@ -15,9 +15,9 @@ class GetBalance {
   GetBalance.fromJson(Map<String, dynamic> json) {
     modelErrors = json['ModelErrors'];
     if (json['ResultObject'] != null) {
-      resultObject = new List<ResultObject>();
+      resultObject = new List<ResultObject1>();
       json['ResultObject'].forEach((v) {
-        resultObject.add(new ResultObject.fromJson(v));
+        resultObject.add(new ResultObject1.fromJson(v));
       });
     }
     statusCode = json['StatusCode'];
@@ -38,14 +38,14 @@ class GetBalance {
   }
 }
 
-class ResultObject {
+class ResultObject1 {
   String leaveName;
   String leaveTotal;
   String leaveUse;
 
-  ResultObject({this.leaveName, this.leaveTotal, this.leaveUse});
+  ResultObject1({this.leaveName, this.leaveTotal, this.leaveUse});
 
-  ResultObject.fromJson(Map<String, dynamic> json) {
+  ResultObject1.fromJson(Map<String, dynamic> json) {
     leaveName = json['LeaveName'];
     leaveTotal = json['leaveTotal'];
     leaveUse = json['leaveUse'];

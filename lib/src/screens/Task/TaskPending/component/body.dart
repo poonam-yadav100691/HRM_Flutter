@@ -107,19 +107,20 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         child: Column(
           children: [
             GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, addTaskRoute);
-                },
-                child: Card(
-                  child: new Container(
-                    // padding: new EdgeInsets.all(5.0),
-                    child: ListTile(
-                      leading: Icon(Icons.add),
-                      title: Text('Add Task'),
-                      trailing: Icon(Icons.keyboard_arrow_right),
-                    ),
+              onTap: () {
+                Navigator.pushNamed(context, addTaskRoute);
+              },
+              child: Card(
+                child: new Container(
+                  // padding: new EdgeInsets.all(5.0),
+                  child: ListTile(
+                    leading: Icon(Icons.add),
+                    title: Text('Add Task'),
+                    trailing: Icon(Icons.keyboard_arrow_right),
                   ),
-                )),
+                ),
+              ),
+            ),
             valuefirst.indexOf(true) > -1
                 ? Container(
                     margin: EdgeInsets.all(5),
@@ -212,8 +213,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           GetToken().getToken().then((value) {
             deleteItem(index);
           });
-
-          // Future<String> token = getToken();
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -223,10 +222,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   }
 
   void undoDeletion(index, item) {
-    /*
-    This method accepts the parameters index and item and re-inserts the {item} at
-    index {index}
-    */
     setState(() {
       taskPenList.insert(index, item);
     });

@@ -51,26 +51,30 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
               child: DefaultTabController(
                 length: 2,
                 child: new Scaffold(
-                  floatingActionButton: getPermissionObject('My Request').app_add=="1"? FloatingActionButton.extended(
-                    onPressed: () {
-                      Navigator.pushNamed(context, addRequestRoute);
-                      // Add your onPressed code here!
-                    },
-                    elevation: 4,
-                    label: Text('Request'),
-                    icon: Icon(
-                      Icons.add,
-                    ),
-                    backgroundColor: Colors.pink,
-                  ):null,
+                  floatingActionButton:
+                      getPermissionObject('My Request').app_add == "1"
+                          ? FloatingActionButton.extended(
+                              onPressed: () {
+                                Navigator.pushNamed(context, addRequestRoute);
+                                // Add your onPressed code here!
+                              },
+                              elevation: 4,
+                              label: Text('Request'),
+                              icon: Icon(
+                                Icons.add,
+                              ),
+                              backgroundColor: Colors.pink,
+                            )
+                          : null,
                   body: TabBarView(
                     children: [
-
-                      (leaveReqList??[]).isNotEmpty? MyLeaveRequest(data: leaveReqList):Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child: Center(child: CircularProgressIndicator())),
-
+                      (leaveReqList ?? []).isNotEmpty
+                          ? MyLeaveRequest(data: leaveReqList)
+                          : Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height,
+                              child:
+                                  Center(child: CircularProgressIndicator())),
                       MyOTRequest()
                     ],
                   ),
@@ -145,7 +149,6 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
           GetToken().getToken().then((value) {
             _getRequests();
           });
-
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
