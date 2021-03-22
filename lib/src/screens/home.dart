@@ -23,8 +23,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 
-import 'package:toast/toast.dart';
-
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -75,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Map body = {
         "Tokenkey": token,
       };
-
+ print("Mbody: ${body} 4 $uri");
       http.post(uri, body: body).then((response) {
         if (response.statusCode == 200) {
           var jsonResponse = jsonDecode(response.body);
