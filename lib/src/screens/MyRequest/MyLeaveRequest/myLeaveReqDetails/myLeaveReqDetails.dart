@@ -300,7 +300,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                         ? Container(
                             padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
                             child: Column(children: [
-                              OutlineButton(
+                              getPermissionObject('My Request').app_edit=="1"?  OutlineButton(
                                 onPressed: () {
                                   cancelMyRequest(myReqTitleObj[0].requestID);
                                 },
@@ -309,7 +309,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 borderSide: BorderSide(
                                   color: Colors.red,
                                 ),
-                              )
+                              ):Container()
                             ]))
                         : Container(),
                   ],

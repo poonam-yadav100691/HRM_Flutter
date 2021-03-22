@@ -239,7 +239,7 @@ class _BodyState extends State<Body> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
+            getPermissionObject('Attendance').app_add=="1"?  Container(
                 margin: const EdgeInsets.only(top: 20.0),
                 child: RaisedButton(
                   color: leaveCardcolor,
@@ -251,8 +251,8 @@ class _BodyState extends State<Body> {
                   textColor: Colors.white,
                   padding: const EdgeInsets.all(10.0),
                   child: const Text('Check-In', style: TextStyle(fontSize: 25)),
-                )),
-            Container(
+                )):Container(),
+            getPermissionObject('Attendance').app_add=="1"? Container(
                 margin: const EdgeInsets.only(top: 20.0),
                 child: RaisedButton(
                   disabledColor: kGreyLightColor,
@@ -267,7 +267,7 @@ class _BodyState extends State<Body> {
                   padding: const EdgeInsets.all(10.0),
                   child:
                       const Text('Check-Out', style: TextStyle(fontSize: 25)),
-                )),
+                )):Container(),
           ],
         ),
 

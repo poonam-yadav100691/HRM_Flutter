@@ -1,3 +1,5 @@
+
+
 import 'package:HRMNew/components/approvalAction.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -40,7 +42,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     String empLevId = widget.data;
-    _getEmpReqDetails(empLevId);
+      _getEmpReqDetails(empLevId);
   }
 
   void takeAction(text) {
@@ -50,9 +52,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     );
   }
 
+
+
   int totalDayss;
 
-  DateTime strDate, endDate;
+  DateTime strDate,endDate;
 
   int _onDateRangeSelect(String startDate, String endstrDate) {
     DateFormat format = DateFormat.yMd();
@@ -63,7 +67,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     print('$strDate  $endDate ');
     final difference = endDate.difference(strDate).inDays;
 
-    return difference;
+     return difference;
+
+
   }
 
   Future<void> _getEmpReqDetails(reqID) async {
@@ -86,9 +92,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       print("R2 : $jsonResponse");
       EmpReqDetails getLevReqDetails = new EmpReqDetails.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
-        myReqTitleObj = getLevReqDetails.requestTitleObject ?? [];
-        approvedObject = getLevReqDetails.approvedObject ?? [];
-        requestItemObject = getLevReqDetails.requestItemObject ?? [];
+        myReqTitleObj = getLevReqDetails.requestTitleObject??[];
+        approvedObject = getLevReqDetails.approvedObject??[];
+        requestItemObject = getLevReqDetails.requestItemObject??[];
 
         setState(() {
           isLoading = false;
@@ -286,7 +292,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               child: Container(
                                 color: Colors.grey[300],
                               ),
+
                             ),
+
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
@@ -311,22 +319,23 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                     errortext = null;
                                   });
                                 },
+
+
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 8,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  RaisedButton(
-                                    onPressed: () async {
-                                      if (resoneController.text != "") {
-                                        setState(() {
-                                          isLoading = true;
-                                        });
+
+                            Padding(padding: EdgeInsets.symmetric(vertical: 8,),
+
+
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                RaisedButton(onPressed:() async{
+
+                                  if(resoneController.text!="") {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
 
                                         SharedPreferences sharedPreferences =
                                             await SharedPreferences
@@ -412,47 +421,41 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                             resoneController.text ?? " ",
                                       };
 
-                                      http
-                                          .post(uri, body: body)
-                                          .then((response) {
-                                        var jsonResponse =
-                                            jsonDecode(response.body);
-                                        // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
-                                        if (jsonResponse["StatusCode"] == 200) {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                          print("j&&& $jsonResponse");
-                                          Navigator.pop(context);
-                                        } else {
-                                          print(
-                                              "ModelError: ${jsonResponse["ModelErrors"]}");
-                                          if (jsonResponse["ModelErrors"] ==
-                                              'Unauthorized') {
-                                            Future<String> token =
-                                                GetToken().getToken();
-                                          } else {
-                                            // .showSnackBar(
-                                            //     currentState   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
-                                          }
-                                        }
+                                  print('$body');
+                                  http.post(uri, body: body).then((response) {
+                                    var jsonResponse = jsonDecode(response.body);
+                                    // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+                                    if (jsonResponse["StatusCode"] == 200) {
+                                      setState(() {
+                                        isLoading = false;
                                       });
-                                    },
-                                    child: Text(
-                                      'Approve',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .button
-                                          .copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                    ),
-                                    color: Colors.green,
-                                  ),
-                                ],
-                              ),
+
+                                      print("j&&& $jsonResponse");
+                                      Navigator.pop(context);
+
+
+
+                                    } else {
+                                      print("ModelError: ${jsonResponse["ModelErrors"]}");
+                                      if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+                                        Future<String> token = GetToken().getToken();
+                                      } else {
+                                        // .showSnackBar(
+                                        //     currentState   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+                                      }
+                                    }
+                                  });
+
+                                },
+                                  child: Text('Approve',style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
+                                  color: Colors.green,
+                                ),
+
+                              ],
                             ),
-                            isLoading ? LinearProgressIndicator() : Container(),
+                            ),
+                            isLoading?LinearProgressIndicator():Container(),
+
                           ],
                         ),
                       ),
@@ -732,6 +735,8 @@ Widget planetCard(BuildContext context, name, remark, date) {
     ),
   );
 }
+
+
 
 Widget _itemBuilder(label, textValue) {
   return Container(

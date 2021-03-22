@@ -51,7 +51,7 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
               child: DefaultTabController(
                 length: 2,
                 child: new Scaffold(
-                  floatingActionButton: FloatingActionButton.extended(
+                  floatingActionButton: getPermissionObject('My Request').app_add=="1"? FloatingActionButton.extended(
                     onPressed: () {
                       Navigator.pushNamed(context, addRequestRoute);
                       // Add your onPressed code here!
@@ -62,7 +62,7 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                       Icons.add,
                     ),
                     backgroundColor: Colors.pink,
-                  ),
+                  ):null,
                   body: TabBarView(
                     children: [
 

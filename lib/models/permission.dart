@@ -35,6 +35,7 @@ class Permission {
   String app_add;
   String app_edit;
   String app_action;
+  String CountItem;
 
   Permission({
     this.roleName,
@@ -43,6 +44,7 @@ class Permission {
     this.app_add,
     this.app_edit,
     this.app_action,
+    this.CountItem,
   });
 
   factory Permission.fromJson(Map<String, dynamic> json) => new Permission(
@@ -52,6 +54,7 @@ class Permission {
         app_add: json["app_add"],
         app_edit: json["app_edit"],
         app_action: json["app_action"],
+      CountItem:json["CountItem"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -61,5 +64,6 @@ class Permission {
         "app_add": app_add,
         "app_edit": app_edit,
         "app_action": app_action,
+    "CountItem":CountItem,
       };
 }
