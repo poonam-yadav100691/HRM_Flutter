@@ -1,5 +1,6 @@
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/requestDetails.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveReqDetails/myLeaveReqDetails.dart';
 import 'package:flutter/material.dart';
 import '../../empRequestPODO.dart';
@@ -58,24 +59,26 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             ),
             child: planetCard(
                 context,
-                empOtList[i].empName,
-                empOtList[i].empPosition,
-                empOtList[i].dateRequest,
-                empOtList[i].requestID),
+                 empOtList[i],
+                // empOtList[i].empName,
+                // empOtList[i].empPosition,
+                // empOtList[i].dateRequest,
+                // empOtList[i].requestID),
           ),
         ),
+        )
       );
     }
     Size size = MediaQuery.of(context).size;
     return Background(child: ListView(children: children));
   }
 
-  Widget planetCard(BuildContext context, name, design, date, id) {
+  Widget planetCard(BuildContext context, ResultObject object) {
     Size size = MediaQuery.of(context).size;
 
     var inputFormat = DateFormat('MM/dd/yyyy HH:mm:ss a');
     var outputFormat = DateFormat('dd/MM/yy');
-    var inputDate2 = inputFormat.parse(date); // <-- Incoming date
+    var inputDate2 = inputFormat.parse(object.dateRequest); // <-- Incoming date
     var returnDate = outputFormat.format(inputDate2);
 
     return InkWell(
@@ -139,7 +142,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Text(
-                                      name,
+                                      object.empName,
                                       style: new TextStyle(
                                           color: kRedColor,
                                           fontWeight: FontWeight.w600),
@@ -153,11 +156,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 ),
                               ),
                               Text(
-                                design,
+                                object.empPosition,
                                 style: new TextStyle(),
                               ),
                               Text(
-                                id,
+                                object.requestID,
                                 style: new TextStyle(),
                               ),
                             ],
@@ -173,7 +176,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         ),
       ),
       onTap: () {
-        Navigator.pushNamed(context, requestDetailsRoute);
+        Navigator.push(context, MaterialPageRoute(builder: (_) => RequestDetails(levReqDetailID: object.requestID,)));
       },
     );
   }

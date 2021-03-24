@@ -260,7 +260,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Request Status: ${myReqTitleObj[0].statusText}'),
+                                  'Request Status: ${requestItemObject.isNotEmpty?myReqTitleObj[0].statusText:""}'),
                             ),
                             SizedBox(
                               width: size.width,
@@ -272,7 +272,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Reason: ${requestItemObject[0].requestReason}'),
+                                  'Reason: ${requestItemObject.isNotEmpty?requestItemObject[0].requestReason:""}'),
                             ),
                             SizedBox(
                               width: size.width,
@@ -284,7 +284,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Manager: ${requestItemObject[0].responseName}'),
+                                  'Manager: ${requestItemObject.isNotEmpty?requestItemObject[0].responseName:""}'),
                             ),
                             SizedBox(
                               width: size.width,
@@ -298,7 +298,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Requested For: ${requestItemObject[0].requestFor}'),
+                                  'Requested For: ${requestItemObject.isNotEmpty?requestItemObject[0].requestFor:""}'),
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -343,7 +343,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                         String token =
                                             sharedPreferences.getString(
                                                 AppConstant.ACCESS_TOKEN);
-                                        final uri = Services.RejectLeave;
+                                        final uri = Services.RejectOT;
                                         Map body = {
                                           "TokenKey": token,
                                           "lang": '2',
@@ -408,12 +408,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                           await SharedPreferences.getInstance();
                                       String token = sharedPreferences
                                           .getString(AppConstant.ACCESS_TOKEN);
-                                      final uri = Services.ApproveLeave;
+                                      final uri = Services.ApproveOT;
                                       Map body = {
                                         "TokenKey": token,
                                         "lang": '2',
                                         "requestID": myReqTitleObj[0].requestID,
-                                        "rejectDescription":
+                                        "approvedescription":
                                             resoneController.text ?? " ",
                                         "approveby": sharedPreferences
                                             .getString(AppConstant.EMP_ID),

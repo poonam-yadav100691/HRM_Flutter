@@ -67,7 +67,7 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.height,
                             child: Center(child: CircularProgressIndicator())),
-                    empLeaveReqList.isNotEmpty
+                    empOtReqList.isNotEmpty
                         ? EmpOTRequest(data: empOtReqList)
                         : Container(
                             width: MediaQuery.of(context).size.width,
