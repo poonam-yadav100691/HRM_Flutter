@@ -38,7 +38,7 @@ class GetBalance {
   }
 }
 
-class ResultObject1 {
+ class ResultObject1 {
   String leaveName;
   String leaveTotal;
   String leaveUse;

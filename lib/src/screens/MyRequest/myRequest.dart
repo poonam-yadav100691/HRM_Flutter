@@ -75,7 +75,13 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                               height: MediaQuery.of(context).size.height,
                               child:
                                   Center(child: CircularProgressIndicator())),
-                      MyOTRequest()
+
+                      (otReqList ?? []).isNotEmpty
+                      ?MyOTRequest(otReqList):Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child:
+                          Center(child: CircularProgressIndicator())),
                     ],
                   ),
                   bottomNavigationBar: new TabBar(

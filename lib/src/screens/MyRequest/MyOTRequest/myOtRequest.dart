@@ -1,10 +1,11 @@
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/component/body.dart';
 import 'package:flutter/material.dart';
 
 class MyOTRequest extends StatelessWidget {
-  MyOTRequest();
-
+  MyOTRequest(this.data);
+List<ResultObject> data;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +27,7 @@ class MyOTRequest extends StatelessWidget {
               Navigator.pop(context);
             }),
       ),
-      body: Body(),
+      body: Body(this.data),
       resizeToAvoidBottomPadding: true,
     );
   }

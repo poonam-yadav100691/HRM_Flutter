@@ -192,10 +192,72 @@ class _BodyState extends State<Body> {
             RaisedButton(
                 child: Text("Submit",style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
                 color: Colors.green,
-                onPressed: () {
+                onPressed: () async {
                   if (_fbKey.currentState.saveAndValidate()) {
-                    print(_fbKey.currentState.value);
-                  }
+
+                      print(_fbKey.currentState.value);
+
+                      setState(() {
+                        isLoading = true;
+                      });
+
+                      SharedPreferences sharedPreferences =
+                          await SharedPreferences.getInstance();
+                      String token = sharedPreferences
+                          .getString(AppConstant.ACCESS_TOKEN);
+                      String id = sharedPreferences
+                          .getString(AppConstant.EMP_ID);
+                      String  uri = Services.AddNewOT;
+
+                      Map body = {
+
+                        // {
+                        //   "tokenKey": "token",
+                        //   "toEmp": 2,
+                        //   "noted": "",
+                        //   "startDate": "2021-03-24T23:51:05.369497+07:00",
+                        //   "endDate": "2021-03-24T23:51:05.369497+07:00"
+                        // }
+
+                        // "tokenKey": token,
+                        // "lang": '2',
+                        // "OTDate": date,
+                        // "stTime": selectedstartdateTime,
+                        // "endTime": selectedenddateTime,
+                        // "otTitle": subjectController.text,
+                        // "otReason": reasonController.text,
+                        // // "reasone": .text,
+                        // "empId": id,
+                      };
+
+                      print(body);
+
+                      http.post(uri, body: body).then((response) {
+                        var jsonResponse = jsonDecode(response.body);
+                        // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+
+                        print(jsonResponse.toString());
+                        if (jsonResponse["StatusCode"] == 200) {
+                          setState(() {
+                            isLoading = false;
+                          });
+
+                          print("j&&& $jsonResponse");
+                          Navigator.pop(context);
+                        } else {
+                          print(
+                              "ModelError: ${jsonResponse["ModelErrors"]}");
+                          if (jsonResponse["ModelErrors"] ==
+                              'Unauthorized') {
+                            GetToken().getToken().then((value) {});
+                            // Future<String> token = getToken();
+                          } else {
+                            // currentState.showSnackBar(
+                            //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+                          }
+                        }
+                      });
+                    }
                 }),
             RaisedButton(
                 child: Text("Reset",style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),

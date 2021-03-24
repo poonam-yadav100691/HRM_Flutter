@@ -25,13 +25,14 @@ import 'dart:typed_data';
 
 import 'package:toast/toast.dart';
 
-List<Permission> listOfPermission = [];
 
-Permission getPermissionObject(String type) {
-  Permission _permission;
+List<Permission> listOfPermission=[];
+
+Permission getPermissionObject(String type){
+Permission _permission;
   listOfPermission.forEach((element) {
-    if (element.app_permissionName == type) {
-      _permission = element;
+    if(element.app_permissionName==type){
+      _permission= element;
     }
   });
 
@@ -87,18 +88,29 @@ class _MyHomePageState extends State<MyHomePage> {
       Map body = {
         "Tokenkey": token,
       };
+
       http.post(uri, body: body).then((response) {
         if (response.statusCode == 200) {
           var jsonResponse = jsonDecode(response.body);
+
+          print('permission response  $jsonResponse');
+
           if (jsonResponse["StatusCode"] == 200) {
+            // sharedPreferences.setString(
+            //     AppConstant.PERMISSIONS, jsonResponse['ResultObject']);
             final List parsed = jsonResponse['ResultObject'];
-            List<Permission> _permissions = [];
-            parsed.forEach((element) {
-              _permissions.add(Permission.fromJson(element));
-            });
-            setState(() {
-              listOfPermission = _permissions;
-            });
+            List<Permission> _permissions =[];
+
+               parsed.forEach((element) {
+                 _permissions.add(Permission.fromJson(element));
+               });
+
+               setState(() {
+                 listOfPermission=_permissions;
+
+               });
+
+            // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
             getLeaveCounts();
           } else {
             setState(() {
@@ -115,6 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
             }
           }
         } else {
+          print("response.statusCode.." + response.statusCode.toString());
           _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
               "Something wnet wrong.. Please try again later."));
         }
@@ -130,16 +143,22 @@ class _MyHomePageState extends State<MyHomePage> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.LeaveBalance;
+
     setState(() {
       isLoading = true;
     });
     Map body = {"Tokenkey": token, "lang": '2'};
     http.post(uri, body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
-      print("jsonResponse: " + jsonResponse.toString());
+      print("j&&&&&&&&&&&&&&&&&&&&&&&" + jsonResponse.toString());
       GetBalance balance = new GetBalance.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
         balanceList = balance.resultObject;
+
+        // for (int i = 0; i < balanceList.length; i++) {
+        //   leaveTypeList.add(balanceList[i]);
+        // }
+        // });
         print(balanceList.toString());
         setState(() {
           isLoading = false;
@@ -328,7 +347,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(username ?? "",
+                          Text(username??"",
                               style: TextStyle(
                                   fontSize: 16.0, fontWeight: FontWeight.bold)),
                           Padding(padding: EdgeInsets.only(top: 6)),
@@ -488,6 +507,7 @@ class _MyHomePageState extends State<MyHomePage> {
               countTxt == null
                   ? Padding(padding: EdgeInsets.only(top: 10))
                   : Padding(padding: EdgeInsets.only(bottom: 0)),
+<<<<<<< HEAD
               Container(
                 padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
@@ -514,6 +534,16 @@ class _MyHomePageState extends State<MyHomePage> {
               countTxt == null
                   ? Padding(padding: EdgeInsets.only(bottom: 7))
                   : Padding(padding: EdgeInsets.only(bottom: 7)),
+=======
+              Image.asset(
+                img,
+                fit: BoxFit.contain,
+                height: 55,
+              ),
+              countTxt == null
+                  ? Padding(padding: EdgeInsets.only(bottom: 10))
+                  : Padding(padding: EdgeInsets.only(bottom: 3)),
+>>>>>>> 2b50d07dce896c8c1d760cb9aeff9945b14fb5bd
               Text(
                 title,
                 style: TextStyle(fontSize: 13, color: Colors.grey),
@@ -571,7 +601,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print("in body---");
     Size size = MediaQuery.of(context).size;
     return Container(
-      // color: leaveCardcolor,
+      color: leaveCardcolor,
       child: Column(children: [
         Container(
           height: size.height * 0.11,
@@ -603,7 +633,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // crossAxisSpacing: 15,
               // mainAxisSpacing: 15,
               crossAxisCount: 3,
-              children: getChildren(),
+              children:getChildren(),
             ),
           ),
         ),
@@ -611,101 +641,70 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  List<Widget> getChildren() {
-    List<Widget> list = [];
 
-    if (getPermissionObject('News')?.app_view == '1') {
-      // list.add(_homeGrid("News", "lib/assets/images/homeGrid/news12.jpg", newsList,
-      //     getPermissionObject('News')?.CountItem ?? '0'));
-      list.add(_homeGrid("News", "lib/assets/images/homeGrid/newNews.png",
-          newsList, getPermissionObject('News')?.CountItem ?? '0'));
+  List<Widget> getChildren(){
+
+    List<Widget> list=[];
+
+
+    if(getPermissionObject('News')?.app_view=='1'){
+    list.add(_homeGrid("News", "lib/assets/images/news12.jpg",
+    newsList,getPermissionObject('News')?.CountItem??'0'));
     }
 
-    if (getPermissionObject('My Request')?.app_view == '1') {
-      // list.add(_homeGrid("My Request", "lib/assets/images/images.png",
-      //     myRequestRoute, getPermissionObject('My Request')?.CountItem ?? '0'));
-      list.add(_homeGrid(
-          "My Request",
-          "lib/assets/images/homeGrid/newMyReq.png",
-          myRequestRoute,
-          getPermissionObject('My Request')?.CountItem ?? '0'));
+    if(getPermissionObject('Tasks')?.app_view=='1'){
+    list.add( _homeGrid(
+    "Tasks", "lib/assets/images/task.png", taskRoute, getPermissionObject('Tasks')?.CountItem??'0'));
     }
 
-    if (getPermissionObject('Payslip')?.app_view == '1') {
-      // list.add(_homeGrid(
-      //     "Payslip", "lib/assets/images/payslip.png", payslipRoute, null));
-      list.add(_homeGrid("Payslip", "lib/assets/images/homeGrid/newPayslip.png",
-          payslipRoute, null));
+    if(getPermissionObject('Emp Request')?.app_view=='1'){
+    list.add( _homeGrid("Emp Request", "lib/assets/images/empReuest.png",
+    empRequestRoute, getPermissionObject('Emp Request')?.CountItem??'0'));
     }
 
-    if (getPermissionObject('Tasks')?.app_view == '1') {
-      // list.add(_homeGrid("Tasks", "lib/assets/images/task.png", taskRoute,
-      //     getPermissionObject('Tasks')?.CountItem ?? '0'));
-      list.add(_homeGrid("Tasks", "lib/assets/images/homeGrid/newTask.png",
-          taskRoute, getPermissionObject('Tasks')?.CountItem ?? '0'));
+    if(getPermissionObject('Delegates')?.app_view=='1'){
+    list.add( _homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
+    delegateRoute,getPermissionObject('Delegates')?.CountItem??'0'));
     }
 
-    if (getPermissionObject('Attendance')?.app_view == '1') {
-      // list.add(_homeGrid("Attendance", "lib/assets/images/attendance.png",
-      //     attendanceRoute, null));
-      list.add(_homeGrid(
-          "Attendance",
-          "lib/assets/images/homeGrid/newAttendance.png",
-          attendanceRoute,
-          null));
+
+    print('my rew appview  ${getPermissionObject('My Request')?.app_view}');
+    if(getPermissionObject('My Request')?.app_view=='1'){
+    list.add( _homeGrid("My Request", "lib/assets/images/images.png",
+    myRequestRoute,getPermissionObject('My Request')?.CountItem??'0'));
     }
 
-    if (getPermissionObject('Holiday')?.app_view == '1') {
-      // list.add(_homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
-      //     calendarViewRoute, null));
-      list.add(_homeGrid(
-          "Holiday",
-          "lib/assets/images/homeGrid/newholidays.png",
-          calendarViewRoute,
-          null));
+
+    if(getPermissionObject('Attendance')?.app_view=='1'){
+    list.add( _homeGrid("Attendance", "lib/assets/images/attendance.png",
+    attendanceRoute, null));
     }
 
-    if (getPermissionObject('Insurance')?.app_view == '1') {
-      // list.add(_homeGrid("Insurance", "lib/assets/images/insurance.png",
-      //     insuranceRoute, null));
-
-      list.add(_homeGrid("Insurance",
-          "lib/assets/images/homeGrid/newInsurance.png", insuranceRoute, null));
+    if(getPermissionObject('Loans')?.app_view=='1'){
+    list.add( _homeGrid(
+    "Loans", "lib/assets/images/loan.png", loansRoute, null));
     }
 
-    if (getPermissionObject('Loans')?.app_view == '1') {
-      // list.add(
-      //     _homeGrid("Loans", "lib/assets/images/loan.png", loansRoute, null));
-      list.add(_homeGrid(
-          "Loans", "lib/assets/images/homeGrid/newLoan.png", loansRoute, null));
+    if(getPermissionObject('Insurance')?.app_view=='1'){
+    list.add(  _homeGrid("Insurance", "lib/assets/images/insurance.png",
+    insuranceRoute, null));
     }
 
-    if (getPermissionObject('Delegates')?.app_view == '1') {
-      // list.add(_homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
-      //     delegateRoute, getPermissionObject('Delegates')?.CountItem ?? '0'));
-      list.add(_homeGrid(
-          "Delegates",
-          "lib/assets/images/homeGrid/newDelegates.png",
-          delegateRoute,
-          getPermissionObject('Delegates')?.CountItem ?? '0'));
+    if(getPermissionObject('Payslip')?.app_view=='1'){
+    list.add(  _homeGrid("Payslip", "lib/assets/images/payslip.png",
+    payslipRoute, null));
     }
 
-    if (getPermissionObject('Emp Request')?.app_view == '1') {
-      // list.add(_homeGrid(
-      //     "Emp Request",
-      //     "lib/assets/images/empReuest.png",
-      //     empRequestRoute,
-      //     getPermissionObject('Emp Request')?.CountItem ?? '0'));
-      list.add(_homeGrid(
-          "Emp Request",
-          "lib/assets/images/homeGrid/newEmpReq.png",
-          empRequestRoute,
-          getPermissionObject('Emp Request')?.CountItem ?? '0'));
+    if(getPermissionObject('Holiday')?.app_view=='1'){
+    list.add(_homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
+    calendarViewRoute, null));
     }
-
     return list;
   }
+
 }
+
+
 
 class GetToken {
   SharedPreferences sharedPreferences;
@@ -732,6 +731,7 @@ class GetToken {
               var jsonResponse = jsonDecode(response.body);
               print("Here--In Token-----$jsonResponse");
               if (jsonResponse["StatusCode"] == 200) {
+
                 LoginResponse login =
                     new LoginResponse.fromJson(jsonResponse["ResultObject"][0]);
 

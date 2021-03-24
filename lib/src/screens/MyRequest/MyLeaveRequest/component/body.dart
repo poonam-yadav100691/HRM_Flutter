@@ -76,7 +76,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             child: new Stack(
               children: <Widget>[
                 planetCard(context, leaveList[i]),
-                planetThumbnail(context, leaveList[i].statusText.toLowerCase()),
+                  planetThumbnail(context, leaveList[i].statusText.toLowerCase()),
               ],
             ),
           ),
