@@ -87,12 +87,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     return Background(child: ListView(children: children));
   }
 
-  Widget planetThumbnail(BuildContext context,String statusText) {
+  Widget planetThumbnail(BuildContext context, String statusText) {
     // _onDateRangeSelect(leaveList.strDate, leaveList.endDate);
     return Container(
       child: new Image(
         image: new AssetImage(
-            "lib/assets/images/" + statusText + ".png"),
+            "lib/assets/images/${statusText[0].toUpperCase()}${statusText.substring(1)}.png"),
         height: 40.0,
         width: 40.0,
       ),

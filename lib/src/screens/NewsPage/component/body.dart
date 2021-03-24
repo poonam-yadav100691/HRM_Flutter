@@ -98,8 +98,6 @@ class _BodyState extends State<Body> {
           GetToken().getToken().then((value) {
             _deleteNews(newsID);
           });
-
-          // Future<String> token = getToken();
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

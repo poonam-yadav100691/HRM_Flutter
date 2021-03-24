@@ -125,70 +125,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // Future<void> getToken() async {
-  //   Network().check().then((intenet) async {
-  //     if (intenet != null && intenet) {
-  //       sharedPreferences = await SharedPreferences.getInstance();
-  //       String username = sharedPreferences.getString(AppConstant.LoginGmailID);
-  //       String password = sharedPreferences.getString(AppConstant.PASSWORD);
-  //       String urname = sharedPreferences.getString(AppConstant.USERNAME);
-  //       print("username---2 : $username");
-  //       print("urname---2 : $urname");
-  //       try {
-  //         final uri = Services.LOGIN;
-  //         Map body = {
-  //           "PassKey": "a486f489-76c0-4c49-8ff0-d0fdec0a162b",
-  //           "UserName": username,
-  //           "UserPassword": password
-  //         };
-  //         http.post(uri, body: body).then((response) {
-  //           if (response.statusCode == 200) {
-  //             var jsonResponse = jsonDecode(response.body);
-  //             print("Reponse---2 : $jsonResponse");
-  //             if (jsonResponse["StatusCode"] == 200) {
-  //               // loginResponse login =
-  //               //     new loginResponse.fromJson(jsonResponse["ResultObject"][0]);
-  //               //     sharedPreferences.setInt(
-  //               //         AppConstant.USER_ID.toString(), login.userId);
-  //               //     sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
-  //               //     sharedPreferences.setString(
-  //               //         AppConstant.ACCESS_TOKEN, login.tokenKey);
-  //               //     sharedPreferences.setString(
-  //               //         AppConstant.USERNAME, login.eng_fullname);
-  //               //     sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);
-  //               //     sharedPreferences.setString(
-  //               //         AppConstant.PHONENO, login.emp_mobile);
-  //               //     sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
-  //               //     sharedPreferences.setString(
-  //               //         AppConstant.DEPARTMENT, login.emp_dep);
-  //               //     sharedPreferences.setString(
-  //               //         AppConstant.COMPANY, login.emp_company);
-  //               //     _register();
-  //               //   } else {
-  //               //     _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
-  //               //         "Something wnet wrong.. Please try again later."));
-  //               //   }
-  //               // } else {
-  //               //   print("response.statusCode.." + response.statusCode.toString());
-  //               //
-  //               //   _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
-  //               //       "Something wnet wrong.. Please try again later."));
-  //             }
-  //           }
-  //         }
-  //             );
-  //       } catch (e) {
-  //         print("Error: $e");
-  //         return (e);
-  //       }
-  //     } else {
-  //       Navigator.pop(context);
-  //       Toast.show("Please check internet connection", context,
-  //           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-  //     }
-  //   });
-  // }
-
   Future<void> getLeaveCounts() async {
     balanceList.clear();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -529,6 +465,7 @@ class _MyHomePageState extends State<MyHomePage> {
               countTxt == null
                   ? Container()
                   : Container(
+                      // color: Colors.pink,
                       child: Align(
                         alignment: Alignment.topRight,
                         child: Container(
@@ -552,14 +489,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   ? Padding(padding: EdgeInsets.only(top: 10))
                   : Padding(padding: EdgeInsets.only(bottom: 0)),
               Container(
+                padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey[600],
+                      color: Colors.grey[500],
                       spreadRadius: 1,
-                      blurRadius: 2,
+                      blurRadius: 4,
                       offset: Offset(1, 2), // changes position of shadow
                     ),
                   ],
@@ -574,13 +512,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               countTxt == null
-                  ? Padding(padding: EdgeInsets.only(bottom: 5))
-                  : Padding(padding: EdgeInsets.only(bottom: 5)),
+                  ? Padding(padding: EdgeInsets.only(bottom: 7))
+                  : Padding(padding: EdgeInsets.only(bottom: 7)),
               Text(
                 title,
                 style: TextStyle(fontSize: 13, color: Colors.grey),
               ),
-              Padding(padding: EdgeInsets.only(top: 5))
+              // Padding(padding: EdgeInsets.only(top: 5))
             ]),
       ),
     );
@@ -639,32 +577,31 @@ class _MyHomePageState extends State<MyHomePage> {
           height: size.height * 0.11,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           decoration: BoxDecoration(
-              // shape: BoxShape.circle, // BoxShape.circle or BoxShape.retangle
+              // shape: BoxShape.circle, 
+              // BoxShape.circle or BoxShape.retangle
               color: leaveCardcolor,
               boxShadow: [
                 BoxShadow(
                     color: Colors.grey[800], blurRadius: 4.0, spreadRadius: 1),
-              ]),
+              ],
+              ),
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: <Widget>[
               for (var i = 0; i < balanceList.length; i++)
                 _homeSlider(balanceList[i].leaveName, balanceList[i].leaveUse,
                     balanceList[i].leaveTotal, _color[i])
-              // i++
-
-              // for (var color in _color)
             ],
           ),
         ),
         SingleChildScrollView(
           child: Container(
-            height: size.height * 0.62,
+            height: size.height,
             child: GridView.count(
               primary: false,
-              padding: const EdgeInsets.all(10),
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
+              // padding: const EdgeInsets.all(10),
+              // crossAxisSpacing: 15,
+              // mainAxisSpacing: 15,
               crossAxisCount: 3,
               children: getChildren(),
             ),
