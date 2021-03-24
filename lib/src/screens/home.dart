@@ -482,7 +482,6 @@ class _MyHomePageState extends State<MyHomePage> {
               countTxt == null
                   ? Container()
                   : Container(
-                      // color: Colors.pink,
                       child: Align(
                         alignment: Alignment.topRight,
                         child: Container(
@@ -505,19 +504,36 @@ class _MyHomePageState extends State<MyHomePage> {
               countTxt == null
                   ? Padding(padding: EdgeInsets.only(top: 10))
                   : Padding(padding: EdgeInsets.only(bottom: 0)),
-              Image.asset(
-                img,
-                fit: BoxFit.contain,
-                height: 55,
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey[600],
+                      spreadRadius: 1,
+                      blurRadius: 2,
+                      offset: Offset(1, 2), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image.asset(
+                    img,
+                    fit: BoxFit.contain,
+                    height: 45,
+                  ),
+                ),
               ),
               countTxt == null
-                  ? Padding(padding: EdgeInsets.only(bottom: 10))
-                  : Padding(padding: EdgeInsets.only(bottom: 3)),
+                  ? Padding(padding: EdgeInsets.only(bottom: 5))
+                  : Padding(padding: EdgeInsets.only(bottom: 5)),
               Text(
                 title,
                 style: TextStyle(fontSize: 13, color: Colors.grey),
               ),
-              // Padding(padding: EdgeInsets.only(top: 5))
+              Padding(padding: EdgeInsets.only(top: 5))
             ]),
       ),
     );
@@ -570,7 +586,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print("in body---");
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: leaveCardcolor,
+      // color: leaveCardcolor,
       child: Column(children: [
         Container(
           height: size.height * 0.11,
@@ -614,57 +630,92 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Widget> list = [];
 
     if (getPermissionObject('News')?.app_view == '1') {
-      list.add(_homeGrid("News", "lib/assets/images/news12.jpg", newsList,
-          getPermissionObject('News')?.CountItem ?? '0'));
+      // list.add(_homeGrid("News", "lib/assets/images/homeGrid/news12.jpg", newsList,
+      //     getPermissionObject('News')?.CountItem ?? '0'));
+      list.add(_homeGrid("News", "lib/assets/images/homeGrid/newNews.png",
+          newsList, getPermissionObject('News')?.CountItem ?? '0'));
     }
 
-    if (getPermissionObject('Tasks')?.app_view == '1') {
-      list.add(_homeGrid("Tasks", "lib/assets/images/task.png", taskRoute,
-          getPermissionObject('Tasks')?.CountItem ?? '0'));
-    }
-
-    if (getPermissionObject('Emp Request')?.app_view == '1') {
-      list.add(_homeGrid(
-          "Emp Request",
-          "lib/assets/images/empReuest.png",
-          empRequestRoute,
-          getPermissionObject('Emp Request')?.CountItem ?? '0'));
-    }
-
-    if (getPermissionObject('Delegates')?.app_view == '1') {
-      list.add(_homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
-          delegateRoute, getPermissionObject('Delegates')?.CountItem ?? '0'));
-    }
-
-    print('my rew appview  ${getPermissionObject('My Request')?.app_view}');
     if (getPermissionObject('My Request')?.app_view == '1') {
-      list.add(_homeGrid("My Request", "lib/assets/images/images.png",
-          myRequestRoute, getPermissionObject('My Request')?.CountItem ?? '0'));
-    }
-
-    if (getPermissionObject('Attendance')?.app_view == '1') {
-      list.add(_homeGrid("Attendance", "lib/assets/images/attendance.png",
-          attendanceRoute, null));
-    }
-
-    if (getPermissionObject('Loans')?.app_view == '1') {
-      list.add(
-          _homeGrid("Loans", "lib/assets/images/loan.png", loansRoute, null));
-    }
-
-    if (getPermissionObject('Insurance')?.app_view == '1') {
-      list.add(_homeGrid("Insurance", "lib/assets/images/insurance.png",
-          insuranceRoute, null));
+      // list.add(_homeGrid("My Request", "lib/assets/images/images.png",
+      //     myRequestRoute, getPermissionObject('My Request')?.CountItem ?? '0'));
+      list.add(_homeGrid(
+          "My Request",
+          "lib/assets/images/homeGrid/newMyReq.png",
+          myRequestRoute,
+          getPermissionObject('My Request')?.CountItem ?? '0'));
     }
 
     if (getPermissionObject('Payslip')?.app_view == '1') {
+      // list.add(_homeGrid(
+      //     "Payslip", "lib/assets/images/payslip.png", payslipRoute, null));
+      list.add(_homeGrid("Payslip", "lib/assets/images/homeGrid/newPayslip.png",
+          payslipRoute, null));
+    }
+
+    if (getPermissionObject('Tasks')?.app_view == '1') {
+      // list.add(_homeGrid("Tasks", "lib/assets/images/task.png", taskRoute,
+      //     getPermissionObject('Tasks')?.CountItem ?? '0'));
+      list.add(_homeGrid("Tasks", "lib/assets/images/homeGrid/newTask.png",
+          taskRoute, getPermissionObject('Tasks')?.CountItem ?? '0'));
+    }
+
+    if (getPermissionObject('Attendance')?.app_view == '1') {
+      // list.add(_homeGrid("Attendance", "lib/assets/images/attendance.png",
+      //     attendanceRoute, null));
       list.add(_homeGrid(
-          "Payslip", "lib/assets/images/payslip.png", payslipRoute, null));
+          "Attendance",
+          "lib/assets/images/homeGrid/newAttendance.png",
+          attendanceRoute,
+          null));
     }
 
     if (getPermissionObject('Holiday')?.app_view == '1') {
-      list.add(_homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
-          calendarViewRoute, null));
+      // list.add(_homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
+      //     calendarViewRoute, null));
+      list.add(_homeGrid(
+          "Holiday",
+          "lib/assets/images/homeGrid/newholidays.png",
+          calendarViewRoute,
+          null));
+    }
+
+    if (getPermissionObject('Insurance')?.app_view == '1') {
+      // list.add(_homeGrid("Insurance", "lib/assets/images/insurance.png",
+      //     insuranceRoute, null));
+
+      list.add(_homeGrid("Insurance",
+          "lib/assets/images/homeGrid/newInsurance.png", insuranceRoute, null));
+    }
+
+    if (getPermissionObject('Loans')?.app_view == '1') {
+      // list.add(
+      //     _homeGrid("Loans", "lib/assets/images/loan.png", loansRoute, null));
+      list.add(_homeGrid(
+          "Loans", "lib/assets/images/homeGrid/newLoan.png", loansRoute, null));
+    }
+
+    if (getPermissionObject('Delegates')?.app_view == '1') {
+      // list.add(_homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
+      //     delegateRoute, getPermissionObject('Delegates')?.CountItem ?? '0'));
+      list.add(_homeGrid(
+          "Delegates",
+          "lib/assets/images/homeGrid/newDelegates.png",
+          delegateRoute,
+          getPermissionObject('Delegates')?.CountItem ?? '0'));
+    }
+
+    if (getPermissionObject('Emp Request')?.app_view == '1') {
+      // list.add(_homeGrid(
+      //     "Emp Request",
+      //     "lib/assets/images/empReuest.png",
+      //     empRequestRoute,
+      //     getPermissionObject('Emp Request')?.CountItem ?? '0'));
+      list.add(_homeGrid(
+          "Emp Request",
+          "lib/assets/images/homeGrid/newEmpReq.png",
+          empRequestRoute,
+          getPermissionObject('Emp Request')?.CountItem ?? '0'));
     }
     return list;
   }
