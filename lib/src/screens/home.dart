@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Colors.purple[100],
   ];
 
-  List<ResultObject> balanceList = new List();
+  List<ResultObject1> balanceList = new List();
   @override
   void initState() {
     super.initState();
@@ -92,6 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
       http.post(uri, body: body).then((response) {
         if (response.statusCode == 200) {
           var jsonResponse = jsonDecode(response.body);
+
+          print('permission response  $jsonResponse');
+
           if (jsonResponse["StatusCode"] == 200) {
             // sharedPreferences.setString(
             //     AppConstant.PERMISSIONS, jsonResponse['ResultObject']);
@@ -567,31 +570,14 @@ class _MyHomePageState extends State<MyHomePage> {
               countTxt == null
                   ? Padding(padding: EdgeInsets.only(top: 10))
                   : Padding(padding: EdgeInsets.only(bottom: 0)),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey[600],
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: Offset(1, 2), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Image.asset(
-                    img,
-                    fit: BoxFit.contain,
-                    height: 45,
-                  ),
-                ),
+              Image.asset(
+                img,
+                fit: BoxFit.contain,
+                height: 55,
               ),
               countTxt == null
-                  ? Padding(padding: EdgeInsets.only(bottom: 5))
-                  : Padding(padding: EdgeInsets.only(bottom: 5)),
+                  ? Padding(padding: EdgeInsets.only(bottom: 10))
+                  : Padding(padding: EdgeInsets.only(bottom: 3)),
               Text(
                 title,
                 style: TextStyle(fontSize: 13, color: Colors.grey),
@@ -649,7 +635,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print("in body---");
     Size size = MediaQuery.of(context).size;
     return Container(
-      // color: leaveCardcolor,
+      color: leaveCardcolor,
       child: Column(children: [
         Container(
           height: size.height * 0.11,
@@ -717,6 +703,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
 
+    print('my rew appview  ${getPermissionObject('My Request')?.app_view}');
     if(getPermissionObject('My Request')?.app_view=='1'){
     list.add( _homeGrid("My Request", "lib/assets/images/images.png",
     myRequestRoute,getPermissionObject('My Request')?.CountItem??'0'));

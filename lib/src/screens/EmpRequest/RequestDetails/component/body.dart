@@ -248,7 +248,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Duration: ${requestItemObject[0].duration}'),
+                                  'Duration: ${requestItemObject.isNotEmpty?requestItemObject[0].duration:""}'),
                             ),
                             SizedBox(
                               width: size.width,

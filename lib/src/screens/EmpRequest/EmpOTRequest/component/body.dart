@@ -1,5 +1,6 @@
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveReqDetails/myLeaveReqDetails.dart';
 import 'package:flutter/material.dart';
 import '../../empRequestPODO.dart';
 import './background.dart';
@@ -18,11 +19,21 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   // var totalDays = 0;
 
+
+
+
   _BodyState(this.empOtList);
+
+
+
 
   @override
   AnimationController animationController;
   Animation<dynamic> animation;
+
+
+
+
   Widget build(BuildContext context) {
     // List jsonResponse = jsonDecode(empOtList);
     final children = <Widget>[];
@@ -32,13 +43,13 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           onTap: () {
             print("empOtList[i].requestID:: ${empOtList[i].requestID}");
 
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) =>
-            //         MyLeaveReqDetails(levReqDetailID: empOtList[i].requestID),
-            //   ),
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    MyLeaveReqDetails(levReqDetailID: empOtList[i].requestID),
+              ),
+            );
           },
           child: Container(
             margin: const EdgeInsets.symmetric(
