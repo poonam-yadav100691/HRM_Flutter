@@ -228,11 +228,16 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 color: Colors.grey[300],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Period: ${(requestItemObject[0].strDate).substring(0, 9)} - ${requestItemObject[0].endDate.substring(0, 9)}'),
-                            ),
+                            Text('${requestItemObject.length}'),
+                            // requestItemObject.length > 0 ||
+                            //         requestItemObject[0].strDate != null
+                            //     ? Padding(
+                            //         padding:
+                            //             const EdgeInsets.symmetric(vertical: 8),
+                            //         child: Text(
+                            //             'Period: ${(requestItemObject[0].strDate).substring(0, 9)} - ${requestItemObject[0].endDate.substring(0, 9)}'),
+                            //       )
+                            //     : Container(),
                             SizedBox(
                               width: size.width,
                               height: 1.0,

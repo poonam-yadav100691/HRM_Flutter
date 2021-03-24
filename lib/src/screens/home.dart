@@ -104,17 +104,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
                setState(() {
                  listOfPermission=_permissions;
+
                });
 
             // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
             getLeaveCounts();
           } else {
-            // setState(() {
-            //   isLoading = false;
-            // });
+            setState(() {
+              isLoading = false;
+            });
             print("ModelError: ${jsonResponse["ModelErrors"]}");
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-              getToken().then((value) {
+              GetToken().getToken().then((value) {
                 _register();
               });
             } else {
@@ -134,72 +135,69 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> getToken() async {
-    Network().check().then((intenet) async {
-      if (intenet != null && intenet) {
-        sharedPreferences = await SharedPreferences.getInstance();
-        String username = sharedPreferences.getString(AppConstant.LoginGmailID);
-        String password = sharedPreferences.getString(AppConstant.PASSWORD);
-        String urname = sharedPreferences.getString(AppConstant.USERNAME);
-        print("username---2 : $username");
-        print("urname---2 : $urname");
-
-        try {
-          final uri = Services.LOGIN;
-          Map body = {
-            "PassKey": "a486f489-76c0-4c49-8ff0-d0fdec0a162b",
-            "UserName": username,
-            "UserPassword": password
-          };
-
-          http.post(uri, body: body).then((response) {
-            if (response.statusCode == 200) {
-              var jsonResponse = jsonDecode(response.body);
-              print("Reponse---2 : $jsonResponse");
-              if (jsonResponse["StatusCode"] == 200) {
-                // loginResponse login =
-                //     new loginResponse.fromJson(jsonResponse["ResultObject"][0]);
-
-                //     sharedPreferences.setInt(
-                //         AppConstant.USER_ID.toString(), login.userId);
-                //     sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
-                //     sharedPreferences.setString(
-                //         AppConstant.ACCESS_TOKEN, login.tokenKey);
-                //     sharedPreferences.setString(
-                //         AppConstant.USERNAME, login.eng_fullname);
-                //     sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);
-                //     sharedPreferences.setString(
-                //         AppConstant.PHONENO, login.emp_mobile);
-                //     sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
-                //     sharedPreferences.setString(
-                //         AppConstant.DEPARTMENT, login.emp_dep);
-                //     sharedPreferences.setString(
-                //         AppConstant.COMPANY, login.emp_company);
-                //     _register();
-                //   } else {
-                //     _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
-                //         "Something wnet wrong.. Please try again later."));
-                //   }
-                // } else {
-                //   print("response.statusCode.." + response.statusCode.toString());
-                //
-                //   _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
-                //       "Something wnet wrong.. Please try again later."));
-              }
-            }
-          }
-              );
-        } catch (e) {
-          print("Error: $e");
-          return (e);
-        }
-      } else {
-        Navigator.pop(context);
-        Toast.show("Please check internet connection", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      }
-    });
-  }
+  // Future<void> getToken() async {
+  //   Network().check().then((intenet) async {
+  //     if (intenet != null && intenet) {
+  //       sharedPreferences = await SharedPreferences.getInstance();
+  //       String username = sharedPreferences.getString(AppConstant.LoginGmailID);
+  //       String password = sharedPreferences.getString(AppConstant.PASSWORD);
+  //       String urname = sharedPreferences.getString(AppConstant.USERNAME);
+  //       print("username---2 : $username");
+  //       print("urname---2 : $urname");
+  //       try {
+  //         final uri = Services.LOGIN;
+  //         Map body = {
+  //           "PassKey": "a486f489-76c0-4c49-8ff0-d0fdec0a162b",
+  //           "UserName": username,
+  //           "UserPassword": password
+  //         };
+  //         http.post(uri, body: body).then((response) {
+  //           if (response.statusCode == 200) {
+  //             var jsonResponse = jsonDecode(response.body);
+  //             print("Reponse---2 : $jsonResponse");
+  //             if (jsonResponse["StatusCode"] == 200) {
+  //               // loginResponse login =
+  //               //     new loginResponse.fromJson(jsonResponse["ResultObject"][0]);
+  //               //     sharedPreferences.setInt(
+  //               //         AppConstant.USER_ID.toString(), login.userId);
+  //               //     sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
+  //               //     sharedPreferences.setString(
+  //               //         AppConstant.ACCESS_TOKEN, login.tokenKey);
+  //               //     sharedPreferences.setString(
+  //               //         AppConstant.USERNAME, login.eng_fullname);
+  //               //     sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);
+  //               //     sharedPreferences.setString(
+  //               //         AppConstant.PHONENO, login.emp_mobile);
+  //               //     sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
+  //               //     sharedPreferences.setString(
+  //               //         AppConstant.DEPARTMENT, login.emp_dep);
+  //               //     sharedPreferences.setString(
+  //               //         AppConstant.COMPANY, login.emp_company);
+  //               //     _register();
+  //               //   } else {
+  //               //     _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
+  //               //         "Something wnet wrong.. Please try again later."));
+  //               //   }
+  //               // } else {
+  //               //   print("response.statusCode.." + response.statusCode.toString());
+  //               //
+  //               //   _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
+  //               //       "Something wnet wrong.. Please try again later."));
+  //             }
+  //           }
+  //         }
+  //             );
+  //       } catch (e) {
+  //         print("Error: $e");
+  //         return (e);
+  //       }
+  //     } else {
+  //       Navigator.pop(context);
+  //       Toast.show("Please check internet connection", context,
+  //           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+  //     }
+  //   });
+  // }
 
   Future<void> getLeaveCounts() async {
     balanceList.clear();
@@ -232,7 +230,9 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          // Future<String> token = getToken();
+          GetToken().getToken().then((value) {
+            getLeaveCounts();
+          });
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -255,11 +255,11 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
-            getTranslated(context, 'MyDetails'),
+            getTranslated(context, 'TKGroupHRMS'),
             style: TextStyle(
                 fontFamily: "sf-ui-text", fontWeight: FontWeight.bold),
           ),
-          backgroundColor: leaveCardcolor1,
+          // backgroundColor: leaveCardcolor1,
           shadowColor: Colors.transparent,
           centerTitle: true,
           // leading: IconButton(
@@ -524,18 +524,18 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.pushNamed(context, pagNav);
       },
       child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey[800],
-              spreadRadius: 4,
-              blurRadius: 8,
-              offset: Offset(0, 2), // changes position of shadow
-            ),
-          ],
-        ),
+        // decoration: BoxDecoration(
+        //   color: Colors.white,
+        //   borderRadius: BorderRadius.circular(15),
+        //   boxShadow: [
+        //     BoxShadow(
+        //       color: Colors.grey[400],
+        //       spreadRadius: 3,
+        //       blurRadius: 5,
+        //       offset: Offset(0, 1), // changes position of shadow
+        //     ),
+        //   ],
+        // ),
         alignment: AlignmentDirectional(0.0, 0.0),
         padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
         child: Column(
@@ -543,10 +543,7 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               countTxt == null
-                  ? Visibility(
-                      child: Text("Gone"),
-                      visible: false,
-                    )
+                  ? Container()
                   : Container(
                       child: Align(
                         alignment: Alignment.topRight,
@@ -570,14 +567,31 @@ class _MyHomePageState extends State<MyHomePage> {
               countTxt == null
                   ? Padding(padding: EdgeInsets.only(top: 10))
                   : Padding(padding: EdgeInsets.only(bottom: 0)),
-              Image.asset(
-                img,
-                fit: BoxFit.contain,
-                height: 55,
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey[600],
+                      spreadRadius: 1,
+                      blurRadius: 2,
+                      offset: Offset(1, 2), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image.asset(
+                    img,
+                    fit: BoxFit.contain,
+                    height: 45,
+                  ),
+                ),
               ),
               countTxt == null
-                  ? Padding(padding: EdgeInsets.only(bottom: 10))
-                  : Padding(padding: EdgeInsets.only(bottom: 3)),
+                  ? Padding(padding: EdgeInsets.only(bottom: 5))
+                  : Padding(padding: EdgeInsets.only(bottom: 5)),
               Text(
                 title,
                 style: TextStyle(fontSize: 13, color: Colors.grey),
@@ -635,7 +649,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print("in body---");
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: leaveCardcolor,
+      // color: leaveCardcolor,
       child: Column(children: [
         Container(
           height: size.height * 0.11,
