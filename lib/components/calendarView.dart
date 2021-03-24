@@ -1,6 +1,15 @@
+import 'dart:convert';
+
+import 'package:HRMNew/models/calenderPodo.dart';
+import 'package:HRMNew/src/constants/AppConstant.dart';
+import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:http/http.dart' as http;
+
 
 // Example holidays
 final Map<DateTime, List> _holidays = {
@@ -26,6 +35,8 @@ class _CalendarViewState extends State<CalendarView>
   @override
   void initState() {
     super.initState();
+
+    _getRequests();
     final _selectedDay = DateTime.now();
 
     _events = {
@@ -361,6 +372,52 @@ class _CalendarViewState extends State<CalendarView>
   //     ],
   //   );
   // }
+
+  bool  isLoading = false;
+  List<ResultObject> myRequestList = new List();
+  Future<void> _getRequests() async {
+    // setState(() {
+    //   isLoading = true;
+    // });
+    myRequestList.clear();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    final uri = Services.PublicHolidays;
+    Map body = {
+      "Tokenkey": token,
+      "lang": '2',
+      "yearView":'2021'
+    };
+    http.post(uri, body: body).then((response) {
+      var jsonResponse = jsonDecode(response.body);
+      print(response.body);
+      MyRequestsCalender myRequest = new MyRequestsCalender.fromJson(jsonResponse);
+      if (jsonResponse["StatusCode"] == 200) {
+        setState(() {
+          isLoading = false;
+        });
+
+
+
+         print(myRequest.toJson().toString());
+        // print(leaveReqList.toString());
+        // print(otReqList.toString());
+      } else {
+        print("ModelError: ${jsonResponse["ModelErrors"]}");
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+          GetToken().getToken().then((value) {
+            _getRequests();
+          });
+
+        } else {
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
+      }
+    });
+  }
+
+
 
   Widget _buildEventList() {
     return ListView(

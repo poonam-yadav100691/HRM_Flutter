@@ -104,18 +104,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
                setState(() {
                  listOfPermission=_permissions;
-
                });
 
             // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
             getLeaveCounts();
           } else {
-            setState(() {
-              isLoading = false;
-            });
+            // setState(() {
+            //   isLoading = false;
+            // });
             print("ModelError: ${jsonResponse["ModelErrors"]}");
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-              getToken();
+              getToken().then((value) {
+                _register();
+              });
             } else {
               _scaffoldKey.currentState.showSnackBar(
                   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

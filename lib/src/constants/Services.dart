@@ -14,6 +14,7 @@ class Services {
   static final String DelNews = BASE_URL + 'New/DeleteNews';
 
   static final String NewsDetail = BASE_URL + 'NewsItem';
+  static final String PublicHolidays = BASE_URL + 'User/publicholidays';
   static final String MyRequest = BASE_URL + 'User/MyRequest';
   static final String AddNewLeave = BASE_URL + 'User/AddNewLeave';
   static final String RejectLeave = BASE_URL + 'User/RejectLeave';
