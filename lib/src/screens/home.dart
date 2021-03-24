@@ -25,14 +25,13 @@ import 'dart:typed_data';
 
 import 'package:toast/toast.dart';
 
+List<Permission> listOfPermission = [];
 
-List<Permission> listOfPermission=[];
-
-Permission getPermissionObject(String type){
-Permission _permission;
+Permission getPermissionObject(String type) {
+  Permission _permission;
   listOfPermission.forEach((element) {
-    if(element.app_permissionName==type){
-      _permission= element;
+    if (element.app_permissionName == type) {
+      _permission = element;
     }
   });
 
@@ -99,16 +98,15 @@ class _MyHomePageState extends State<MyHomePage> {
             // sharedPreferences.setString(
             //     AppConstant.PERMISSIONS, jsonResponse['ResultObject']);
             final List parsed = jsonResponse['ResultObject'];
-            List<Permission> _permissions =[];
+            List<Permission> _permissions = [];
 
-               parsed.forEach((element) {
-                 _permissions.add(Permission.fromJson(element));
-               });
+            parsed.forEach((element) {
+              _permissions.add(Permission.fromJson(element));
+            });
 
-               setState(() {
-                 listOfPermission=_permissions;
-
-               });
+            setState(() {
+              listOfPermission = _permissions;
+            });
 
             // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
             getLeaveCounts();
@@ -347,7 +345,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(username??"",
+                          Text(username ?? "",
                               style: TextStyle(
                                   fontSize: 16.0, fontWeight: FontWeight.bold)),
                           Padding(padding: EdgeInsets.only(top: 6)),
@@ -507,34 +505,6 @@ class _MyHomePageState extends State<MyHomePage> {
               countTxt == null
                   ? Padding(padding: EdgeInsets.only(top: 10))
                   : Padding(padding: EdgeInsets.only(bottom: 0)),
-<<<<<<< HEAD
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey[500],
-                      spreadRadius: 1,
-                      blurRadius: 4,
-                      offset: Offset(1, 2), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Image.asset(
-                    img,
-                    fit: BoxFit.contain,
-                    height: 45,
-                  ),
-                ),
-              ),
-              countTxt == null
-                  ? Padding(padding: EdgeInsets.only(bottom: 7))
-                  : Padding(padding: EdgeInsets.only(bottom: 7)),
-=======
               Image.asset(
                 img,
                 fit: BoxFit.contain,
@@ -543,7 +513,6 @@ class _MyHomePageState extends State<MyHomePage> {
               countTxt == null
                   ? Padding(padding: EdgeInsets.only(bottom: 10))
                   : Padding(padding: EdgeInsets.only(bottom: 3)),
->>>>>>> 2b50d07dce896c8c1d760cb9aeff9945b14fb5bd
               Text(
                 title,
                 style: TextStyle(fontSize: 13, color: Colors.grey),
@@ -607,14 +576,14 @@ class _MyHomePageState extends State<MyHomePage> {
           height: size.height * 0.11,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           decoration: BoxDecoration(
-              // shape: BoxShape.circle, 
-              // BoxShape.circle or BoxShape.retangle
-              color: leaveCardcolor,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey[800], blurRadius: 4.0, spreadRadius: 1),
-              ],
-              ),
+            // shape: BoxShape.circle,
+            // BoxShape.circle or BoxShape.retangle
+            color: leaveCardcolor,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey[800], blurRadius: 4.0, spreadRadius: 1),
+            ],
+          ),
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: <Widget>[
@@ -633,7 +602,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // crossAxisSpacing: 15,
               // mainAxisSpacing: 15,
               crossAxisCount: 3,
-              children:getChildren(),
+              children: getChildren(),
             ),
           ),
         ),
@@ -641,70 +610,65 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  List<Widget> getChildren() {
+    List<Widget> list = [];
 
-  List<Widget> getChildren(){
-
-    List<Widget> list=[];
-
-
-    if(getPermissionObject('News')?.app_view=='1'){
-    list.add(_homeGrid("News", "lib/assets/images/news12.jpg",
-    newsList,getPermissionObject('News')?.CountItem??'0'));
+    if (getPermissionObject('News')?.app_view == '1') {
+      list.add(_homeGrid("News", "lib/assets/images/news12.jpg", newsList,
+          getPermissionObject('News')?.CountItem ?? '0'));
     }
 
-    if(getPermissionObject('Tasks')?.app_view=='1'){
-    list.add( _homeGrid(
-    "Tasks", "lib/assets/images/task.png", taskRoute, getPermissionObject('Tasks')?.CountItem??'0'));
+    if (getPermissionObject('Tasks')?.app_view == '1') {
+      list.add(_homeGrid("Tasks", "lib/assets/images/task.png", taskRoute,
+          getPermissionObject('Tasks')?.CountItem ?? '0'));
     }
 
-    if(getPermissionObject('Emp Request')?.app_view=='1'){
-    list.add( _homeGrid("Emp Request", "lib/assets/images/empReuest.png",
-    empRequestRoute, getPermissionObject('Emp Request')?.CountItem??'0'));
+    if (getPermissionObject('Emp Request')?.app_view == '1') {
+      list.add(_homeGrid(
+          "Emp Request",
+          "lib/assets/images/empReuest.png",
+          empRequestRoute,
+          getPermissionObject('Emp Request')?.CountItem ?? '0'));
     }
 
-    if(getPermissionObject('Delegates')?.app_view=='1'){
-    list.add( _homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
-    delegateRoute,getPermissionObject('Delegates')?.CountItem??'0'));
+    if (getPermissionObject('Delegates')?.app_view == '1') {
+      list.add(_homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
+          delegateRoute, getPermissionObject('Delegates')?.CountItem ?? '0'));
     }
-
 
     print('my rew appview  ${getPermissionObject('My Request')?.app_view}');
-    if(getPermissionObject('My Request')?.app_view=='1'){
-    list.add( _homeGrid("My Request", "lib/assets/images/images.png",
-    myRequestRoute,getPermissionObject('My Request')?.CountItem??'0'));
+    if (getPermissionObject('My Request')?.app_view == '1') {
+      list.add(_homeGrid("My Request", "lib/assets/images/images.png",
+          myRequestRoute, getPermissionObject('My Request')?.CountItem ?? '0'));
     }
 
-
-    if(getPermissionObject('Attendance')?.app_view=='1'){
-    list.add( _homeGrid("Attendance", "lib/assets/images/attendance.png",
-    attendanceRoute, null));
+    if (getPermissionObject('Attendance')?.app_view == '1') {
+      list.add(_homeGrid("Attendance", "lib/assets/images/attendance.png",
+          attendanceRoute, null));
     }
 
-    if(getPermissionObject('Loans')?.app_view=='1'){
-    list.add( _homeGrid(
-    "Loans", "lib/assets/images/loan.png", loansRoute, null));
+    if (getPermissionObject('Loans')?.app_view == '1') {
+      list.add(
+          _homeGrid("Loans", "lib/assets/images/loan.png", loansRoute, null));
     }
 
-    if(getPermissionObject('Insurance')?.app_view=='1'){
-    list.add(  _homeGrid("Insurance", "lib/assets/images/insurance.png",
-    insuranceRoute, null));
+    if (getPermissionObject('Insurance')?.app_view == '1') {
+      list.add(_homeGrid("Insurance", "lib/assets/images/insurance.png",
+          insuranceRoute, null));
     }
 
-    if(getPermissionObject('Payslip')?.app_view=='1'){
-    list.add(  _homeGrid("Payslip", "lib/assets/images/payslip.png",
-    payslipRoute, null));
+    if (getPermissionObject('Payslip')?.app_view == '1') {
+      list.add(_homeGrid(
+          "Payslip", "lib/assets/images/payslip.png", payslipRoute, null));
     }
 
-    if(getPermissionObject('Holiday')?.app_view=='1'){
-    list.add(_homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
-    calendarViewRoute, null));
+    if (getPermissionObject('Holiday')?.app_view == '1') {
+      list.add(_homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
+          calendarViewRoute, null));
     }
     return list;
   }
-
 }
-
-
 
 class GetToken {
   SharedPreferences sharedPreferences;
@@ -731,7 +695,6 @@ class GetToken {
               var jsonResponse = jsonDecode(response.body);
               print("Here--In Token-----$jsonResponse");
               if (jsonResponse["StatusCode"] == 200) {
-
                 LoginResponse login =
                     new LoginResponse.fromJson(jsonResponse["ResultObject"][0]);
 
