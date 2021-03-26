@@ -6,7 +6,6 @@ import 'package:HRMNew/src/screens/Payslip/PayslipDesc/payslipDesc.dart';
 import 'package:HRMNew/src/screens/Payslip/component/paySlipListPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import './background.dart';
@@ -181,6 +180,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    if (!isLoading) {
     return Background(
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -191,5 +191,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
           ),
     );
+     } else {
+      return Center(child: CircularProgressIndicator());
+    }
   }
 }

@@ -137,8 +137,7 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
         print("j&&& $myRequest");
         myRequestList = myRequest.resultObject;
         for (int i = 0; i < myRequestList.length; i++) {
-          print(
-              "j&&&&&&&&&&&&&&&&&&&&&&& ${myRequestList[i].requestType.toString()}");
+          print("j& ${myRequestList[i].requestType.toString()}");
           if (myRequestList[i].requestType == 'Leave') {
             leaveReqList.add(myRequestList[i]);
           } else {

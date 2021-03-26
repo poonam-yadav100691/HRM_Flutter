@@ -25,14 +25,13 @@ import 'dart:typed_data';
 
 import 'package:toast/toast.dart';
 
+List<Permission> listOfPermission = [];
 
-List<Permission> listOfPermission=[];
-
-Permission getPermissionObject(String type){
-Permission _permission;
+Permission getPermissionObject(String type) {
+  Permission _permission;
   listOfPermission.forEach((element) {
-    if(element.app_permissionName==type){
-      _permission= element;
+    if (element.app_permissionName == type) {
+      _permission = element;
     }
   });
 
@@ -99,16 +98,15 @@ class _MyHomePageState extends State<MyHomePage> {
             // sharedPreferences.setString(
             //     AppConstant.PERMISSIONS, jsonResponse['ResultObject']);
             final List parsed = jsonResponse['ResultObject'];
-            List<Permission> _permissions =[];
+            List<Permission> _permissions = [];
 
-               parsed.forEach((element) {
-                 _permissions.add(Permission.fromJson(element));
-               });
+            parsed.forEach((element) {
+              _permissions.add(Permission.fromJson(element));
+            });
 
-               setState(() {
-                 listOfPermission=_permissions;
-
-               });
+            setState(() {
+              listOfPermission = _permissions;
+            });
 
             // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
             getLeaveCounts();
@@ -137,70 +135,6 @@ class _MyHomePageState extends State<MyHomePage> {
       return (e);
     }
   }
-
-  // Future<void> getToken() async {
-  //   Network().check().then((intenet) async {
-  //     if (intenet != null && intenet) {
-  //       sharedPreferences = await SharedPreferences.getInstance();
-  //       String username = sharedPreferences.getString(AppConstant.LoginGmailID);
-  //       String password = sharedPreferences.getString(AppConstant.PASSWORD);
-  //       String urname = sharedPreferences.getString(AppConstant.USERNAME);
-  //       print("username---2 : $username");
-  //       print("urname---2 : $urname");
-  //       try {
-  //         final uri = Services.LOGIN;
-  //         Map body = {
-  //           "PassKey": "a486f489-76c0-4c49-8ff0-d0fdec0a162b",
-  //           "UserName": username,
-  //           "UserPassword": password
-  //         };
-  //         http.post(uri, body: body).then((response) {
-  //           if (response.statusCode == 200) {
-  //             var jsonResponse = jsonDecode(response.body);
-  //             print("Reponse---2 : $jsonResponse");
-  //             if (jsonResponse["StatusCode"] == 200) {
-  //               // loginResponse login =
-  //               //     new loginResponse.fromJson(jsonResponse["ResultObject"][0]);
-  //               //     sharedPreferences.setInt(
-  //               //         AppConstant.USER_ID.toString(), login.userId);
-  //               //     sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
-  //               //     sharedPreferences.setString(
-  //               //         AppConstant.ACCESS_TOKEN, login.tokenKey);
-  //               //     sharedPreferences.setString(
-  //               //         AppConstant.USERNAME, login.eng_fullname);
-  //               //     sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);
-  //               //     sharedPreferences.setString(
-  //               //         AppConstant.PHONENO, login.emp_mobile);
-  //               //     sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
-  //               //     sharedPreferences.setString(
-  //               //         AppConstant.DEPARTMENT, login.emp_dep);
-  //               //     sharedPreferences.setString(
-  //               //         AppConstant.COMPANY, login.emp_company);
-  //               //     _register();
-  //               //   } else {
-  //               //     _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
-  //               //         "Something wnet wrong.. Please try again later."));
-  //               //   }
-  //               // } else {
-  //               //   print("response.statusCode.." + response.statusCode.toString());
-  //               //
-  //               //   _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
-  //               //       "Something wnet wrong.. Please try again later."));
-  //             }
-  //           }
-  //         }
-  //             );
-  //       } catch (e) {
-  //         print("Error: $e");
-  //         return (e);
-  //       }
-  //     } else {
-  //       Navigator.pop(context);
-  //       Toast.show("Please check internet connection", context,
-  //           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-  //     }
-  //   });
-  // }
 
   Future<void> getLeaveCounts() async {
     balanceList.clear();
@@ -411,7 +345,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(username??"",
+                          Text(username ?? "",
                               style: TextStyle(
                                   fontSize: 16.0, fontWeight: FontWeight.bold)),
                           Padding(padding: EdgeInsets.only(top: 6)),
@@ -570,14 +504,31 @@ class _MyHomePageState extends State<MyHomePage> {
               countTxt == null
                   ? Padding(padding: EdgeInsets.only(top: 10))
                   : Padding(padding: EdgeInsets.only(bottom: 0)),
-              Image.asset(
-                img,
-                fit: BoxFit.contain,
-                height: 55,
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey[600],
+                      spreadRadius: 1,
+                      blurRadius: 2,
+                      offset: Offset(1, 2), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image.asset(
+                    img,
+                    fit: BoxFit.contain,
+                    height: 45,
+                  ),
+                ),
               ),
               countTxt == null
-                  ? Padding(padding: EdgeInsets.only(bottom: 10))
-                  : Padding(padding: EdgeInsets.only(bottom: 3)),
+                  ? Padding(padding: EdgeInsets.only(bottom: 5))
+                  : Padding(padding: EdgeInsets.only(bottom: 5)),
               Text(
                 title,
                 style: TextStyle(fontSize: 13, color: Colors.grey),
@@ -635,40 +586,39 @@ class _MyHomePageState extends State<MyHomePage> {
     print("in body---");
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: leaveCardcolor,
+      // color: leaveCardcolor,
       child: Column(children: [
         Container(
           height: size.height * 0.11,
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           decoration: BoxDecoration(
-              // shape: BoxShape.circle, // BoxShape.circle or BoxShape.retangle
-              color: leaveCardcolor,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey[800], blurRadius: 4.0, spreadRadius: 1),
-              ]),
+            // shape: BoxShape.circle,
+            // BoxShape.circle or BoxShape.retangle
+            color: leaveCardcolor,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey[800], blurRadius: 4.0, spreadRadius: 1),
+            ],
+          ),
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: <Widget>[
               for (var i = 0; i < balanceList.length; i++)
                 _homeSlider(balanceList[i].leaveName, balanceList[i].leaveUse,
                     balanceList[i].leaveTotal, _color[i])
-              // i++
-
-              // for (var color in _color)
             ],
           ),
         ),
         SingleChildScrollView(
           child: Container(
-            height: size.height * 0.62,
+            height: size.height,
             child: GridView.count(
               primary: false,
-              padding: const EdgeInsets.all(10),
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
+              // padding: const EdgeInsets.all(10),
+              // crossAxisSpacing: 15,
+              // mainAxisSpacing: 15,
               crossAxisCount: 3,
-              children:getChildren(),
+              children: getChildren(),
             ),
           ),
         ),
@@ -676,70 +626,100 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  List<Widget> getChildren() {
+    List<Widget> list = [];
 
-  List<Widget> getChildren(){
-
-    List<Widget> list=[];
-
-
-    if(getPermissionObject('News')?.app_view=='1'){
-    list.add(_homeGrid("News", "lib/assets/images/news12.jpg",
-    newsList,getPermissionObject('News')?.CountItem??'0'));
+    if (getPermissionObject('News')?.app_view == '1') {
+      // list.add(_homeGrid("News", "lib/assets/images/homeGrid/news12.jpg", newsList,
+      //     getPermissionObject('News')?.CountItem ?? '0'));
+      list.add(_homeGrid("News", "lib/assets/images/homeGrid/newNews.png",
+          newsList, getPermissionObject('News')?.CountItem ?? '0'));
     }
 
-    if(getPermissionObject('Tasks')?.app_view=='1'){
-    list.add( _homeGrid(
-    "Tasks", "lib/assets/images/task.png", taskRoute, getPermissionObject('Tasks')?.CountItem??'0'));
+    if (getPermissionObject('My Request')?.app_view == '1') {
+      // list.add(_homeGrid("My Request", "lib/assets/images/images.png",
+      //     myRequestRoute, getPermissionObject('My Request')?.CountItem ?? '0'));
+      list.add(_homeGrid(
+          "My Request",
+          "lib/assets/images/homeGrid/newMyReq.png",
+          myRequestRoute,
+          getPermissionObject('My Request')?.CountItem ?? '0'));
     }
 
-    if(getPermissionObject('Emp Request')?.app_view=='1'){
-    list.add( _homeGrid("Emp Request", "lib/assets/images/empReuest.png",
-    empRequestRoute, getPermissionObject('Emp Request')?.CountItem??'0'));
+    if (getPermissionObject('Payslip')?.app_view == '1') {
+      // list.add(_homeGrid(
+      //     "Payslip", "lib/assets/images/payslip.png", payslipRoute, null));
+      list.add(_homeGrid("Payslip", "lib/assets/images/homeGrid/newPayslip.png",
+          payslipRoute, null));
     }
 
-    if(getPermissionObject('Delegates')?.app_view=='1'){
-    list.add( _homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
-    delegateRoute,getPermissionObject('Delegates')?.CountItem??'0'));
+    if (getPermissionObject('Tasks')?.app_view == '1') {
+      // list.add(_homeGrid("Tasks", "lib/assets/images/task.png", taskRoute,
+      //     getPermissionObject('Tasks')?.CountItem ?? '0'));
+      list.add(_homeGrid("Tasks", "lib/assets/images/homeGrid/newTask.png",
+          taskRoute, getPermissionObject('Tasks')?.CountItem ?? '0'));
     }
 
-
-    print('my rew appview  ${getPermissionObject('My Request')?.app_view}');
-    if(getPermissionObject('My Request')?.app_view=='1'){
-    list.add( _homeGrid("My Request", "lib/assets/images/images.png",
-    myRequestRoute,getPermissionObject('My Request')?.CountItem??'0'));
+    if (getPermissionObject('Attendance')?.app_view == '1') {
+      // list.add(_homeGrid("Attendance", "lib/assets/images/attendance.png",
+      //     attendanceRoute, null));
+      list.add(_homeGrid(
+          "Attendance",
+          "lib/assets/images/homeGrid/newAttendance.png",
+          attendanceRoute,
+          null));
     }
 
-
-    if(getPermissionObject('Attendance')?.app_view=='1'){
-    list.add( _homeGrid("Attendance", "lib/assets/images/attendance.png",
-    attendanceRoute, null));
+    if (getPermissionObject('Holiday')?.app_view == '1') {
+      // list.add(_homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
+      //     calendarViewRoute, null));
+      list.add(_homeGrid(
+          "Holiday",
+          "lib/assets/images/homeGrid/newholidays.png",
+          calendarViewRoute,
+          null));
     }
 
-    if(getPermissionObject('Loans')?.app_view=='1'){
-    list.add( _homeGrid(
-    "Loans", "lib/assets/images/loan.png", loansRoute, null));
+    if (getPermissionObject('Insurance')?.app_view == '1') {
+      // list.add(_homeGrid("Insurance", "lib/assets/images/insurance.png",
+      //     insuranceRoute, null));
+
+      list.add(_homeGrid("Insurance",
+          "lib/assets/images/homeGrid/newInsurance.png", insuranceRoute, null));
     }
 
-    if(getPermissionObject('Insurance')?.app_view=='1'){
-    list.add(  _homeGrid("Insurance", "lib/assets/images/insurance.png",
-    insuranceRoute, null));
+    if (getPermissionObject('Loans')?.app_view == '1') {
+      // list.add(
+      //     _homeGrid("Loans", "lib/assets/images/loan.png", loansRoute, null));
+      list.add(_homeGrid(
+          "Loans", "lib/assets/images/homeGrid/newLoan.png", loansRoute, null));
     }
 
-    if(getPermissionObject('Payslip')?.app_view=='1'){
-    list.add(  _homeGrid("Payslip", "lib/assets/images/payslip.png",
-    payslipRoute, null));
+    if (getPermissionObject('Delegates')?.app_view == '1') {
+      // list.add(_homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
+      //     delegateRoute, getPermissionObject('Delegates')?.CountItem ?? '0'));
+      list.add(_homeGrid(
+          "Delegates",
+          "lib/assets/images/homeGrid/newDelegates.png",
+          delegateRoute,
+          getPermissionObject('Delegates')?.CountItem ?? '0'));
     }
 
-    if(getPermissionObject('Holiday')?.app_view=='1'){
-    list.add(_homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
-    calendarViewRoute, null));
+    if (getPermissionObject('Emp Request')?.app_view == '1') {
+      // list.add(_homeGrid(
+      //     "Emp Request",
+      //     "lib/assets/images/empReuest.png",
+      //     empRequestRoute,
+      //     getPermissionObject('Emp Request')?.CountItem ?? '0'));
+      list.add(_homeGrid(
+          "Emp Request",
+          "lib/assets/images/homeGrid/newEmpReq.png",
+          empRequestRoute,
+          getPermissionObject('Emp Request')?.CountItem ?? '0'));
     }
     return list;
   }
-
 }
-
-
 
 class GetToken {
   SharedPreferences sharedPreferences;
@@ -766,7 +746,6 @@ class GetToken {
               var jsonResponse = jsonDecode(response.body);
               print("Here--In Token-----$jsonResponse");
               if (jsonResponse["StatusCode"] == 200) {
-
                 LoginResponse login =
                     new LoginResponse.fromJson(jsonResponse["ResultObject"][0]);
 

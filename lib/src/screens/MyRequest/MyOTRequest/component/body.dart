@@ -12,10 +12,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-
-
   // List<ResultObject> leaveList;
-
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +27,8 @@ class _BodyState extends State<Body> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    MyOTReqDetails(levReqDetailID: widget.leaveList[i].requestID),
+                builder: (context) => MyOTReqDetails(
+                    levReqDetailID: widget.leaveList[i].requestID),
               ),
             );
           },
@@ -43,7 +40,8 @@ class _BodyState extends State<Body> {
             child: new Stack(
               children: <Widget>[
                 planetCard(context, widget.leaveList[i]),
-                planetThumbnail(context, widget.leaveList[i].statusText.toLowerCase()),
+                planetThumbnail(
+                    context, widget.leaveList[i].statusText.toLowerCase()),
               ],
             ),
           ),
@@ -54,38 +52,38 @@ class _BodyState extends State<Body> {
     return Background(child: ListView(children: children));
   }
 
+  // Widget getUi(){
+  //     return Background(
+  //        child: Column(
+  //          children: [
+  //            new Container(
+  //                margin: const EdgeInsets.symmetric(
+  //                  vertical: 15.0,
+  //                  horizontal: 10.0,
+  //                ),
+  //                child: new Stack(
+  //                  children: <Widget>[
+  //                    planetCard(context),
+  //                    planetThumbnail,
+  //                  ],
+  //                )),
+  //          ],
+  //        ));
+  //  }
 
- // Widget getUi(){
- //     return Background(
- //        child: Column(
- //          children: [
- //            new Container(
- //                margin: const EdgeInsets.symmetric(
- //                  vertical: 15.0,
- //                  horizontal: 10.0,
- //                ),
- //                child: new Stack(
- //                  children: <Widget>[
- //                    planetCard(context),
- //                    planetThumbnail,
- //                  ],
- //                )),
- //          ],
- //        ));
- //  }
-
-  Widget planetThumbnail(BuildContext context,String statusText) {
+  Widget planetThumbnail(BuildContext context, String statusText) {
     // _onDateRangeSelect(leaveList.strDate, leaveList.endDate);
     return Container(
       child: new Image(
         image: new AssetImage(
-            "lib/assets/images/" + statusText + ".png"),
+            "lib/assets/images/${statusText[0].toUpperCase()}${statusText.substring(1)}.png"),
         height: 40.0,
         width: 40.0,
       ),
     );
   }
-  Widget planetCard(BuildContext context,ResultObject object) {
+
+  Widget planetCard(BuildContext context, ResultObject object) {
     return Container(
       // width: MediaQuery.of(context).size.width * 0.88,
       margin: new EdgeInsets.only(left: 26.0),
