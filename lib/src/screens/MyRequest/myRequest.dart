@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:HRMNew/routes/route_names.dart';
@@ -51,6 +52,21 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
               child: DefaultTabController(
                 length: 2,
                 child: new Scaffold(
+
+                  // appBar: AppBar(
+                  //   title: Text('My Request'),
+                  //   shadowColor: Colors.transparent,
+                  //   centerTitle: true,
+                  //   backgroundColor: leaveCardcolor,
+                  //   automaticallyImplyLeading: false,
+                  //   leading: IconButton(
+                  //       icon: Icon(Icons.arrow_back_ios),
+                  //       color: Colors.white,
+                  //       onPressed: () {
+                  //         Navigator.pop(context);
+                  //       }),
+                  // ),
+
                   floatingActionButton:
                       getPermissionObject('My Request').app_add == "1"
                           ? FloatingActionButton.extended(
@@ -68,20 +84,28 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                           : null,
                   body: TabBarView(
                     children: [
-                      (leaveReqList ?? []).isNotEmpty
+                     isLoading?Container(
+                         width: MediaQuery.of(context).size.width,
+                         height: MediaQuery.of(context).size.height,
+                         child:
+                         Center(child: CircularProgressIndicator())): (leaveReqList ?? []).isNotEmpty
                           ? MyLeaveRequest(data: leaveReqList)
                           : Container(
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height,
                               child:
-                                  Center(child: CircularProgressIndicator())),
+                              Center(child:Text('No Data Found'))),
 
-                      (otReqList ?? []).isNotEmpty
+                      isLoading? Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child:
+                          Center(child: CircularProgressIndicator())): (otReqList ?? []).isNotEmpty
                       ?MyOTRequest(otReqList):Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height,
                           child:
-                          Center(child: CircularProgressIndicator())),
+                          Center(child:Text('No Data Found'))),
                     ],
                   ),
                   bottomNavigationBar: new TabBar(
@@ -118,9 +142,9 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
   }
 
   Future<void> _getRequests() async {
-    // setState(() {
-    //   isLoading = true;
-    // });
+    setState(() {
+      isLoading = true;
+    });
     myRequestList.clear();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
