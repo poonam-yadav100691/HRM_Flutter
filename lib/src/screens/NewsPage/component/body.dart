@@ -44,14 +44,12 @@ class _BodyState extends State<Body> {
 
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
-          isLoading = false;
+
           newsLists = newsList.resultObject;
 
-          userID = sharedPreferences.get(AppConstant.USER_ID.toString());
+          userID = sharedPreferences.getInt(AppConstant.USER_ID.toString());
+          isLoading = false;
         });
-        print(userID);
-        print(
-            "j&&&jsonResponse ${sharedPreferences.get(AppConstant.USER_ID.toString())}");
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {

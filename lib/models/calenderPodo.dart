@@ -39,16 +39,16 @@
 }
 
 class ResultObject {
-  String requestID;
+  String month;
   List<Event> Events;
 
   ResultObject(
-      {this.requestID,
+      {this.month,
         this.Events
       });
 
   ResultObject.fromJson(Map<String, dynamic> json) {
-    requestID = json['Events'];
+    month = json['month'];
     if (json['Events'] != null) {
       Events = new List<Event>();
       json['Events'].forEach((v) {
@@ -59,7 +59,7 @@ class ResultObject {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['RequestID'] = this.requestID;
+    data['RequestID'] = this.month;
     data['Events'] = this.Events;
     return data;
   }
