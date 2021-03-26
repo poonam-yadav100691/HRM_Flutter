@@ -40,81 +40,72 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     MediaQueryData _mediaQueryData = MediaQuery.of(context);
-    var screenWidth = _mediaQueryData.size.width;
-    var screenHeight = _mediaQueryData.size.height;
-    if (!isLoading) {
-      return Align(
-          alignment: Alignment.bottomLeft, // and bottomLeft
-          child: SafeArea(
-              bottom: true,
-              top: false,
-              child: DefaultTabController(
-                length: 2,
-                child: new Scaffold(
-                  floatingActionButton:
-                      getPermissionObject('My Request').app_add == "1"
-                          ? FloatingActionButton.extended(
-                              onPressed: () {
-                                Navigator.pushNamed(context, addRequestRoute);
-                                // Add your onPressed code here!
-                              },
-                              elevation: 4,
-                              label: Text('Request'),
-                              icon: Icon(
-                                Icons.add,
-                              ),
-                              backgroundColor: Colors.pink,
-                            )
-                          : null,
-                  body: TabBarView(
-                    children: [
-                      (leaveReqList ?? []).isNotEmpty
-                          ? MyLeaveRequest(data: leaveReqList)
-                          : Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height,
-                              child:
-                                  Center(child: CircularProgressIndicator())),
-
-                      (otReqList ?? []).isNotEmpty
-                      ?MyOTRequest(otReqList):Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child:
-                          Center(child: CircularProgressIndicator())),
-                    ],
-                  ),
-                  bottomNavigationBar: new TabBar(
-                    tabs: [
-                      Tab(
-                        text: 'LEAVE REQUEST',
-                        // icon: new Icon(Icons.home),
-                      ),
-                      Tab(
-                        text: 'OT REQUEST',
-                        // icon: new Icon(Icons.rss_feed),
-                      ),
-                    ],
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.grey,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicatorPadding: EdgeInsets.all(1.0),
-                    indicatorColor: Colors.red,
-                    indicator: BoxDecoration(
-                      color: Colors.white,
-
-                      // borderRadius: BorderRadius.circular(15.0),
-                      boxShadow: [
-                        BoxShadow(color: Colors.red, blurRadius: 3.0)
-                      ],
-                    ),
-                  ),
-                  // backgroundColor: Colors.black,
+    // if (!isLoading) {
+    return Align(
+        alignment: Alignment.bottomLeft, // and bottomLeft
+        child: SafeArea(
+            bottom: true,
+            top: false,
+            child: DefaultTabController(
+              length: 2,
+              child: new Scaffold(
+                floatingActionButton:
+                    getPermissionObject('My Request').app_add == "1"
+                        ? FloatingActionButton.extended(
+                            onPressed: () {
+                              Navigator.pushNamed(context, addRequestRoute);
+                              // Add your onPressed code here!
+                            },
+                            elevation: 4,
+                            label: Text('Request'),
+                            icon: Icon(
+                              Icons.add,
+                            ),
+                            backgroundColor: Colors.pink,
+                          )
+                        : null,
+                body: TabBarView(
+                  children: [
+                    (leaveReqList ?? []).isNotEmpty
+                        ? MyLeaveRequest(data: leaveReqList)
+                        : Container(),
+                    (otReqList ?? []).isNotEmpty
+                        ? MyOTRequest(otReqList)
+                        : Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            child: Center(child: CircularProgressIndicator())),
+                  ],
                 ),
-              )));
-    } else {
-      return Container(child: Center(child: CircularProgressIndicator()));
-    }
+                bottomNavigationBar: new TabBar(
+                  tabs: [
+                    Tab(
+                      text: 'LEAVE REQUEST',
+                      // icon: new Icon(Icons.home),
+                    ),
+                    Tab(
+                      text: 'OT REQUEST',
+                      // icon: new Icon(Icons.rss_feed),
+                    ),
+                  ],
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorPadding: EdgeInsets.all(1.0),
+                  indicatorColor: Colors.red,
+                  indicator: BoxDecoration(
+                    color: Colors.white,
+
+                    // borderRadius: BorderRadius.circular(15.0),
+                    boxShadow: [BoxShadow(color: Colors.red, blurRadius: 3.0)],
+                  ),
+                ),
+                // backgroundColor: Colors.black,
+              ),
+            )));
+    // } else {
+    //   return Container(child: Center(child: CircularProgressIndicator()));
+    // }
   }
 
   Future<void> _getRequests() async {
@@ -130,10 +121,6 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
       var jsonResponse = jsonDecode(response.body);
       MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
-        setState(() {
-          isLoading = false;
-        });
-
         print("j&&& $myRequest");
         myRequestList = myRequest.resultObject;
         for (int i = 0; i < myRequestList.length; i++) {
@@ -145,9 +132,12 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
           }
         }
 
+        setState(() {
+          isLoading = false;
+        });
         // print(myRequestList.toString());
-        // print(leaveReqList.toString());
-        // print(otReqList.toString());
+        print(leaveReqList.length);
+        print(otReqList.toString());
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
@@ -155,6 +145,9 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
             _getRequests();
           });
         } else {
+          setState(() {
+            isLoading = false;
+          });
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
         }

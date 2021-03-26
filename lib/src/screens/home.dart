@@ -461,80 +461,71 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.pushNamed(context, pagNav);
       },
       child: Container(
-        // decoration: BoxDecoration(
-        //   color: Colors.white,
-        //   borderRadius: BorderRadius.circular(15),
-        //   boxShadow: [
-        //     BoxShadow(
-        //       color: Colors.grey[400],
-        //       spreadRadius: 3,
-        //       blurRadius: 5,
-        //       offset: Offset(0, 1), // changes position of shadow
-        //     ),
-        //   ],
-        // ),
-        alignment: AlignmentDirectional(0.0, 0.0),
-        padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              countTxt == null
-                  ? Container()
-                  : Container(
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: Container(
-                          child: Center(
-                              child: Text(countTxt,
-                                  style: TextStyle(color: Colors.white))),
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.red,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.red[400], spreadRadius: 1),
-                            ],
+        child: Column(children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[400],
+                  spreadRadius: 3,
+                  blurRadius: 5,
+                  offset: Offset(0, 1), // changes position of shadow
+                ),
+              ],
+            ),
+            alignment: AlignmentDirectional(0.0, 0.0),
+            padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                countTxt == null
+                    ? Container()
+                    : Container(
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Container(
+                            child: Center(
+                                child: Text(countTxt,
+                                    style: TextStyle(color: Colors.white))),
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.red,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.red[400], spreadRadius: 1),
+                              ],
+                            ),
                           ),
                         ),
                       ),
+                countTxt == null
+                    ? Padding(padding: EdgeInsets.only(bottom: 18))
+                    : Padding(padding: EdgeInsets.only(bottom: 0)),
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Image.asset(
+                      img,
+                      fit: BoxFit.contain,
+                      height: 45,
                     ),
-              countTxt == null
-                  ? Padding(padding: EdgeInsets.only(top: 10))
-                  : Padding(padding: EdgeInsets.only(bottom: 0)),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey[600],
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: Offset(1, 2), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Image.asset(
-                    img,
-                    fit: BoxFit.contain,
-                    height: 45,
                   ),
                 ),
-              ),
-              countTxt == null
-                  ? Padding(padding: EdgeInsets.only(bottom: 5))
-                  : Padding(padding: EdgeInsets.only(bottom: 5)),
-              Text(
-                title,
-                style: TextStyle(fontSize: 13, color: Colors.grey),
-              ),
-              Padding(padding: EdgeInsets.only(top: 5))
-            ]),
+                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10))
+              ],
+            ),
+          ),
+          Padding(padding: EdgeInsets.only(top: 5)),
+          Text(
+            title,
+            style: TextStyle(fontSize: 13, color: Colors.grey),
+          ),
+        ]),
       ),
     );
   }
@@ -586,7 +577,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print("in body---");
     Size size = MediaQuery.of(context).size;
     return Container(
-      // color: leaveCardcolor,
+      height: size.height,
       child: Column(children: [
         Container(
           height: size.height * 0.11,
@@ -611,12 +602,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         SingleChildScrollView(
           child: Container(
+            margin: EdgeInsets.all(8),
             height: size.height,
             child: GridView.count(
               primary: false,
-              // padding: const EdgeInsets.all(10),
-              // crossAxisSpacing: 15,
-              // mainAxisSpacing: 15,
+              padding: const EdgeInsets.all(10),
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
               crossAxisCount: 3,
               children: getChildren(),
             ),
@@ -630,15 +622,11 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Widget> list = [];
 
     if (getPermissionObject('News')?.app_view == '1') {
-      // list.add(_homeGrid("News", "lib/assets/images/homeGrid/news12.jpg", newsList,
-      //     getPermissionObject('News')?.CountItem ?? '0'));
       list.add(_homeGrid("News", "lib/assets/images/homeGrid/newNews.png",
           newsList, getPermissionObject('News')?.CountItem ?? '0'));
     }
 
     if (getPermissionObject('My Request')?.app_view == '1') {
-      // list.add(_homeGrid("My Request", "lib/assets/images/images.png",
-      //     myRequestRoute, getPermissionObject('My Request')?.CountItem ?? '0'));
       list.add(_homeGrid(
           "My Request",
           "lib/assets/images/homeGrid/newMyReq.png",
@@ -647,22 +635,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (getPermissionObject('Payslip')?.app_view == '1') {
-      // list.add(_homeGrid(
-      //     "Payslip", "lib/assets/images/payslip.png", payslipRoute, null));
       list.add(_homeGrid("Payslip", "lib/assets/images/homeGrid/newPayslip.png",
           payslipRoute, null));
     }
 
     if (getPermissionObject('Tasks')?.app_view == '1') {
-      // list.add(_homeGrid("Tasks", "lib/assets/images/task.png", taskRoute,
-      //     getPermissionObject('Tasks')?.CountItem ?? '0'));
       list.add(_homeGrid("Tasks", "lib/assets/images/homeGrid/newTask.png",
           taskRoute, getPermissionObject('Tasks')?.CountItem ?? '0'));
     }
 
     if (getPermissionObject('Attendance')?.app_view == '1') {
-      // list.add(_homeGrid("Attendance", "lib/assets/images/attendance.png",
-      //     attendanceRoute, null));
       list.add(_homeGrid(
           "Attendance",
           "lib/assets/images/homeGrid/newAttendance.png",
@@ -671,8 +653,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (getPermissionObject('Holiday')?.app_view == '1') {
-      // list.add(_homeGrid("Holiday", "lib/assets/images/holiday-icon.png",
-      //     calendarViewRoute, null));
       list.add(_homeGrid(
           "Holiday",
           "lib/assets/images/homeGrid/newholidays.png",
@@ -681,23 +661,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (getPermissionObject('Insurance')?.app_view == '1') {
-      // list.add(_homeGrid("Insurance", "lib/assets/images/insurance.png",
-      //     insuranceRoute, null));
-
       list.add(_homeGrid("Insurance",
           "lib/assets/images/homeGrid/newInsurance.png", insuranceRoute, null));
     }
 
     if (getPermissionObject('Loans')?.app_view == '1') {
-      // list.add(
-      //     _homeGrid("Loans", "lib/assets/images/loan.png", loansRoute, null));
       list.add(_homeGrid(
           "Loans", "lib/assets/images/homeGrid/newLoan.png", loansRoute, null));
     }
 
     if (getPermissionObject('Delegates')?.app_view == '1') {
-      // list.add(_homeGrid("Delegates", "lib/assets/images/transfer_teacher.jpg",
-      //     delegateRoute, getPermissionObject('Delegates')?.CountItem ?? '0'));
       list.add(_homeGrid(
           "Delegates",
           "lib/assets/images/homeGrid/newDelegates.png",
@@ -706,11 +679,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (getPermissionObject('Emp Request')?.app_view == '1') {
-      // list.add(_homeGrid(
-      //     "Emp Request",
-      //     "lib/assets/images/empReuest.png",
-      //     empRequestRoute,
-      //     getPermissionObject('Emp Request')?.CountItem ?? '0'));
       list.add(_homeGrid(
           "Emp Request",
           "lib/assets/images/homeGrid/newEmpReq.png",
