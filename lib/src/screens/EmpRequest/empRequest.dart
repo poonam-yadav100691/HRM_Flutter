@@ -61,18 +61,24 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
                 ),
                 body: TabBarView(
                   children: [
-                    empLeaveReqList.isNotEmpty
+                    isLoading? Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: Center(child: CircularProgressIndicator())): empLeaveReqList.isNotEmpty
                         ? EmpLeaveRequest(data: empLeaveReqList)
                         : Container(
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.height,
-                            child: Center(child: CircularProgressIndicator())),
-                    empOtReqList.isNotEmpty
+                            child: Center(child:Text('No Data Found'))),
+                    isLoading? Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: Center(child: CircularProgressIndicator())): empOtReqList.isNotEmpty
                         ? EmpOTRequest(data: empOtReqList)
                         : Container(
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.height,
-                            child: Center(child: CircularProgressIndicator()))
+                            child:Center(child:Text('No Data Found')))
                   ],
                 ),
                 bottomNavigationBar: new TabBar(
@@ -105,6 +111,10 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
 
   Future<void> _getEmpRequests() async {
     empRequestList.clear();
+
+    setState(() {
+      isLoading = true;
+    });
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.EmpRequest;
