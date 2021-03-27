@@ -52,7 +52,6 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
               child: DefaultTabController(
                 length: 2,
                 child: new Scaffold(
-
                   // appBar: AppBar(
                   //   title: Text('My Request'),
                   //   shadowColor: Colors.transparent,
@@ -84,28 +83,28 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                           : null,
                   body: TabBarView(
                     children: [
-                     isLoading?Container(
-                         width: MediaQuery.of(context).size.width,
-                         height: MediaQuery.of(context).size.height,
-                         child:
-                         Center(child: CircularProgressIndicator())): (leaveReqList ?? []).isNotEmpty
-                          ? MyLeaveRequest(data: leaveReqList)
-                          : Container(
+                      isLoading
+                          ? Container(
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height,
-                              child:
-                              Center(child:Text('No Data Found'))),
-
-                      isLoading? Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child:
-                          Center(child: CircularProgressIndicator())): (otReqList ?? []).isNotEmpty
-                      ?MyOTRequest(otReqList):Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child:
-                          Center(child:Text('No Data Found'))),
+                              child: Center(child: CircularProgressIndicator()))
+                          : (leaveReqList ?? []).isNotEmpty
+                              ? MyLeaveRequest(data: leaveReqList)
+                              : Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height,
+                                  child: Center(child: Text('No Data Found'))),
+                      isLoading
+                          ? Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height,
+                              child: Center(child: CircularProgressIndicator()))
+                          : (otReqList ?? []).isNotEmpty
+                              ? MyOTRequest(otReqList)
+                              : Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height,
+                                  child: Center(child: Text('No Data Found'))),
                     ],
                   ),
                   bottomNavigationBar: new TabBar(
@@ -136,8 +135,9 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                   // backgroundColor: Colors.black,
                 ),
               )));
-    } else {
-      return Container(child: Center(child: CircularProgressIndicator()));
+      // } else {
+      //   return Container(child: Center(child: CircularProgressIndicator()));
+      // }
     }
   }
 
@@ -154,10 +154,6 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
       var jsonResponse = jsonDecode(response.body);
       MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
-        setState(() {
-          isLoading = false;
-        });
-
         print("j&&& $myRequest");
         myRequestList = myRequest.resultObject;
         for (int i = 0; i < myRequestList.length; i++) {
@@ -169,9 +165,12 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
           }
         }
 
+        setState(() {
+          isLoading = false;
+        });
         // print(myRequestList.toString());
-        // print(leaveReqList.toString());
-        // print(otReqList.toString());
+        print(leaveReqList.length);
+        print(otReqList.toString());
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
@@ -179,6 +178,9 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
             _getRequests();
           });
         } else {
+          setState(() {
+            isLoading = false;
+          });
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
         }
