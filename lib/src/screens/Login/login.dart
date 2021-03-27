@@ -157,7 +157,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 
                 // sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
                 print(
-                    "Ge ${sharedPreferences.get(AppConstant.USER_ID.toString())}");
+                    "Ge ${sharedPreferences.getInt(AppConstant.USER_ID.toString())}");
 
                 setState(() {
                   _state = 2;

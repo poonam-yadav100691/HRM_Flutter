@@ -6,6 +6,7 @@ import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -162,11 +163,30 @@ class _CalendarViewState extends State<CalendarView>
     );
   }
 
+
+  Map<DateTime, List> getEvents(){
+    Map<DateTime, List> events=Map();
+    myRequestMain.resultObject.forEach((element) {
+      print(element.Events[0].eventDate.split(" ")[0].replaceAll('/', '-'));
+      element.Events.forEach((element1) {
+        print(element1.eventDate.split(" ")[0].replaceAll('/', '-'));
+        List<String> eventNames=[];
+        eventNames.add(element1.eventNoted);
+        events[DateTime.parse(DateFormat("MM/dd/yyyy").parse(element1.eventDate.split(" ")[0]).toString())]=eventNames;
+      });
+
+    });
+
+
+    return events;
+  }
+
+
   // Simple TableCalendar configuration (using Styles)
   Widget _buildTableCalendar() {
-    return TableCalendar(
+    return isLoading?LinearProgressIndicator(): TableCalendar(
       calendarController: _calendarController,
-      events: _events,
+      events:isLoading?_events:getEvents(),
       holidays: _holidays,
 
       startingDayOfWeek: StartingDayOfWeek.monday,
@@ -371,7 +391,7 @@ class _CalendarViewState extends State<CalendarView>
   // }
 
   MyRequestsCalender myRequestMain;
-  bool  isLoading = false;
+  bool  isLoading = true;
   List<ResultObject> myRequestList = new List();
   Future<void> _getRequests() async {
     // setState(() {
@@ -392,14 +412,13 @@ class _CalendarViewState extends State<CalendarView>
       MyRequestsCalender myRequest = new MyRequestsCalender.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
+          myRequestMain= myRequest;
           isLoading = false;
         });
 
 
 
-        setState(() {
-          myRequestMain= myRequest;
-        });
+
         // print(leaveReqList.toString());
         // print(otReqList.toString());
       } else {
