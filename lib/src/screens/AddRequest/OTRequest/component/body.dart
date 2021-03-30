@@ -27,6 +27,12 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   var _focusNode = new FocusNode();
 
+  String startTime;
+
+  String startDate;
+
+  String endTime;
+
   _focusListener() {
     setState(() {});
   }
@@ -63,8 +69,8 @@ class _BodyState extends State<Body> {
 
   DateTime selecteddate = DateTime.now();
   bool dateSelectedselect = false;
-  String selectedenddateTime = '${DateTime.now().add(Duration(minutes: 40))}';
-  String selectedstartdateTime = '${DateTime.now().add(Duration(minutes: 40))}';
+  DateTime selectedenddateTime = DateTime.now().add(Duration(minutes: 40));
+  DateTime selectedstartdateTime = DateTime.now().add(Duration(minutes: 40));
 
   bool isLoading = true;
   @override
@@ -85,35 +91,38 @@ class _BodyState extends State<Body> {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
-                          GestureDetector(
-                            onTap: () async {
-                              final DateTime pickedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime.now(),
-                                  lastDate: DateTime(DateTime.now().year + 1));
-                              if (pickedDate != null &&
-                                  pickedDate != selecteddate)
-                                setState(() {
-                                  selecteddate = pickedDate;
-                                  dateSelectedselect = true;
-                                });
-                            },
-                            child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.all(16),
-                                margin: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                    ),
-                                    shape: BoxShape.rectangle,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8))),
-                                child: Text(dateSelectedselect
-                                    ? 'Selected OT Date : $selecteddate'
-                                    : 'Select OT Date ')),
-                          ),
+                          // GestureDetector(
+                          //   onTap: () async {
+                          //     final DateTime pickedDate = await showDatePicker(
+                          //         context: context,
+                          //         initialDate: DateTime.now(),
+                          //         firstDate: DateTime.now(),
+                          //          onChanged: (val) {
+                          //           selectedstartdateTime = val;
+                          //         },
+                          //         lastDate: DateTime(DateTime.now().year + 1));
+                          //     if (pickedDate != null &&
+                          //         pickedDate != selecteddate)
+                          //       setState(() {
+                          //         selecteddate = pickedDate;
+                          //         dateSelectedselect = true;
+                          //       });
+                          //   },
+                          //   child: Container(
+                          //       width: MediaQuery.of(context).size.width,
+                          //       padding: EdgeInsets.all(16),
+                          //       margin: EdgeInsets.all(8),
+                          //       decoration: BoxDecoration(
+                          //           border: Border.all(
+                          //             color: Colors.grey,
+                          //           ),
+                          //           shape: BoxShape.rectangle,
+                          //           borderRadius:
+                          //               BorderRadius.all(Radius.circular(8))),
+                          //       child: Text(dateSelectedselect
+                          //           ? 'Selected OT Date : $selecteddate'
+                          //           : 'Select OT Date ')),
+                          // ),
 
                           Container(
                             child: Padding(
@@ -136,43 +145,32 @@ class _BodyState extends State<Body> {
                                   dateLabelText: ' OT Start From',
                                   style: Theme.of(context).textTheme.caption,
                                   onChanged: (val) {
-                                    selectedstartdateTime = val;
+                                    DateFormat dateFormat =
+                                        DateFormat("yyyy-MM-dd HH:mm");
+                                    DateTime dateTime = dateFormat.parse(val);
+                                    selectedstartdateTime = dateTime;
+                                    print(
+                                        "selectedstartdateTime:: $selectedstartdateTime");
+
+                                    var formatter =
+                                        new DateFormat('dd-MM-yyyy');
+                                    startTime = DateFormat('kk:mm:a')
+                                        .format(selectedstartdateTime);
+                                    startDate =
+                                        formatter.format(selectedstartdateTime);
+                                    print("date:: $startTime");
+
+                                    print("date:: $startDate");
                                   },
                                   validator: (val) {
-                                    print(val);
+                                    print("Validate: $val");
                                     return null;
                                   },
-                                  onSaved: (val) => print(val),
+                                  onSaved: (val) => print(" Onsave: $val"),
                                 ),
                               ),
                             ),
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.all(8.0),
-                          //   child: FormBuilderDateTimePicker(
-                          //     attribute: 'OTStartTime',
-                          //     decoration: new InputDecoration(
-                          //       fillColor: Colors.white,
-                          //       border: _focusNode.hasFocus
-                          //           ? OutlineInputBorder(
-                          //               borderRadius: BorderRadius.all(
-                          //                   Radius.circular(5.0)),
-                          //               borderSide:
-                          //                   BorderSide(color: leaveCardcolor))
-                          //           : OutlineInputBorder(
-                          //               borderRadius: BorderRadius.all(
-                          //                   Radius.circular(5.0)),
-                          //               borderSide:
-                          //                   BorderSide(color: Colors.grey)),
-                          //       filled: true,
-                          //       contentPadding: EdgeInsets.only(
-                          //           bottom: 10.0, left: 10.0, right: 10.0),
-                          //       labelText: 'OT Start From',
-                          //     ),
-                          //     onChanged: _onstrDateChanged,
-                          //     validators: [FormBuilderValidators.required()],
-                          //   ),
-                          // ),
 
                           Container(
                             child: Padding(
@@ -195,21 +193,27 @@ class _BodyState extends State<Body> {
                                   dateLabelText: 'OT Ends On',
                                   style: Theme.of(context).textTheme.caption,
                                   onChanged: (val) {
-                                    selectedenddateTime = val;
+                                    DateFormat dateFormat =
+                                        DateFormat("yyyy-MM-dd HH:mm");
+                                    DateTime dateTime = dateFormat.parse(val);
+                                    selectedenddateTime = dateTime;
+                                    endTime = DateFormat('kk:mm:a')
+                                        .format(selectedenddateTime);
+                                    print("date:: $startTime");
                                   },
                                   validator: (val) {
-                                    print(val);
+                                    // print(val);
                                     return null;
                                   },
-                                  onSaved: (val) => print(val),
+                                  // onSaved: (val) => print(val),
                                 ),
                               ),
                             ),
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.all(8.0),
-                          //   child: FormBuilderDateTimePicker(
-                          //     attribute: 'OTEndTime',
+
+                          // Container(
+                          //   padding: const EdgeInsets.all(9),
+                          //   child: TextFormField(
                           //     decoration: new InputDecoration(
                           //       fillColor: Colors.white,
                           //       border: _focusNode.hasFocus
@@ -226,45 +230,19 @@ class _BodyState extends State<Body> {
                           //       filled: true,
                           //       contentPadding: EdgeInsets.only(
                           //           bottom: 10.0, left: 10.0, right: 10.0),
-                          //       labelText: 'OT End On',
+                          //       // suffixIcon: Icon(Icons.keyboard_arrow_down),
+                          //       labelText: 'Manager',
                           //     ),
-                          //     onChanged: _onendDateChanged,
-                          //     validators: [FormBuilderValidators.required()],
+                          //     controller: managerController,
+                          //     validator: (String value) {
+                          //       if (value.isEmpty) {
+                          //         return 'Please Enter Manager';
+                          //       } else {
+                          //         return null;
+                          //       }
+                          //     },
                           //   ),
                           // ),
-
-                          Container(
-                            padding: const EdgeInsets.all(9),
-                            child: TextFormField(
-                              decoration: new InputDecoration(
-                                fillColor: Colors.white,
-                                border: _focusNode.hasFocus
-                                    ? OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: leaveCardcolor))
-                                    : OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.grey)),
-                                filled: true,
-                                contentPadding: EdgeInsets.only(
-                                    bottom: 10.0, left: 10.0, right: 10.0),
-                                // suffixIcon: Icon(Icons.keyboard_arrow_down),
-                                labelText: 'Manager',
-                              ),
-                              controller: managerController,
-                              validator: (String value) {
-                                if (value.isEmpty) {
-                                  return 'Please Enter Manager';
-                                } else {
-                                  return null;
-                                }
-                              },
-                            ),
-                          ),
                           Container(
                             padding: const EdgeInsets.all(9),
                             child: TextFormField(
@@ -355,25 +333,20 @@ class _BodyState extends State<Body> {
                                   await SharedPreferences.getInstance();
                               String token = sharedPreferences
                                   .getString(AppConstant.ACCESS_TOKEN);
-                              String id = sharedPreferences
-                                  .getString(AppConstant.EMP_ID);
-                               String  uri = Services.AddNewOT;
+                              String uri = Services.AddNewOT;
 
                               Map body = {
                                 "tokenKey": token,
-                                "lang": '2',
-                                "OTDate": date,
-                                "stTime": selectedstartdateTime,
-                                "endTime": selectedenddateTime,
+                                "OTDate": startDate,
+                                "stTime": startTime,
+                                "endTime": endTime,
                                 "otTitle": subjectController.text,
                                 "otReason": reasonController.text,
-                                // "reasone": .text,
-                                "empId": id,
                               };
 
                               print(body);
 
-                               http.post(uri, body: body).then((response) {
+                              http.post(uri, body: body).then((response) {
                                 var jsonResponse = jsonDecode(response.body);
                                 // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
 

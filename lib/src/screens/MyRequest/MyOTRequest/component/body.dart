@@ -52,25 +52,6 @@ class _BodyState extends State<Body> {
     return Background(child: ListView(children: children));
   }
 
-  // Widget getUi(){
-  //     return Background(
-  //        child: Column(
-  //          children: [
-  //            new Container(
-  //                margin: const EdgeInsets.symmetric(
-  //                  vertical: 15.0,
-  //                  horizontal: 10.0,
-  //                ),
-  //                child: new Stack(
-  //                  children: <Widget>[
-  //                    planetCard(context),
-  //                    planetThumbnail,
-  //                  ],
-  //                )),
-  //          ],
-  //        ));
-  //  }
-
   Widget planetThumbnail(BuildContext context, String statusText) {
     // _onDateRangeSelect(leaveList.strDate, leaveList.endDate);
     return Container(
@@ -136,32 +117,6 @@ class _BodyState extends State<Body> {
                       ),
                     ],
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(bottom: 5.0),
-                  //   child: Row(
-                  //     children: [
-                  //       Text(
-                  //         '13 Mar 20 - 14 Mar 20',
-                  //         style: new TextStyle(fontWeight: FontWeight.w500),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(bottom: 5.0),
-                  //   child: Row(
-                  //     children: [
-                  //       Text(
-                  //         'Date Of Reply :',
-                  //         style: new TextStyle(),
-                  //       ),
-                  //       Text(
-                  //         '${object.submitDate}',
-                  //         style: new TextStyle(fontWeight: FontWeight.w500),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   Row(
                     children: [
                       Text(

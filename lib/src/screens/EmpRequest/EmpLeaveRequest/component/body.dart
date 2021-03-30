@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/requestDetails.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +43,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                 empLeaveList[i].empName,
                 empLeaveList[i].empPosition,
                 empLeaveList[i].dateRequest,
-                empLeaveList[i].requestID),
+                empLeaveList[i].requestID,
+                empLeaveList[i].empPhoto),
           ),
         );
       }
@@ -69,12 +73,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   //   ));
   // }
 
-  Widget planetCard(BuildContext context, name, design, date, id) {
+  Widget planetCard(BuildContext context, name, design, date, id, empPhoto) {
     var inputFormat = DateFormat('MM/dd/yyyy HH:mm:ss a');
     var outputFormat = DateFormat('dd/MM/yy');
     var inputDate2 = inputFormat.parse(date); // <-- Incoming date
     var returnDate = outputFormat.format(inputDate2);
-
+    Uint8List bytes = base64Decode(empPhoto);
     Size size = MediaQuery.of(context).size;
     return InkWell(
       child: Container(
@@ -115,10 +119,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                         Container(
                           padding: const EdgeInsets.only(left: 6.0),
                           child: ClipOval(
-                            child: Image.asset(
-                              "lib/assets/images/profile.jpg",
+                            child: new Image.memory(
+                              bytes,
                               height: 47,
-                              // width: 90,
+                              width: 47,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),

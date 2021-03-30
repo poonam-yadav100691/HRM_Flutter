@@ -1,4 +1,4 @@
-
+import 'dart:typed_data';
 
 import 'package:HRMNew/components/approvalAction.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -42,7 +42,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     String empLevId = widget.data;
-      _getEmpReqDetails(empLevId);
+    _getEmpReqDetails(empLevId);
   }
 
   void takeAction(text) {
@@ -52,11 +52,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     );
   }
 
-
-
   int totalDayss;
 
-  DateTime strDate,endDate;
+  DateTime strDate, endDate;
 
   int _onDateRangeSelect(String startDate, String endstrDate) {
     DateFormat format = DateFormat.yMd();
@@ -67,9 +65,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     print('$strDate  $endDate ');
     final difference = endDate.difference(strDate).inDays;
 
-     return difference;
-
-
+    return difference;
   }
 
   Future<void> _getEmpReqDetails(reqID) async {
@@ -92,9 +88,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       print("R2 : $jsonResponse");
       EmpReqDetails getLevReqDetails = new EmpReqDetails.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
-        myReqTitleObj = getLevReqDetails.requestTitleObject??[];
-        approvedObject = getLevReqDetails.approvedObject??[];
-        requestItemObject = getLevReqDetails.requestItemObject??[];
+        myReqTitleObj = getLevReqDetails.requestTitleObject ?? [];
+        approvedObject = getLevReqDetails.approvedObject ?? [];
+        requestItemObject = getLevReqDetails.requestItemObject ?? [];
 
         setState(() {
           isLoading = false;
@@ -122,6 +118,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     print("data ((((...$data");
+
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -177,10 +174,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   Container(
                                     padding: const EdgeInsets.only(left: 5.0),
                                     child: ClipOval(
-                                      child: Image.asset(
-                                        "lib/assets/images/profile.jpg",
-                                        height: 55,
-                                        // width: 90,
+                                      child: Image.memory(
+                                        base64Decode(myReqTitleObj[0].empPhoto),
+                                        height: 47,
+                                        width: 47,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
@@ -228,16 +226,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 color: Colors.grey[300],
                               ),
                             ),
-                            Text('${requestItemObject.length}'),
-                            // requestItemObject.length > 0 ||
-                            //         requestItemObject[0].strDate != null
-                            //     ? Padding(
-                            //         padding:
-                            //             const EdgeInsets.symmetric(vertical: 8),
-                            //         child: Text(
-                            //             'Period: ${(requestItemObject[0].strDate).substring(0, 9)} - ${requestItemObject[0].endDate.substring(0, 9)}'),
-                            //       )
-                            //     : Container(),
                             SizedBox(
                               width: size.width,
                               height: 1.0,
@@ -248,19 +236,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Duration: ${requestItemObject.isNotEmpty?requestItemObject[0].duration:""}'),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Request Status: ${requestItemObject.isNotEmpty?myReqTitleObj[0].statusText:""}'),
+                                  'Duration: ${requestItemObject.isNotEmpty ? requestItemObject[0].duration : "-"} days'),
                             ),
                             SizedBox(
                               width: size.width,
@@ -272,7 +248,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Reason: ${requestItemObject.isNotEmpty?requestItemObject[0].requestReason:""}'),
+                                  'Request Status: ${requestItemObject.isNotEmpty ? myReqTitleObj[0].statusText : "-"}'),
                             ),
                             SizedBox(
                               width: size.width,
@@ -284,7 +260,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Manager: ${requestItemObject.isNotEmpty?requestItemObject[0].responseName:""}'),
+                                  'Reason: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestReason : "-"}'),
                             ),
                             SizedBox(
                               width: size.width,
@@ -292,13 +268,23 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               child: Container(
                                 color: Colors.grey[300],
                               ),
-
                             ),
-
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Requested For: ${requestItemObject.isNotEmpty?requestItemObject[0].requestFor:""}'),
+                                  'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Requested For: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestFor : "-"}'),
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -319,23 +305,22 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                     errortext = null;
                                   });
                                 },
-
-
                               ),
                             ),
-
-                            Padding(padding: EdgeInsets.symmetric(vertical: 8,),
-
-
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                RaisedButton(onPressed:() async{
-
-                                  if(resoneController.text!="") {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 8,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  RaisedButton(
+                                    onPressed: () async {
+                                      if (resoneController.text != "") {
+                                        setState(() {
+                                          isLoading = true;
+                                        });
 
                                         SharedPreferences sharedPreferences =
                                             await SharedPreferences
@@ -421,41 +406,49 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                             resoneController.text ?? " ",
                                       };
 
-                                  print('$body');
-                                  http.post(uri, body: body).then((response) {
-                                    var jsonResponse = jsonDecode(response.body);
-                                    // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
-                                    if (jsonResponse["StatusCode"] == 200) {
-                                      setState(() {
-                                        isLoading = false;
+                                      print('$body');
+                                      http
+                                          .post(uri, body: body)
+                                          .then((response) {
+                                        var jsonResponse =
+                                            jsonDecode(response.body);
+                                        // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+                                        if (jsonResponse["StatusCode"] == 200) {
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+
+                                          print("j&&& $jsonResponse");
+                                          Navigator.pop(context);
+                                        } else {
+                                          print(
+                                              "ModelError: ${jsonResponse["ModelErrors"]}");
+                                          if (jsonResponse["ModelErrors"] ==
+                                              'Unauthorized') {
+                                            Future<String> token =
+                                                GetToken().getToken();
+                                          } else {
+                                            // .showSnackBar(
+                                            //     currentState   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+                                          }
+                                        }
                                       });
-
-                                      print("j&&& $jsonResponse");
-                                      Navigator.pop(context);
-
-
-
-                                    } else {
-                                      print("ModelError: ${jsonResponse["ModelErrors"]}");
-                                      if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-                                        Future<String> token = GetToken().getToken();
-                                      } else {
-                                        // .showSnackBar(
-                                        //     currentState   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
-                                      }
-                                    }
-                                  });
-
-                                },
-                                  child: Text('Approve',style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
-                                  color: Colors.green,
-                                ),
-
-                              ],
+                                    },
+                                    child: Text(
+                                      'Approve',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .button
+                                          .copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                    ),
+                                    color: Colors.green,
+                                  ),
+                                ],
+                              ),
                             ),
-                            ),
-                            isLoading?LinearProgressIndicator():Container(),
-
+                            isLoading ? LinearProgressIndicator() : Container(),
                           ],
                         ),
                       ),
@@ -735,8 +728,6 @@ Widget planetCard(BuildContext context, name, remark, date) {
     ),
   );
 }
-
-
 
 Widget _itemBuilder(label, textValue) {
   return Container(

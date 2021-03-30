@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:HRMNew/routes/route_names.dart';

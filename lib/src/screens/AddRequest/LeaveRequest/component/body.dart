@@ -48,8 +48,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   String leaveLable = "Leave";
   String leaveId;
-  // String endDate;
-
   int totalDays = 0;
 
   String respPerLable = "Leave";
@@ -137,59 +135,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          // child: FormBuilderRadioGroup(
-                          //   attribute: 'LeaveApplyFor',
-                          //   decoration: new InputDecoration(
-                          //     fillColor: Colors.white,
-                          //     border: _focusNode.hasFocus
-                          //         ? OutlineInputBorder(
-                          //             borderRadius: BorderRadius.all(
-                          //                 Radius.circular(5.0)),
-                          //             borderSide:
-                          //                 BorderSide(color: leaveCardcolor))
-                          //         : OutlineInputBorder(
-                          //             borderRadius: BorderRadius.all(
-                          //                 Radius.circular(5.0)),
-                          //             borderSide:
-                          //                 BorderSide(color: Colors.grey)),
-                          //     filled: true,
-                          //     contentPadding: EdgeInsets.only(
-                          //         bottom: 3.0, left: 3.0, right: 3.0),
-                          //     labelText: 'Leave Apply For ',
-                          //   ),
-                          //   // onChanged: _onRadioChanged,
-                          //   onChanged: _onLeaveChanged,//(val) {
-                          //     // New <----------
-                          //     // if (value == "Yes") {
-                          //     //   setState((){
-                          //     //     isVisible = true;
-                          //     //   });
-                          //     // } else {
-                          //     //   setState(() {
-                          //     //     isVisible = false;
-                          //     //   });
-                          //     // }
-                          //     // print(val);
-                          //     // if (val == "Half Day") {
-                          //     //   setState(() {
-                          //     //     showHalf = true;
-                          //     //   });
-                          //     // } else {
-                          //     //   setState(() {
-                          //     //     showHalf = false;
-                          //     //   });
-                          //     // }
-                          //   //},
-                          //   validators: [FormBuilderValidators.required()],
-                          //   options: ["Full Day", "Half Day"]
-                          //       .map((lang) => FormBuilderFieldOption(
-                          //             value: lang,
-                          //             child: Text('$lang'),
-                          //           ))
-                          //       .toList(growable: false),
-                          //
-                          // )
-
                           child: Container(
                             width: MediaQuery.of(context).size.width,
                             padding: EdgeInsets.symmetric(horizontal: 8),
@@ -296,50 +241,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                       ),
                                     ],
                                   ),
-                                )
-
-                                // FormBuilderRadioGroup(
-                                //   attribute: 'LeaveStartFrom',
-                                //   decoration: new InputDecoration(
-                                //     fillColor: Colors.white,
-                                //     border: _focusNode.hasFocus
-                                //         ? OutlineInputBorder(
-                                //             borderRadius: BorderRadius.all(
-                                //                 Radius.circular(5.0)),
-                                //             borderSide: BorderSide(
-                                //                 color: leaveCardcolor))
-                                //         : OutlineInputBorder(
-                                //             borderRadius: BorderRadius.all(
-                                //                 Radius.circular(5.0)),
-                                //             borderSide:
-                                //                 BorderSide(color: Colors.grey)),
-                                //     filled: true,
-                                //     contentPadding: EdgeInsets.only(
-                                //         bottom: 3.0, left: 3.0, right: 3.0),
-                                //     labelText: 'Leave Start From',
-                                //   ),
-                                //   onChanged: _onhalfChanged,
-                                //   validators: [
-                                //     FormBuilderValidators.required()
-                                //   ],
-                                //   options: ["First Half", "Second Half"]
-                                //       .map((lang) => FormBuilderFieldOption(
-                                //             value: lang,
-                                //             child: Text('$lan  g'),
-                                //           ))
-                                //       .toList(growable: false),
-                                // ),
-                                )
+                                ))
                             : Container(),
-                        // MyCustomDateRange(
-                        //   onChanged: _onChanged,
-                        //   title: "Select Leave Date Range",
-                        //   attrName: 'date_range',
-                        //   validator: (value) {
-                        //     print("Selected date rangr $value");
-                        //   },
-                        // ),
-
                         selectedLeaveRadio == 2
                             ? GestureDetector(
                                 onTap: () async {
@@ -390,33 +293,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                     child: Text('$selectedDateRange')),
                               ),
 
-                        // FormBuilderDateRangePicker(
-                        //   controller: rangeDateSelected,
-                        //   attribute: 'date_range',
-                        //   onChanged: _onDateRangeSelect,
-                        //   firstDate: DateTime.now(),
-                        //   lastDate: DateTime(2030),
-                        //   format: DateFormat('dd-MM-yyyy'),
-                        //   decoration: new InputDecoration(
-                        //     fillColor: Colors.white,
-                        //     border: _focusNode.hasFocus
-                        //         ? OutlineInputBorder(
-                        //             borderRadius: BorderRadius.all(
-                        //                 Radius.circular(5.0)),
-                        //             borderSide:
-                        //                 BorderSide(color: leaveCardcolor))
-                        //         : OutlineInputBorder(
-                        //             borderRadius: BorderRadius.all(
-                        //                 Radius.circular(5.0)),
-                        //             borderSide:
-                        //                 BorderSide(color: Colors.grey)),
-                        //     filled: true,
-                        //     contentPadding: EdgeInsets.only(
-                        //         bottom: 10.0, left: 10.0, right: 10.0),
-                        //     labelText: "Select Leave Date Range",
-                        //   ),
-                        // ),
-
                         selectedLeaveRadio == 2
                             ? Container()
                             : Container(
@@ -461,53 +337,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   ? 'Return Date: $returndate'
                                   : 'Return to Work date')),
                         ),
-
-                        // MyCustomTextField(
-                        //     title: totalDays.toString(),
-                        //     attrName: 'total_days'),
-                        // Padding(
-                        //     padding: const EdgeInsets.all(8.0),
-                        //     child: FormBuilderDateTimePicker(
-                        //       // attribute: "date",
-                        //       inputType: InputType.date,
-                        //       firstDate: DateTime.now(),
-                        //       format: DateFormat("dd-MM-yyyy"),
-                        //       // initialValue: DateTime.now(),
-
-                        //       autocorrect: false,
-                        //       focusNode: _focusNode,
-                        //       style: TextStyle(color: Colors.black),
-                        //     )),
-
-                        // Padding(
-                        //   padding: const EdgeInsets.all(8.0),
-                        //   child: FormBuilderDateTimePicker(
-                        //     attribute: "returnDate",
-                        //      controller: returnDateSelected,
-                        //      onChanged: _onReturnDateSelect,
-                        //     inputType: InputType.date,
-                        //     firstDate: DateTime.now(),
-                        //     format: DateFormat("dd-MM-yyyy"),
-                        //     decoration: new InputDecoration(
-                        //       fillColor: Colors.white,
-                        //       border: _focusNode.hasFocus
-                        //           ? OutlineInputBorder(
-                        //               borderRadius: BorderRadius.all(
-                        //                   Radius.circular(5.0)),
-                        //               borderSide:
-                        //                   BorderSide(color: leaveCardcolor))
-                        //           : OutlineInputBorder(
-                        //               borderRadius: BorderRadius.all(
-                        //                   Radius.circular(5.0)),
-                        //               borderSide:
-                        //                   BorderSide(color: Colors.grey)),
-                        //       filled: true,
-                        //       contentPadding: EdgeInsets.only(
-                        //           bottom: 10.0, left: 10.0, right: 10.0),
-                        //       labelText: "Return to work date",
-                        //     ),
-                        //   ),
-                        // ),
 
                         Container(
                           padding: const EdgeInsets.all(9),
@@ -631,14 +460,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             },
                           ),
                         ),
-                        // MyCustomDropDown(
-                        //   title: "Select Responsible Person",
-                        //   controller:responsiblePerController
-                        // ),
-                        // MyCustomTextField(
-                        //     title: "Total Days", attrName: 'total_days'),
-                        // MyCustomTextField(title: "Subject", attrName: 'subject'),
-                        // MyCustomTextField(title: "Reason", attrName: 'reason'),
 
                         Container(
                           padding: const EdgeInsets.all(9),
