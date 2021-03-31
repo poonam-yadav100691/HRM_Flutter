@@ -1,4 +1,7 @@
-import 'dart:developer';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:HRMNew/classes/language.dart';
 import 'package:HRMNew/components/LogoutOverlay.dart';
@@ -14,16 +17,10 @@ import 'package:HRMNew/src/models/balancePodo.dart';
 import 'package:HRMNew/src/screens/Login/PODO/loginResponse.dart';
 import 'package:HRMNew/utils/UIhelper.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'dart:ui';
-import 'package:intl/intl.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'dart:typed_data';
-
-import 'package:toast/toast.dart';
 
 List<Permission> listOfPermission = [];
 
@@ -81,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
-    print("Token Access: $token");
+
     try {
       final uri = Services.GetPermissions;
       Map body = {
@@ -91,8 +88,6 @@ class _MyHomePageState extends State<MyHomePage> {
       http.post(uri, body: body).then((response) {
         if (response.statusCode == 200) {
           var jsonResponse = jsonDecode(response.body);
-
-          print('permission response  $jsonResponse');
 
           if (jsonResponse["StatusCode"] == 200) {
             // sharedPreferences.setString(
@@ -107,8 +102,6 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {
               listOfPermission = _permissions;
             });
-
-            // print("%%%%%%%%%%%%%%%%%%% ${_permissions[0].roleName}");
             getLeaveCounts();
           } else {
             setState(() {
@@ -152,12 +145,6 @@ class _MyHomePageState extends State<MyHomePage> {
       GetBalance balance = new GetBalance.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
         balanceList = balance.resultObject;
-
-        // for (int i = 0; i < balanceList.length; i++) {
-        //   leaveTypeList.add(balanceList[i]);
-        // }
-        // });
-        print(balanceList.toString());
         setState(() {
           isLoading = false;
           username = sharedPreferences.getString(AppConstant.USERNAME);
@@ -401,12 +388,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     "Get holidays list of this finalcial year",
                     Icons.arrow_forward_ios,
                     calendarViewRoute),
-                _cardList(
-                    "NOTES / RULES",
-                    "lib/assets/images/rules.png",
-                    "Get list of all notes/rule of company",
-                    Icons.arrow_forward_ios,
-                    rulesRoute),
+                // _cardList(
+                //     "NOTES / RULES",
+                //     "lib/assets/images/rules.png",
+                //     "Get list of all notes/rule of company",
+                //     Icons.arrow_forward_ios,
+                //     rulesRoute),
               ],
             ),
           )
@@ -574,7 +561,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _body() {
-    print("in body---");
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height,
@@ -699,7 +685,6 @@ class GetToken {
         String password = sharedPreferences.getString(AppConstant.PASSWORD);
         String urname = sharedPreferences.getString(AppConstant.USERNAME);
 
-        print("Here--In Token-----$username");
         try {
           final uri = Services.LOGIN;
           Map body = {
@@ -707,12 +692,10 @@ class GetToken {
             "UserName": username,
             "UserPassword": password
           };
-          print("Here--In Token-----$body");
 
           http.post(uri, body: body).then((response) {
             if (response.statusCode == 200) {
               var jsonResponse = jsonDecode(response.body);
-              print("Here--In Token-----$jsonResponse");
               if (jsonResponse["StatusCode"] == 200) {
                 LoginResponse login =
                     new LoginResponse.fromJson(jsonResponse["ResultObject"][0]);
@@ -722,7 +705,7 @@ class GetToken {
                 sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
                 sharedPreferences.setString(
                     AppConstant.ACCESS_TOKEN, login.tokenKey);
-                print("New token : ${login.tokenKey}");
+
                 sharedPreferences.setString(
                     AppConstant.USERNAME, login.eng_fullname);
                 sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);

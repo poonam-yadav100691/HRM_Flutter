@@ -73,6 +73,7 @@ class RequestTitleObject {
   String fileName;
   String attachedFile;
   String statusText;
+  String empPhoto;
 
   String empContact;
 
@@ -86,6 +87,7 @@ class RequestTitleObject {
       this.fileName,
       this.attachedFile,
       this.statusText,
+      this.empPhoto,
       this.empContact});
 
   RequestTitleObject.fromJson(Map<String, dynamic> json) {
@@ -98,6 +100,7 @@ class RequestTitleObject {
     fileName = json['fileName'];
     attachedFile = json['attachedFile'];
     statusText = json['statusText'];
+    empPhoto = json['empPhoto'];
     empContact = json['empContact'];
   }
 
@@ -112,6 +115,7 @@ class RequestTitleObject {
     data['fileName'] = this.fileName;
     data['attachedFile'] = this.attachedFile;
     data['statusText'] = this.statusText;
+    data['empPhoto'] = this.empPhoto;
     data['empContact'] = this.empContact;
     return data;
   }

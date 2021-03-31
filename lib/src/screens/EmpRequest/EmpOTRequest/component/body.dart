@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/requestDetails.dart';
@@ -20,54 +22,43 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   // var totalDays = 0;
 
-
-
-
   _BodyState(this.empOtList);
-
-
-
 
   @override
   AnimationController animationController;
   Animation<dynamic> animation;
 
-
-
-
   Widget build(BuildContext context) {
     // List jsonResponse = jsonDecode(empOtList);
     final children = <Widget>[];
     for (var i = 0; i < empOtList.length; i++) {
-      children.add(
-        new GestureDetector(
-          onTap: () {
-            print("empOtList[i].requestID:: ${empOtList[i].requestID}");
+      children.add(new GestureDetector(
+        onTap: () {
+          print("empOtList[i].requestID:: ${empOtList[i].requestID}");
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    MyLeaveReqDetails(levReqDetailID: empOtList[i].requestID),
-              ),
-            );
-          },
-          child: Container(
-            margin: const EdgeInsets.symmetric(
-              vertical: 10.0,
-              horizontal: 10.0,
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  MyLeaveReqDetails(levReqDetailID: empOtList[i].requestID),
             ),
-            child: planetCard(
-                context,
-                 empOtList[i],
-                // empOtList[i].empName,
-                // empOtList[i].empPosition,
-                // empOtList[i].dateRequest,
-                // empOtList[i].requestID),
+          );
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(
+            vertical: 10.0,
+            horizontal: 10.0,
+          ),
+          child: planetCard(
+            context,
+            empOtList[i],
+            // empOtList[i].empName,
+            // empOtList[i].empPosition,
+            // empOtList[i].dateRequest,
+            // empOtList[i].requestID),
           ),
         ),
-        )
-      );
+      ));
     }
     Size size = MediaQuery.of(context).size;
     return Background(child: ListView(children: children));
@@ -120,10 +111,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                         Container(
                           padding: const EdgeInsets.only(left: 6.0),
                           child: ClipOval(
-                            child: Image.asset(
-                              "lib/assets/images/profile.jpg",
+                            child: Image.memory(
+                              base64Decode(object.empPhoto),
                               height: 47,
-                              // width: 90,
+                              width: 47,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -176,7 +168,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         ),
       ),
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => RequestDetails(levReqDetailID: object.requestID,)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => RequestDetails(
+                      levReqDetailID: object.requestID,
+                    )));
       },
     );
   }

@@ -48,6 +48,7 @@ class ResultObject {
   String fileName;
   String attachedFile;
   String statusText;
+  String empPhoto;
 
   ResultObject(
       {this.requestID,
@@ -58,6 +59,7 @@ class ResultObject {
       this.dateRequest,
       this.fileName,
       this.attachedFile,
+      this.empPhoto,
       this.statusText});
 
   ResultObject.fromJson(Map<String, dynamic> json) {
@@ -70,6 +72,7 @@ class ResultObject {
     fileName = json['fileName'];
     attachedFile = json['attachedFile'];
     statusText = json['statusText'];
+    empPhoto = json['empPhoto'];
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +86,7 @@ class ResultObject {
     data['fileName'] = this.fileName;
     data['attachedFile'] = this.attachedFile;
     data['statusText'] = this.statusText;
+    data['empPhoto'] = this.empPhoto;
     return data;
   }
 }
