@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "714254624386",
+    "project_id": "tk-hrm",
+    "storage_bucket": "tk-hrm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714254624386:android:750ad6513d07ad0797b69b",
+        "android_client_info": {
+          "package_name": "com.tkgroup.hrm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714254624386-ned48boclv73jn032qlh2tdopu8bmgjq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tkgroup.hrm",
+            "certificate_hash": "f8d052b342c80361caf6745badd6535ea5b2adae"
+          }
+        },
+        {
+          "client_id": "714254624386-ket3jepb398457kash6kui9i99qgc0f1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzWPnXovkkbvPauWtyit2pThYQJTooI5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714254624386-ket3jepb398457kash6kui9i99qgc0f1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "714254624386-6gbcod85lo12074j6m2gcfjgmqinj4qm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tkgroup.hrm"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

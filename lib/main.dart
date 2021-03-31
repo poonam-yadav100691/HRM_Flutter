@@ -1,12 +1,22 @@
 import 'package:HRMNew/routes/custome_router.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'localization/demo_localization.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+      MyApp());
+}
+
+FirebaseAnalytics analytics = FirebaseAnalytics();
+FirebaseAnalyticsObserver observer =
+FirebaseAnalyticsObserver(analytics: analytics);
 
 class MyApp extends StatefulWidget {
   const MyApp({Key key}) : super(key: key);
@@ -14,6 +24,7 @@ class MyApp extends StatefulWidget {
     _MyAppState state = context.findAncestorStateOfType<_MyAppState>();
     state.setLocale(newLocale);
   }
+
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -26,6 +37,13 @@ class _MyAppState extends State<MyApp> {
       print("&455&&& $locale");
       _locale = locale;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    analytics.logAppOpen();
+    super.initState();
   }
 
   @override
@@ -63,6 +81,7 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
+        navigatorObservers: <NavigatorObserver>[observer],
         localeResolutionCallback: (locale, supportedLocales) {
           for (var supportedLocale in supportedLocales) {
             if (supportedLocale.languageCode == locale.languageCode &&

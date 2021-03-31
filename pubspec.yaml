@@ -38,6 +38,10 @@ dependencies:
   connectivity: ^0.4.8+1
   toast: ^0.1.5
   select_dialog: ^1.2.1
+  firebase_analytics: ^7.0.1
+  firebase_core: ^0.7.0
+  firebase_messaging: ^8.0.0-dev.14
+  flutter_local_notifications: ^3.0.3
   intl: ^0.16.1
   # file_picker: ^2.0.10
   date_time_picker: ^1.0.2
