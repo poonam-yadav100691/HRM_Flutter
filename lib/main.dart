@@ -10,6 +10,7 @@ import 'localization/demo_localization.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
       MyApp());
 }

@@ -10,6 +10,8 @@ import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/Login/PODO/loginResponse.dart';
 import 'package:HRMNew/utils/App_theme.dart';
 import 'package:HRMNew/utils/UIhelper.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,6 +47,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     buttonText = 'LOGIN';
     // _register();
+    generateTocken();
     super.initState();
   }
 
@@ -119,9 +122,11 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           Map body = {
             "PassKey": "a486f489-76c0-4c49-8ff0-d0fdec0a162b",
             "UserName": usernameController.text.trim(),
-            "UserPassword": passwordController.text.trim()
+            "UserPassword": passwordController.text.trim(),
+            "Device_token":token,
           };
 
+          print('token fcm $token');
           http.post(uri, body: body).then((response) {
             if (response.statusCode == 200) {
               var jsonResponse = jsonDecode(response.body);
@@ -577,6 +582,15 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       // navigateToSubPage(context);
     });
   }
+
+
+  String token = '';
+  void generateTocken() async {
+   await  Firebase.initializeApp();
+    token = await FirebaseMessaging().getToken();
+
+  }
+
 
   Color getColor() {
     if (_state == 0) {
