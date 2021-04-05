@@ -92,7 +92,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     return Container(
       child: new Image(
         image: new AssetImage(
-            "lib/assets/images/${statusText[0].toUpperCase()}${statusText.substring(1)}.png"),
+            "lib/assets/images/${statusText[0].toLowerCase()}${statusText.substring(1)}.png"),
         height: 40.0,
         width: 40.0,
       ),

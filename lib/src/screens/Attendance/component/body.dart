@@ -9,6 +9,7 @@ import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import './background.dart';
@@ -41,6 +42,9 @@ class _BodyState extends State<Body> {
     _showSubmitBtn = false;
   }
 
+
+  Image img;
+  File imageFile;
   Future<void> _showMyDialog(serviceRequestText) async {
     return showDialog(
         context: context,
@@ -67,12 +71,21 @@ class _BodyState extends State<Body> {
               ),
             ],
           );
-        }).then((exit1) {
+        }).then((exit1) async{
       if (exit1 == null) return;
 
       if (exit1) {
         //  await Navigator.pop(context);
-        getCamera(context, serviceRequestText);
+
+          imageFile = await ImagePicker.pickImage(
+              source: ImageSource.camera,imageQuality: 60);
+          if (imageFile != null) {
+
+              setState(() {
+               result1=imageFile.path;
+              });
+            }
+
         // user pressed Yes button
       } else {
         Navigator.pushNamed(context, homeRoute);
@@ -129,7 +142,7 @@ class _BodyState extends State<Body> {
     //  / return print(position); // return await Geolocator.getCurrentPosition();
   }
 
-  Future<void> submitAttendance(checkinout) async {
+  Future<void> submitAttendance(bool checkinout) async {
    setState(() {
       isLoading = true;
     });
@@ -139,8 +152,8 @@ class _BodyState extends State<Body> {
     Map body = {
       "TokenKey": token,
       "CheckDataTime": new DateTime.now().toString(),
-      "longitude": position.longitude,
-      "latitude": position.latitude,
+      "longitude": position.longitude.toString(),
+      "latitude": position.latitude.toString(),
       "checkInOut": checkinout ? "checkin" : "checkout",
       "picture": result1
     };
@@ -201,7 +214,7 @@ class _BodyState extends State<Body> {
                     border: Border.all(width: 1.0, color: Colors.grey[700]),
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 child: Image.file(
-                  File(result1),
+                 File(result1),
                   fit: BoxFit.cover,
                 ),
               )

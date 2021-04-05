@@ -90,6 +90,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             // Ensure that the camera is initialized.
             await _initializeControllerFuture;
 
+
             // Construct the path where the image should be saved using the
             // pattern package.
             final path = join(
@@ -98,10 +99,13 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               (await getTemporaryDirectory()).path,
               '${DateTime.now()}.png',
             );
-
-            var file = File(path);
+            // _controller.takePicture(path).then((value) {
+            //
+            // });
+             var file = File(path);
             if (file != null) {
               print("helo");
+              await _controller.takePicture(path);
               base64Encode(file.readAsBytesSync());
               var base64Image = base64Encode(file.readAsBytesSync());
               print("Imageee::: ${base64Image}");
@@ -111,10 +115,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               String img64 = base64Encode(bytes);
               print("object");
               print(img64.substring(0, 100));
-              // Navigator.pop(context, base64Encode(file.readAsBytesSync()));
+               Navigator.pop(context, base64Encode(file.readAsBytesSync()));
             }
             // Attempt to take a picture and log where it's been saved.
-            await _controller.takePicture(path);
+
 
             //  Navigator.pop(context, path);
 

@@ -69,8 +69,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
           isLoading = false;
+          payslipDetails = payslipDetailsLst.resultObject;
         });
-        payslipDetails = payslipDetailsLst.resultObject;
+
 
         print("DD--->>>${payslipDetails[0].earningObject}");
       } else {
@@ -92,7 +93,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print(payslipDetails[0]);
+    // print(payslipDetails[0]);
     Size size = MediaQuery.of(context).size;
     return Background(
       child: Column(
@@ -192,10 +193,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                     padding: const EdgeInsets.all(3.0),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent)),
-                    child: Column(
+                    child:isLoading?LinearProgressIndicator(): Column(
                       children: [
                         _itemBuilder(
-                            payslipDetails[0].earningObject, 'earning'),
+                         payslipDetails[0].earningObject, 'earning'),
                       ],
                     ),
                   ),
@@ -216,15 +217,16 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                     padding: const EdgeInsets.all(3.0),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent)),
-                    child: Column(
-                      children: [
+                    child:isLoading?LinearProgressIndicator(): Column(
+                      children:[
                         _itemBuilder(
-                            payslipDetails[0].deductionObject, 'deduction'),
+                          payslipDetails[0].deductionObject, 'deduction'),
+                        ]
                         // _itemBuilder("Tax Deducted", "\$0"),
                         // _itemBuilder("Provident Fund", "\$0"),
                         // _itemBuilder("Loan", "\$550"),
                         // _itemBuilder("Total Deductions", "\$53935"),
-                      ],
+
                     ),
                   ),
                 ),
@@ -271,26 +273,26 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             children: [
               sectionLable != 'deduction'
                   ? Text(
-                      payslipDetail[i].earningDescrip,
+                      payslipDetail[i].earningDescrip??"",
                       textAlign: TextAlign.left,
                       style: new TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 14),
                     )
                   : Text(
-                      payslipDetail[i].deductionDescrip,
+                      payslipDetail[i].deductionDescrip??"",
                       textAlign: TextAlign.left,
                       style: new TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 14),
                     ),
               sectionLable != 'deduction'
                   ? Text(
-                      payslipDetail[i].earningValues.toString(),
+                      payslipDetail[i].earningValues.toString()??"",
                       textAlign: TextAlign.left,
                       style: new TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 14),
                     )
                   : Text(
-                      payslipDetail[i].deductionValues.toString(),
+                      payslipDetail[i].deductionValues.toString()??"",
                       textAlign: TextAlign.left,
                       style: new TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 14),

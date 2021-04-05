@@ -24,7 +24,7 @@ class _PayslipDescState extends State<PayslipDesc> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(getTranslated(context, 'Insurance')),
+        title: Text('Payslip Details'??""),
         shadowColor: Colors.transparent,
         centerTitle: true,
         backgroundColor: leaveCardcolor,

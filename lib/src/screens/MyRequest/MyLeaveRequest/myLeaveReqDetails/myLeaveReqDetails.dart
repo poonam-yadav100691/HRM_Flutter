@@ -37,6 +37,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
   void initState() {
     super.initState();
     String levDetails = widget.levReqDetailID;
+    // _loadUserInfo();
     _getReqDetails(levDetails);
   }
 
@@ -97,12 +98,13 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
           new GetLevReqDetails.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
+          myReqTitleObj = getLevReqDetails.requestTitleObject;
+          approvedObject = getLevReqDetails.approvedObject;
+          requestItemObject = getLevReqDetails.requestItemObject;
           isLoading = false;
         });
 
-        myReqTitleObj = getLevReqDetails.requestTitleObject;
-        approvedObject = getLevReqDetails.approvedObject;
-        requestItemObject = getLevReqDetails.requestItemObject;
+
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
@@ -155,6 +157,23 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
     });
   }
 
+  // _loadUserInfo() async {
+  //   sharedPreferences = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     _accessToken =
+  //     (sharedPreferences.getString(AppConstant.ACCESS_TOKEN) ?? "");
+  //     // _userId =
+  //     //     (sharedPreferences.getInt(AppConstant.USER_ID.toString()) ?? "");
+  //     _username = (sharedPreferences.getString(AppConstant.USERNAME) ?? "");
+  //     _department = (sharedPreferences.getString(AppConstant.DEPARTMENT) ?? "");
+  //     _image = (sharedPreferences.getString(AppConstant.IMAGE) ?? "");
+  //     _email = (sharedPreferences.getString(AppConstant.EMAIL) ?? "");
+  //     _phoneno = (sharedPreferences.getString(AppConstant.PHONENO) ?? "");
+  //     _company = (sharedPreferences.getString(AppConstant.COMPANY) ?? "");
+  //     print("CompanyL : $_company");
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -191,91 +210,384 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                             Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Column(
-                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 5.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            myReqTitleObj[0].requestID != null
-                                                ? Text(
-                                                    "Request No. : " +
-                                                        myReqTitleObj[0]
-                                                            .requestID,
-                                                    style: new TextStyle(
-                                                        color: kRedColor,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  )
-                                                : Container(),
-                                          ],
-                                        ),
-                                      ),
-
-                                      myReqTitleObj[0].statusText != null
-                                          ? Text(
-                                              myReqTitleObj[0].statusText,
-                                              style: new TextStyle(
-                                                  color: kRedColor,
-                                                  fontWeight: FontWeight.w500),
-                                            )
-                                          : Container(),
-
-                                      // totalDays.toString(),
-                                    ],
+                                  // Padding(
+                                  //   padding: const EdgeInsets.only(bottom: 10.0),
+                                  //   child: Row(
+                                  //     mainAxisAlignment:
+                                  //     MainAxisAlignment.spaceEvenly,
+                                  //     children: <Widget>[
+                                  //       // Icon(Icons.arrow_back_ios),
+                                  //       Container(
+                                  //         padding: const EdgeInsets.only(left: 5.0),
+                                  //         child: ClipOval(
+                                  //           child: Image.memory(
+                                  //             base64Decode(myReqTitleObj[0].empPhoto),
+                                  //             height: 47,
+                                  //             width: 47,
+                                  //             fit: BoxFit.cover,
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //       Expanded(
+                                  //         child: Padding(
+                                  //           padding:
+                                  //           const EdgeInsets.only(left: 15.0),
+                                  //           child: Column(
+                                  //             mainAxisAlignment:
+                                  //             MainAxisAlignment.spaceBetween,
+                                  //             crossAxisAlignment:
+                                  //             CrossAxisAlignment.start,
+                                  //             children: [
+                                  //               Text(myReqTitleObj[0].empName,
+                                  //                   style: TextStyle(
+                                  //                       fontSize: 19.0,
+                                  //                       fontWeight: FontWeight.bold)),
+                                  //               Padding(
+                                  //                 padding:
+                                  //                 const EdgeInsets.only(top: 8.0),
+                                  //                 child: Text(
+                                  //                     myReqTitleObj[0].empPosition,
+                                  //                     style:
+                                  //                     TextStyle(fontSize: 14.0)),
+                                  //               ),
+                                  //             ],
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //       InkWell(
+                                  //         child: Container(
+                                  //           padding: EdgeInsets.all(10),
+                                  //           child: Icon(Icons.phone),
+                                  //         ),
+                                  //         onTap: () => launch(
+                                  //             "tel://" + myReqTitleObj[0].empContact),
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // ),
+                                  SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
                                   ),
-
-                                  myReqTitleObj[0].submitDate != null
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 5.0),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                'Date Of Request : ',
-                                                style: new TextStyle(),
-                                              ),
-                                              Text(
-                                                myReqTitleObj[0].submitDate,
-                                                style: new TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      : Container(),
-                                  // : Container(),
-                                  myReqTitleObj[0].managerName != null
-                                      ? Row(
-                                          children: [
-                                            Text(
-                                              'Manager : ',
-                                              style: new TextStyle(),
-                                            ),
-                                            Text(
-                                              myReqTitleObj[0].managerName,
-                                              style: new TextStyle(
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ],
-                                        )
-                                      : Container(),
+                                  SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Duration: ${requestItemObject.isNotEmpty ? requestItemObject[0].duration : "-"} days'),
+                                  ),
+                                  SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Request Status: ${requestItemObject.isNotEmpty ? myReqTitleObj[0].statusText : "-"}'),
+                                  ),
+                                  SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Reason: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestReason : "-"}'),
+                                  ),
+                                  SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName : "-"}'),
+                                  ),
+                                  SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Requested For: ${(requestItemObject.isNotEmpty && requestItemObject !=null ) ? requestItemObject[0].requestFor : "-"}'),
+                                  ),
+                                  // Container(
+                                  //   padding: const EdgeInsets.symmetric(vertical: 8),
+                                  //   child: TextFormField(
+                                  //     decoration: new InputDecoration(
+                                  //       fillColor: Colors.white,
+                                  //       border: OutlineInputBorder(),
+                                  //       filled: true,
+                                  //       contentPadding: EdgeInsets.only(
+                                  //           bottom: 10.0, left: 10.0, right: 10.0),
+                                  //       // suffixIcon: Icon(Icons.keyboard_arrow_down),
+                                  //       labelText: 'Comment',
+                                  //       errorText: errortext,
+                                  //     ),
+                                  //     controller: resoneController,
+                                  //     onChanged: (str) {
+                                  //       setState(() {
+                                  //         errortext = null;
+                                  //       });
+                                  //     },
+                                  //   ),
+                                  // ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.symmetric(
+                                  //     vertical: 8,
+                                  //   ),
+                                  //   child: Row(
+                                  //     mainAxisAlignment:
+                                  //     MainAxisAlignment.spaceEvenly,
+                                  //     children: [
+                                  //       RaisedButton(
+                                  //         onPressed: () async {
+                                  //           if (resoneController.text != "") {
+                                  //             setState(() {
+                                  //               isLoading = true;
+                                  //             });
+                                  //
+                                  //             SharedPreferences sharedPreferences =
+                                  //             await SharedPreferences
+                                  //                 .getInstance();
+                                  //             String token =
+                                  //             sharedPreferences.getString(
+                                  //                 AppConstant.ACCESS_TOKEN);
+                                  //             final uri = Services.RejectOT;
+                                  //             Map body = {
+                                  //               "TokenKey": token,
+                                  //               "lang": '2',
+                                  //               "requestID":
+                                  //               myReqTitleObj[0].requestID,
+                                  //               "rejectDescription":
+                                  //               resoneController.text ?? " ",
+                                  //             };
+                                  //
+                                  //             print('$body');
+                                  //             http
+                                  //                 .post(uri, body: body)
+                                  //                 .then((response) {
+                                  //               var jsonResponse =
+                                  //               jsonDecode(response.body);
+                                  //               // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+                                  //               if (jsonResponse["StatusCode"] ==
+                                  //                   200) {
+                                  //                 setState(() {
+                                  //                   isLoading = false;
+                                  //                 });
+                                  //
+                                  //                 print("j&&& $jsonResponse");
+                                  //                 Navigator.pop(context);
+                                  //               } else {
+                                  //                 print(
+                                  //                     "ModelError: ${jsonResponse["ModelErrors"]}");
+                                  //                 if (jsonResponse["ModelErrors"] ==
+                                  //                     'Unauthorized') {
+                                  //                   Future<String> token =
+                                  //                   GetToken().getToken();
+                                  //                 } else {
+                                  //                   // .showSnackBar(
+                                  //                   //     currentState   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+                                  //                 }
+                                  //               }
+                                  //             });
+                                  //           } else {
+                                  //             setState(() {
+                                  //               errortext = "Please Enter Comment";
+                                  //             });
+                                  //           }
+                                  //         },
+                                  //         child: Text(
+                                  //           'Reject',
+                                  //           style: Theme.of(context)
+                                  //               .textTheme
+                                  //               .button
+                                  //               .copyWith(
+                                  //               color: Colors.white,
+                                  //               fontWeight: FontWeight.bold),
+                                  //         ),
+                                  //         color: Colors.red,
+                                  //       ),
+                                  //       RaisedButton(
+                                  //         onPressed: () async {
+                                  //           setState(() {
+                                  //             isLoading = true;
+                                  //           });
+                                  //
+                                  //           SharedPreferences sharedPreferences =
+                                  //           await SharedPreferences.getInstance();
+                                  //           String token = sharedPreferences
+                                  //               .getString(AppConstant.ACCESS_TOKEN);
+                                  //           final uri = Services.ApproveOT;
+                                  //           Map body = {
+                                  //             "TokenKey": token,
+                                  //             "lang": '2',
+                                  //             "requestID": myReqTitleObj[0].requestID,
+                                  //             "approvedescription":
+                                  //             resoneController.text ?? " ",
+                                  //             "approveby": sharedPreferences
+                                  //                 .getString(AppConstant.EMP_ID),
+                                  //             "approvedescription":
+                                  //             resoneController.text ?? " ",
+                                  //           };
+                                  //
+                                  //           print('$body');
+                                  //           http
+                                  //               .post(uri, body: body)
+                                  //               .then((response) {
+                                  //             var jsonResponse =
+                                  //             jsonDecode(response.body);
+                                  //             // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+                                  //             if (jsonResponse["StatusCode"] == 200) {
+                                  //               setState(() {
+                                  //                 isLoading = false;
+                                  //               });
+                                  //
+                                  //               print("j&&& $jsonResponse");
+                                  //               Navigator.pop(context);
+                                  //             } else {
+                                  //               print(
+                                  //                   "ModelError: ${jsonResponse["ModelErrors"]}");
+                                  //               if (jsonResponse["ModelErrors"] ==
+                                  //                   'Unauthorized') {
+                                  //                 Future<String> token =
+                                  //                 GetToken().getToken();
+                                  //               } else {
+                                  //                 // .showSnackBar(
+                                  //                 //     currentState   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+                                  //               }
+                                  //             }
+                                  //           });
+                                  //         },
+                                  //         child: Text(
+                                  //           'Approve',
+                                  //           style: Theme.of(context)
+                                  //               .textTheme
+                                  //               .button
+                                  //               .copyWith(
+                                  //               color: Colors.white,
+                                  //               fontWeight: FontWeight.bold),
+                                  //         ),
+                                  //         color: Colors.green,
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // ),
+                                  // isLoading ? LinearProgressIndicator() : Container(),
                                 ],
                               ),
+                              // Column(
+                              //   // crossAxisAlignment: CrossAxisAlignment.start,
+                              //   children: [
+                              //     // Row(
+                              //     //   mainAxisAlignment:
+                              //     //       MainAxisAlignment.spaceBetween,
+                              //     //   children: [
+                              //     //     Padding(
+                              //     //       padding:
+                              //     //           const EdgeInsets.only(bottom: 5.0),
+                              //     //       child: Row(
+                              //     //         mainAxisAlignment:
+                              //     //             MainAxisAlignment.spaceBetween,
+                              //     //         children: [
+                              //     //           myReqTitleObj[0].requestID != null
+                              //     //               ? Text(
+                              //     //                   "Request No. : " +
+                              //     //                       myReqTitleObj[0]
+                              //     //                           .requestID,
+                              //     //                   style: new TextStyle(
+                              //     //                       color: kRedColor,
+                              //     //                       fontWeight:
+                              //     //                           FontWeight.w500),
+                              //     //                 )
+                              //     //               : Container(),
+                              //     //         ],
+                              //     //       ),
+                              //     //     ),
+                              //     //
+                              //     //     myReqTitleObj[0].statusText != null
+                              //     //         ? Text(
+                              //     //             myReqTitleObj[0].statusText,
+                              //     //             style: new TextStyle(
+                              //     //                 color: kRedColor,
+                              //     //                 fontWeight: FontWeight.w500),
+                              //     //           )
+                              //     //         : Container(),
+                              //     //
+                              //     //     // totalDays.toString(),
+                              //     //   ],
+                              //     // ),
+                              //     //
+                              //     // myReqTitleObj[0].submitDate != null
+                              //     //     ? Padding(
+                              //     //         padding: const EdgeInsets.only(
+                              //     //             bottom: 5.0),
+                              //     //         child: Row(
+                              //     //           children: [
+                              //     //             Text(
+                              //     //               'Date Of Request : ',
+                              //     //               style: new TextStyle(),
+                              //     //             ),
+                              //     //             Text(
+                              //     //               myReqTitleObj[0].submitDate,
+                              //     //               style: new TextStyle(
+                              //     //                   fontWeight:
+                              //     //                       FontWeight.w500),
+                              //     //             ),
+                              //     //           ],
+                              //     //         ),
+                              //     //       )
+                              //     //     : Container(),
+                              //     // // : Container(),
+                              //     // myReqTitleObj[0].managerName != null
+                              //     //     ? Row(
+                              //     //         children: [
+                              //     //           Text(
+                              //     //             'Manager : ',
+                              //     //             style: new TextStyle(),
+                              //     //           ),
+                              //     //           Text(
+                              //     //             myReqTitleObj[0].managerName,
+                              //     //             style: new TextStyle(
+                              //     //                 fontWeight: FontWeight.w500),
+                              //     //           ),
+                              //     //         ],
+                              //     //       )
+                              //     //     : Container(),
+                              //   ],
+                              // ),
                             ),
                           ],
                         ),
                       ),
                     ),
-                    Container(
+                    (myReqTitleObj[0].statusText != null &&
+                        myReqTitleObj[0].statusText != 'Pending')
+                        ?  Container(
                       width: size.width * .9,
                       margin: EdgeInsets.only(top: 10),
                       child: Text(
@@ -284,16 +596,16 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                         style: new TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-                    ),
+                    ):Container(),
                     Container(
                         padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
                         child: Column(
-                          children: _getapprovedObjectUI(),
+                          children: isLoading?<Widget>[LinearProgressIndicator()]:_getapprovedObjectUI(),
                         )),
                     Container(
                         padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
                         child: Column(
-                          children: _getrequestItemObjectUI(),
+                          children: isLoading?<Widget>[LinearProgressIndicator()]:_getrequestItemObjectUI(),
                         )),
                     (myReqTitleObj[0].statusText != null &&
                             myReqTitleObj[0].statusText == 'Pending')
@@ -327,6 +639,9 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
           body: Background(child: Center(child: CircularProgressIndicator())));
     }
   }
+
+  String errortext;
+  TextEditingController resoneController = TextEditingController();
 
   Widget leaveReqItems(BuildContext context, reqItmObj) {
     var inputFormat = DateFormat('MM/dd/yyyy HH:mm:ss a');

@@ -35,7 +35,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   int totalDays;
 
-  String errortext;
+    String errortext;
   _BodyState(this.data);
 
   @override

@@ -6,8 +6,9 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:HRMNew/localization/localization_constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'localization/demo_localization.dart';
-
+SharedPreferences globalMyLocalPrefes;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -43,8 +44,15 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // TODO: implement initState
+    initSharePref();
     analytics.logAppOpen();
     super.initState();
+  }
+
+
+  initSharePref()async{
+    globalMyLocalPrefes=await SharedPreferences.getInstance();
+
   }
 
   @override
