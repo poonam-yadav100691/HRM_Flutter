@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Network.dart';
@@ -37,7 +38,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 //====================================
 
-  SharedPreferences sharedPreferences;
+  // SharedPreferences sharedPreferences;
   final _minimumPadding = 5.0;
   bool invisible = true;
   bool _obscureText = true;
@@ -111,7 +112,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   Future<void> getToken() async {
     Network().check().then((intenet) async {
       if (intenet != null && intenet) {
-        sharedPreferences = await SharedPreferences.getInstance();
+        // sharedPreferences = await SharedPreferences.getInstance();
         setState(() {
           _state = 1;
           buttonText = 'LOADING..';
@@ -127,7 +128,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           };
 
           print('token fcm $token');
-          http.post(uri, body: body).then((response) {
+          http.post(uri, body: body).then((response) async {
             if (response.statusCode == 200) {
               var jsonResponse = jsonDecode(response.body);
               print("Reponse---2 : $jsonResponse");
@@ -138,31 +139,31 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 print("login.tokenKey: ${login.tokenKey}");
                 print("userId---3 : ${login.userId}");
 
-                sharedPreferences.setInt(
+               await globalMyLocalPrefes.setInt(
                     AppConstant.USER_ID.toString(), login.userId);
-                
-                sharedPreferences.setString(
+
+                await globalMyLocalPrefes.setString(
                     AppConstant.ACCESS_TOKEN, login.tokenKey);
-                sharedPreferences.setString(
+                await globalMyLocalPrefes.setString(
                     AppConstant.USERNAME, login.eng_fullname);
-                sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);
-                sharedPreferences.setString(
+                await globalMyLocalPrefes.setString(AppConstant.IMAGE, login.emp_photo);
+                await globalMyLocalPrefes.setString(
                     AppConstant.PHONENO, login.emp_mobile);
-                sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
-                sharedPreferences.setString(
+                await globalMyLocalPrefes.setString(AppConstant.EMAIL, login.userEmail);
+                await globalMyLocalPrefes.setString(
                     AppConstant.DEPARTMENT, login.emp_dep);
 
-                sharedPreferences.setString(
+                await globalMyLocalPrefes.setString(
                     AppConstant.COMPANY, login.emp_company);
 
-                sharedPreferences.setString(
+                await globalMyLocalPrefes.setString(
                     AppConstant.LoginGmailID, usernameController.text.trim());
-                sharedPreferences.setString(
+                await globalMyLocalPrefes.setString(
                     AppConstant.PASSWORD, passwordController.text.trim());
                 
                 // sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
                 print(
-                    "Ge ${sharedPreferences.getInt(AppConstant.USER_ID.toString())}");
+                    "Ge ${globalMyLocalPrefes.getInt(AppConstant.USER_ID.toString())}");
 
                 setState(() {
                   _state = 2;

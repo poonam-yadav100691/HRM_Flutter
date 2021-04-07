@@ -134,10 +134,10 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                   // backgroundColor: Colors.black,
                 ),
               )));
-      // } else {
-      //   return Container(child: Center(child: CircularProgressIndicator()));
-      // }
-    }
+      } else {
+        return Container(child: Center(child: CircularProgressIndicator()));
+      }
+
   }
 
   Future<void> _getRequests() async {

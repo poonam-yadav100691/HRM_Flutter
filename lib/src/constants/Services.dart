@@ -17,6 +17,7 @@ class Services {
   static final String PublicHolidays = BASE_URL + 'User/publicholidays';
   static final String MyRequest = BASE_URL + 'User/MyRequest';
   static final String AddNewLeave = BASE_URL + 'User/AddNewLeave';
+  static final String AddDelegate = BASE_URL + 'User/Delegates';
   static final String RejectLeave = BASE_URL + 'User/RejectLeave';
   static final String ApproveLeave = BASE_URL + 'User/ApproveLeave';
   static final String ApproveOT = BASE_URL + 'User/ApproveOT';

@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double _fabHeight;
   double _panelHeightOpen;
   double _panelHeightClosed = 95.0;
-  SharedPreferences sharedPreferences;
+  // SharedPreferences sharedPreferences;
   String _username, firstName, lastName, username, department, image;
   Uint8List bytes;
 
@@ -73,11 +73,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future _register() async {
-    setState(() {
-      isLoading = true;
-    });
-    sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    // setState(() {
+    //   isLoading = true;
+    // });
+    // sharedPreferences = await SharedPreferences.getInstance();
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
 
     try {
       final uri = Services.GetPermissions;
@@ -88,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
       http.post(uri, body: body).then((response) {
         if (response.statusCode == 200) {
           var jsonResponse = jsonDecode(response.body);
-
+          print("permission" + jsonResponse.toString());
           if (jsonResponse["StatusCode"] == 200) {
             // sharedPreferences.setString(
             //     AppConstant.PERMISSIONS, jsonResponse['ResultObject']);
@@ -104,9 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
             });
             getLeaveCounts();
           } else {
-            setState(() {
-              isLoading = false;
-            });
+
             print("ModelError: ${jsonResponse["ModelErrors"]}");
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
               GetToken().getToken().then((value) {
@@ -625,7 +623,7 @@ class _MyHomePageState extends State<MyHomePage> {
           payslipRoute, null));
     }
 
-    if (getPermissionObject('Tasks')?.app_view == '1') {
+    if (getPermissionObject('Task')?.app_view == '1') {
       list.add(_homeGrid("Tasks", "lib/assets/images/homeGrid/newTask.png",
           taskRoute, getPermissionObject('Tasks')?.CountItem ?? '0'));
     }
@@ -676,14 +674,14 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class GetToken {
-  SharedPreferences sharedPreferences;
+  // SharedPreferences sharedPreferences;
   Future<void> getToken() async {
     Network().check().then((intenet) async {
       if (intenet != null && intenet) {
-        sharedPreferences = await SharedPreferences.getInstance();
-        String username = sharedPreferences.getString(AppConstant.LoginGmailID);
-        String password = sharedPreferences.getString(AppConstant.PASSWORD);
-        String urname = sharedPreferences.getString(AppConstant.USERNAME);
+        // sharedPreferences = await SharedPreferences.getInstance();
+        String username = globalMyLocalPrefes.getString(AppConstant.LoginGmailID);
+        String password = globalMyLocalPrefes.getString(AppConstant.PASSWORD);
+        String urname = globalMyLocalPrefes.getString(AppConstant.USERNAME);
 
         try {
           final uri = Services.LOGIN;
@@ -693,28 +691,28 @@ class GetToken {
             "UserPassword": password
           };
 
-          http.post(uri, body: body).then((response) {
+          http.post(uri, body: body).then((response) async{
             if (response.statusCode == 200) {
               var jsonResponse = jsonDecode(response.body);
               if (jsonResponse["StatusCode"] == 200) {
                 LoginResponse login =
                     new LoginResponse.fromJson(jsonResponse["ResultObject"][0]);
 
-                sharedPreferences.setInt(
+               await globalMyLocalPrefes.setInt(
                     AppConstant.USER_ID.toString(), login.userId);
-                sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
-                sharedPreferences.setString(
+              await  globalMyLocalPrefes.setString(AppConstant.EMP_ID, login.emp_no);
+               await globalMyLocalPrefes.setString(
                     AppConstant.ACCESS_TOKEN, login.tokenKey);
 
-                sharedPreferences.setString(
+               await globalMyLocalPrefes.setString(
                     AppConstant.USERNAME, login.eng_fullname);
-                sharedPreferences.setString(AppConstant.IMAGE, login.emp_photo);
-                sharedPreferences.setString(
+               await globalMyLocalPrefes.setString(AppConstant.IMAGE, login.emp_photo);
+               await globalMyLocalPrefes.setString(
                     AppConstant.PHONENO, login.emp_mobile);
-                sharedPreferences.setString(AppConstant.EMAIL, login.userEmail);
-                sharedPreferences.setString(
+               await globalMyLocalPrefes.setString(AppConstant.EMAIL, login.userEmail);
+               await globalMyLocalPrefes.setString(
                     AppConstant.DEPARTMENT, login.emp_dep);
-                sharedPreferences.setString(
+               await  globalMyLocalPrefes .setString(
                     AppConstant.COMPANY, login.emp_company);
                 return login.tokenKey;
               } else {

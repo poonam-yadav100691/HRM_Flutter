@@ -102,6 +102,46 @@ class _BodyState extends State<Body> {
     });
   }
 
+  String selectedDateRange = 'Select Date Range';
+
+
+  dateTimeRangePicker() async {
+    DateTimeRange picked = await showDateRangePicker(
+      initialEntryMode: DatePickerEntryMode.input,
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 1),
+      initialDateRange: DateTimeRange(
+        end: DateTime(
+            DateTime.now().year, DateTime.now().month, DateTime.now().day + 13),
+        start: DateTime.now(),
+      ),
+    );
+
+    setState(() {
+      selectedDateRange = '${picked.start.toUtc().toString().substring(0,10)} to ${picked.end.toUtc().toString().substring(0,10)}';
+    });
+
+    _onDateRangeSelect(picked);
+  }
+
+  DateTime strDate, endDate;
+  void _onDateRangeSelect(DateTimeRange val) {
+    strDate = val.start;
+    endDate = val.end;
+
+    print('$strDate  $endDate ');
+    final difference = this.endDate.difference(strDate).inDays;
+    setState(() {
+      totalDays = difference;
+    });
+  }
+
+  DateTime returndate = DateTime.now();
+  bool dateSelectedreturn = false;
+  final TextEditingController resoneController = new TextEditingController();
+  final TextEditingController subject =
+  new TextEditingController();
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
@@ -114,14 +154,65 @@ class _BodyState extends State<Body> {
             padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
-                MyCustomDateRange(
-                  title: "Select Leave Date Range",
-                  attrName: 'date_range',
+                GestureDetector(
+                  onTap: () {
+                    dateTimeRangePicker();
+                  },
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(16),
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(8))),
+                      child: Text('$selectedDateRange')),
                 ),
-                MyCustomTextField(title: "Total Days", attrName: 'total_days'),
-                MyCustomDate(
-                  title: "Return to work on",
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.all(16),
+                    margin: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        shape: BoxShape.rectangle,
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(8))),
+                    child: Text(
+                        'Applying for  ${totalDays.toString()} days')),
+                GestureDetector(
+                  onTap: () async {
+                    final DateTime pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(DateTime.now().year + 1));
+                    if (pickedDate != null && pickedDate != returndate)
+                      setState(() {
+                        returndate = pickedDate;
+                        dateSelectedreturn = true;
+                      });
+                  },
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(16),
+                      margin: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          shape: BoxShape.rectangle,
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(8))),
+                      child: Text(dateSelectedreturn
+                          ? 'Return Date: ${returndate.toString().substring(0,10)}'
+                          : 'Return to Work date')),
                 ),
+
                 Container(
                   padding: const EdgeInsets.all(9),
                   child: TextFormField(
@@ -179,9 +270,71 @@ class _BodyState extends State<Body> {
                     },
                   ),
                 ),
-                MyCustomTextField(title: "Subject", attrName: 'subject'),
-                MyCustomTextField(title: "Reason", attrName: 'reason'),
-                MyCustomFileUpload(),
+                Container(
+                  padding: const EdgeInsets.all(9),
+                  child: TextFormField(
+                    decoration: new InputDecoration(
+                      fillColor: Colors.white,
+                      border: _focusNode.hasFocus
+                          ? OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(5.0)),
+                          borderSide:
+                          BorderSide(color: leaveCardcolor))
+                          : OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(5.0)),
+                          borderSide:
+                          BorderSide(color: Colors.grey)),
+                      filled: true,
+                      contentPadding: EdgeInsets.only(
+                          bottom: 10.0, left: 10.0, right: 10.0),
+                      // suffixIcon: Icon(Icons.keyboard_arrow_down),
+                      labelText: 'Subject',
+                    ),
+                    controller: subject,
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please Enter Subject';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(9),
+                  child: TextFormField(
+                    decoration: new InputDecoration(
+                      fillColor: Colors.white,
+                      border: _focusNode.hasFocus
+                          ? OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(5.0)),
+                          borderSide:
+                          BorderSide(color: leaveCardcolor))
+                          : OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(5.0)),
+                          borderSide:
+                          BorderSide(color: Colors.grey)),
+                      filled: true,
+                      contentPadding: EdgeInsets.only(
+                          bottom: 10.0, left: 10.0, right: 10.0),
+                      // suffixIcon: Icon(Icons.keyboard_arrow_down),
+                      labelText: 'Reason',
+                    ),
+                    controller: resoneController,
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please Select Reason';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                ),
+                // MyCustomFileUpload(),
               ],
             ),
           ),
@@ -189,84 +342,89 @@ class _BodyState extends State<Body> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            RaisedButton(
-                child: Text("Submit",style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
-                color: Colors.green,
-                onPressed: () async {
-                  if (_fbKey.currentState.saveAndValidate()) {
+            SizedBox(
+              width: MediaQuery.of(context).size.width*.8,
+              child: RaisedButton(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Text("Submit",style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
+                  color: Colors.green,
+                  onPressed: () async {
 
-                      print(_fbKey.currentState.value);
 
-                      setState(() {
-                        isLoading = true;
-                      });
 
-                      SharedPreferences sharedPreferences =
-                          await SharedPreferences.getInstance();
-                      String token = sharedPreferences
-                          .getString(AppConstant.ACCESS_TOKEN);
-                      String id = sharedPreferences
-                          .getString(AppConstant.EMP_ID);
-                      String  uri = Services.AddNewOT;
 
-                      Map body = {
+                        setState(() {
+                          isLoading = true;
+                        });
 
-                        // {
-                        //   "tokenKey": "token",
-                        //   "toEmp": 2,
-                        //   "noted": "",
-                        //   "startDate": "2021-03-24T23:51:05.369497+07:00",
-                        //   "endDate": "2021-03-24T23:51:05.369497+07:00"
-                        // }
+                        SharedPreferences sharedPreferences =
+                            await SharedPreferences.getInstance();
+                        String token = sharedPreferences
+                            .getString(AppConstant.ACCESS_TOKEN);
+                        int id = sharedPreferences
+                            .getInt(AppConstant.EMP_ID);
+                        String  uri = Services.AddDelegate;
 
-                        // "tokenKey": token,
-                        // "lang": '2',
-                        // "OTDate": date,
-                        // "stTime": selectedstartdateTime,
-                        // "endTime": selectedenddateTime,
-                        // "otTitle": subjectController.text,
-                        // "otReason": reasonController.text,
-                        // // "reasone": .text,
-                        // "empId": id,
-                      };
+                        Map body = {
 
-                      print(body);
 
-                      http.post(uri, body: body).then((response) {
-                        var jsonResponse = jsonDecode(response.body);
-                        // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+                            "tokenKey": token,
+                            "toEmp": '$id',
+                            "noted": "",
+                            "startDate": strDate.toString().substring(0,10),
+                            "endDate": endDate.toString().substring(0,10)
+                          };
 
-                        print(jsonResponse.toString());
-                        if (jsonResponse["StatusCode"] == 200) {
-                          setState(() {
-                            isLoading = false;
-                          });
+                          // "tokenKey": token,
+                          // "lang": '2',
+                          // "OTDate": date,
+                          // "stTime": selectedstartdateTime,
+                          // "endTime": selectedenddateTime,
+                          // "otTitle": subjectController.text,
+                          // "otReason": reasonController.text,
+                          // // "reasone": .text,
+                          // "empId": id,
 
-                          print("j&&& $jsonResponse");
-                          Navigator.pop(context);
-                        } else {
-                          print(
-                              "ModelError: ${jsonResponse["ModelErrors"]}");
-                          if (jsonResponse["ModelErrors"] ==
-                              'Unauthorized') {
-                            GetToken().getToken().then((value) {});
-                            // Future<String> token = getToken();
+
+                        print(body);
+
+                        http.post(uri, body: body).then((response) {
+                          var jsonResponse = jsonDecode(response.body);
+                          // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+
+                          print(jsonResponse.toString());
+                          if (jsonResponse["StatusCode"] == 200) {
+                            setState(() {
+                              isLoading = false;
+                            });
+
+                            print("j&&& $jsonResponse");
+                            Navigator.pop(context);
                           } else {
-                            // currentState.showSnackBar(
-                            //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+                            print(
+                                "ModelError: ${jsonResponse["ModelErrors"]}");
+                            if (jsonResponse["ModelErrors"] ==
+                                'Unauthorized') {
+                              GetToken().getToken().then((value) {});
+                              // Future<String> token = getToken();
+                            } else {
+                              // currentState.showSnackBar(
+                              //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+                            }
                           }
-                        }
-                      });
-                    }
-                }),
-            RaisedButton(
-                child: Text("Reset",style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
-                color: Colors.red,
-                onPressed: () {
-                  _fbKey.currentState.reset();
-                })
+                        });
+                      }
+                  ),
+            ),
+            // RaisedButton(
+            //     child: Text("Reset",style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
+            //     color: Colors.red,
+            //     onPressed: () {
+            //       _fbKey.currentState.reset();
+            //     })
           ],
-        )
+        ),
+        isLoading?LinearProgressIndicator():Container(),
       ],
     )));
   }

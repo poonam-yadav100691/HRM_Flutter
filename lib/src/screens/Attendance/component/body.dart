@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:HRMNew/components/TakePictureScreen.dart';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -30,15 +31,18 @@ class _BodyState extends State<Body> {
   StreamSubscription<Position> _positionStreamSubscription;
   bool _isCheckinDisabled, _isCheckoutDisabled, _showSubmitBtn;
   String result1;
+  File pickedFile;
   Position position;
+
+  bool isChecking=globalMyLocalPrefes.getBool('isChecking')??false;
 
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _isCheckinDisabled = false;
-    _isCheckoutDisabled = true;
+    _isCheckinDisabled = isChecking;
+    _isCheckoutDisabled = !isChecking;
     _showSubmitBtn = false;
   }
 
@@ -83,6 +87,8 @@ class _BodyState extends State<Body> {
 
               setState(() {
                result1=imageFile.path;
+               pickedFile=imageFile;
+               _showSubmitBtn=true;
               });
             }
 
@@ -149,15 +155,22 @@ class _BodyState extends State<Body> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.MyAttendance;
+
+
+
+   base64Encode(pickedFile.readAsBytesSync());
+   var base64Image = base64Encode(pickedFile.readAsBytesSync());
+   print("Imageee::: ${base64Image}");
+
     Map body = {
       "TokenKey": token,
       "CheckDataTime": new DateTime.now().toString(),
       "longitude": position.longitude.toString(),
       "latitude": position.latitude.toString(),
       "checkInOut": checkinout ? "checkin" : "checkout",
-      "picture": result1
+      "picture": base64Image
     };
-    http.post(uri, body: body).then((response) {
+    http.post(uri, body: body).then((response) async{
       var jsonResponse = jsonDecode(response.body);
       print("Reponse : $jsonResponse");
 
@@ -165,6 +178,8 @@ class _BodyState extends State<Body> {
         setState(() {
           isLoading = false;
         });
+       await globalMyLocalPrefes.setBool('isChecking',!isChecking);
+
         Navigator.pushNamed(context, homeRoute);
       } else {
         setState(() {
@@ -313,81 +328,9 @@ class _BodyState extends State<Body> {
             },
           ),
         ),
-        // FloatingActionButton.extended(
-        //   heroTag: "btn2",
-        //   onPressed: () async {
-        //     await Geolocator.getLastKnownPosition().then((value) => {
-        //           print(value),
-        //           _positionItems.add(_PositionItem(
-        //               _PositionItemType.position, value.toString()))
-        //         });
 
-        //     setState(
-        //       () {},
-        //     );
-        //   },
-        //   label: Text("getLastKnownPosition"),
-        // ),
-        // Container(
-        //     height: double.maxFinite,
-        //     child: SingleChildScrollView(
-        //       child: Stack(children: <Widget>[
-        //         Positioned(
-        //           bottom: 10.0,
-        //           right: 10.0,
-        //           child: FloatingActionButton.extended(
-        //               onPressed: () async {
-        //                 await Geolocator.getCurrentPosition().then((value) => {
-        //                       _positionItems.add(_PositionItem(
-        //                           _PositionItemType.position, value.toString()))
-        //                     });
 
-        //                 setState(
-        //                   () {},
-        //                 );
-        //               },
-        //               label: Text("getCurrentPosition")),
-        //         ),
-        //         Positioned(
-        //           bottom: 150.0,
-        //           right: 10.0,
-        //           child: FloatingActionButton.extended(
-        //             onPressed: _toggleListening,
-        //             label: Text(() {
-        //               if (_positionStreamSubscription == null) {
-        //                 return "getPositionStream = null";
-        //               } else {
-        //                 return "getPositionStream ="
-        //                     " ${_positionStreamSubscription.isPaused ? "off" : "on"}";
-        //               }
-        //             }()),
-        //             backgroundColor: _determineButtonColor(),
-        //           ),
-        //         ),
-        //         Positioned(
-        //           bottom: 220.0,
-        //           right: 10.0,
-        //           child: FloatingActionButton.extended(
-        //             onPressed: () => setState(_positionItems.clear),
-        //             label: Text("clear positions"),
-        //           ),
-        //         ),
-        //         Positioned(
-        //           bottom: 290.0,
-        //           right: 10.0,
-        //           child: FloatingActionButton.extended(
-        //             onPressed: () async {
-        //               await Geolocator.checkPermission().then((value) => {
-        //                     _positionItems.add(_PositionItem(
-        //                         _PositionItemType.permission, value.toString()))
-        //                   });
-        //               setState(() {});
-        //             },
-        //             label: Text("getPermissionStatus"),
-        //           ),
-        //         ),
-        //       ]),
-        //     ))
+        isLoading?LinearProgressIndicator():Container(),
       ],
     )));
   }
