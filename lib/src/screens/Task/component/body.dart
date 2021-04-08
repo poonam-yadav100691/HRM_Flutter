@@ -62,7 +62,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         });
 
         print("j&&& $myRequest");
-        myTaskAllList = myRequest.resultObject;
+        myTaskAllList = myRequest.resultObject??[];
         for (int i = 0; i < myTaskAllList.length; i++) {
           if (myTaskAllList[i].taskStatus) {
             myTaskCompList.add(myTaskAllList[i]);

@@ -22,6 +22,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+
 List<Permission> listOfPermission = [];
 
 Permission getPermissionObject(String type) {
@@ -72,6 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _fabHeight = _initFabHeight;
   }
 
+  // List<Permission> listOfPermission1 = [];
   Future _register() async {
     // setState(() {
     //   isLoading = true;
@@ -100,8 +102,10 @@ class _MyHomePageState extends State<MyHomePage> {
             });
 
             setState(() {
-              listOfPermission = _permissions;
+              // listOfPermission1 = _permissions;
+              listOfPermission=_permissions;
             });
+
             getLeaveCounts();
           } else {
 
@@ -587,7 +591,7 @@ class _MyHomePageState extends State<MyHomePage> {
         SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.all(8),
-            height: size.height,
+            height: size.height-(size.height*.09+size.height*.30),
             child: GridView.count(
               primary: false,
               padding: const EdgeInsets.all(10),
@@ -720,7 +724,6 @@ class GetToken {
               }
             } else {
               print("response.statusCode.." + response.statusCode.toString());
-
               return "Something wnet wrong.. Please try again later.";
             }
           });

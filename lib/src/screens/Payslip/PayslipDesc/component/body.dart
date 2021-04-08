@@ -101,6 +101,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           SingleChildScrollView(
             child: Column(
               children: [
+
+
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -194,10 +196,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent)),
                     child:isLoading?LinearProgressIndicator(): Column(
-                      children: [
-                        _itemBuilder(
-                         payslipDetails[0].earningObject, 'earning'),
-                      ],
+                      children: getEarningObject(),
                     ),
                   ),
                 ),
@@ -210,7 +209,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                         fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
-                Container(
+                isLoading?Container():  Container(
                   color: Colors.white,
                   child: Container(
                     margin: const EdgeInsets.all(15.0),
@@ -218,10 +217,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent)),
                     child:isLoading?LinearProgressIndicator(): Column(
-                      children:[
-                        _itemBuilder(
-                          payslipDetails[0].deductionObject, 'deduction'),
-                        ]
+                      children:getDeductionObject(),
                         // _itemBuilder("Tax Deducted", "\$0"),
                         // _itemBuilder("Provident Fund", "\$0"),
                         // _itemBuilder("Loan", "\$550"),
@@ -230,7 +226,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-                Container(
+                isLoading?Container():  Container(
                   width: size.width * .9,
                   color: Colors.white,
                   child: new RichText(
@@ -243,12 +239,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                       ),
                       children: <TextSpan>[
                         new TextSpan(
-                            text: "Net Salary: \$53935 ",
+                            text: "Net Salary: \$ ${payslipDetails[0].netSalary} ",
                             style: new TextStyle(fontWeight: FontWeight.bold)),
-                        new TextSpan(
-                          text:
-                              ' (Fifty three thousand nine hundred and thirty five only)',
-                        ),
+                        // new TextSpan(
+                        //   text:
+                        //       ' (Fifty three thousand nine hundred and thirty five only)',
+                        // ),
                       ],
                     ),
                   ),
@@ -259,6 +255,48 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+
+
+
+  List<Widget> getEarningObject(){
+    List<Widget> list=[];
+
+    payslipDetails[0].earningObject.forEach((element) {
+      list.add(Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('${element.earningDescrip}',style: Theme.of(context).textTheme.subtitle2,),
+            Text('${element.earningValues}')
+          ],
+        ),
+      )
+      );
+    });
+    return list;
+  }
+
+
+  List<Widget> getDeductionObject(){
+    List<Widget> list=[];
+
+    payslipDetails[0].deductionObject.forEach((element) {
+      list.add(Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('${element.deductionDescrip}',style: Theme.of(context).textTheme.subtitle2,),
+            Text('${element.deductionValues}')
+          ],
+        ),
+      )
+      );
+    });
+    return list;
   }
 
   Widget _itemBuilder(payslipDetail, sectionLable) {
