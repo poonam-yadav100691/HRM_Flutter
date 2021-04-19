@@ -16,9 +16,9 @@ class Delegate extends StatelessWidget {
         backgroundColor: leaveCardcolor,
       ),
       body: Body(),
-      floatingActionButton: getPermissionObject('Delegates').app_add=="0"?FloatingActionButton.extended(
+      floatingActionButton: getPermissionObject('Delegates').app_add=="1"?FloatingActionButton.extended(
         onPressed: () {
-          Navigator.pushNamed(context, addDelegateRoute);
+          Navigator.pushReplacementNamed(context, addDelegateRoute);
           // Add your onPressed code here!
         },
         elevation: 4,

@@ -18,7 +18,7 @@ class Background extends StatelessWidget {
         children: <Widget>[
           new Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Opacity(

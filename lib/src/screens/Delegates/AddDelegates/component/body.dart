@@ -4,6 +4,7 @@ import 'package:HRMNew/components/MyCustomDate.dart';
 import 'package:HRMNew/components/MyCustomDateRange.dart';
 import 'package:HRMNew/components/MyCustomFileUpload.dart';
 import 'package:HRMNew/components/MyCustomTextField.dart';
+import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
@@ -399,7 +400,7 @@ class _BodyState extends State<Body> {
                             });
 
                             print("j&&& $jsonResponse");
-                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(context,delegateRoute);
                           } else {
                             print(
                                 "ModelError: ${jsonResponse["ModelErrors"]}");

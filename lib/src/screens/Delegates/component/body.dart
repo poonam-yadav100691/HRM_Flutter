@@ -36,6 +36,8 @@ class _BodyState extends State<Body> {
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
 
     Map body = {"Tokenkey": token};
+
+    print('req ${body.toString()}');
     http.post(uri, body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       DelegateList delegate = new DelegateList.fromJson(jsonResponse);

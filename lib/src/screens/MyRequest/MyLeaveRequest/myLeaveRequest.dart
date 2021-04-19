@@ -16,6 +16,7 @@ class MyLeaveRequest extends StatelessWidget {
         title: Text('My Requests'),
         shadowColor: Colors.transparent,
         centerTitle: true,
+
         backgroundColor: leaveCardcolor,
         automaticallyImplyLeading: false,
         leading: IconButton(

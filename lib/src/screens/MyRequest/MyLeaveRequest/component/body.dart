@@ -1,13 +1,18 @@
 import 'dart:convert';
 
 import 'package:HRMNew/routes/route_names.dart';
+import 'package:HRMNew/src/constants/AppConstant.dart';
+import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:HRMNew/src/models/balancePodo.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveReqDetails/myLeaveReqDetails.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
+import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './background.dart';
 import 'package:intl/intl.dart';
-
+import 'package:http/http.dart' as http;
 class Body extends StatefulWidget {
   final List<ResultObject> leaveList;
   Body({Key key, @required this.leaveList}) : super(key: key);
@@ -23,12 +28,13 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   _BodyState(this.leaveList);
 
-//  void initState() {
-//     animationController = AnimationController(
-//         duration: const Duration(milliseconds: 1000), vsync: this);
-//     super.initState();
+ void initState() {
+    // animationController = AnimationController(
+    //     duration: const Duration(milliseconds: 1000), vsync: this);
+   getLeaveCounts();
+    super.initState();
 
-//   }
+  }
   // void _onDateRangeSelect(startdate, enddate) async {
   //   DateTime tempDate1 =
   //       new DateFormat("MM/dd/yyyy hh:mm:ss a").parse(startdate);
@@ -47,12 +53,52 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   //   });
   //   print(difference);
   // }
+  bool isLoading;
+  String _username, firstName, lastName, username, department, image;
+  Future<void> getLeaveCounts() async {
+    balanceList.clear();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    final uri = Services.LeaveBalance;
 
+    setState(() {
+      isLoading = true;
+    });
+    Map body = {"Tokenkey": token, "lang": '2'};
+    http.post(uri, body: body).then((response) async{
+      var jsonResponse = jsonDecode(response.body);
+      print("j&&&&&&&&&&&&&&&&&&&&&&&" + jsonResponse.toString());
+      GetBalance balance = new GetBalance.fromJson(jsonResponse);
+      if (jsonResponse["StatusCode"] == 200) {
+
+        setState(() {
+          isLoading = false;
+          username = sharedPreferences.getString(AppConstant.USERNAME);
+          department = sharedPreferences.getString(AppConstant.DEPARTMENT);
+          image = sharedPreferences.getString(AppConstant.IMAGE);
+          balanceList = balance.resultObject;
+        });
+      } else {
+        print("ModelError: ${jsonResponse["ModelErrors"]}");
+        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+         await GetToken().getToken().then((value) {
+            getLeaveCounts();
+          });
+        } else {
+          // currentState.showSnackBar(
+          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+        }
+      }
+    });
+  }
+
+  List<ResultObject1> balanceList = new List();
   @override
   AnimationController animationController;
   Animation<dynamic> animation;
   Widget build(BuildContext context) {
     // List jsonResponse = jsonDecode(leaveList);
+
     final children = <Widget>[];
     for (var i = 0; i < leaveList.length; i++) {
       children.add(
@@ -84,8 +130,99 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       );
     }
     Size size = MediaQuery.of(context).size;
-    return Background(child: ListView(children: children));
+    return Background(child: Container(
+      height: MediaQuery.of(context).size.height,
+      width:  MediaQuery.of(context).size.width,
+      child: Column(
+        children: [
+
+         isLoading?Container(): Container(
+            height: size.height * 0.13,
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            decoration: BoxDecoration(
+              // shape: BoxShape.circle,
+              // BoxShape.circle or BoxShape.retangle
+              color: leaveCardcolor,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey[800], blurRadius: 4.0, spreadRadius: 1),
+              ],
+            ),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                for (var i = 0; i < balanceList.length; i++)
+                  _homeSlider(balanceList[i].leaveName, balanceList[i].leaveUse,
+                      balanceList[i].leaveTotal, _color[i])
+              ],
+            ),
+          ),
+
+          Expanded(
+            child: Container(
+                child: ListView(children: children)),
+          ),
+        ],
+      ),
+    ));
   }
+
+
+  var _color = [
+    Colors.pink[200],
+    Colors.green[100],
+    Colors.orange[100],
+    Colors.purple[100],
+    Colors.blue[100],
+    Colors.pink[200],
+    Colors.green[100],
+    Colors.orange[100],
+    Colors.purple[100],
+  ];
+
+  Widget _homeSlider(
+      String title, String leaveValues, String leaveTotal, Color bgColor) {
+    return Container(
+      decoration: BoxDecoration(
+        // shape: BoxShape.circle, // BoxShape.circle or BoxShape.retangle
+        color: leaveCardcolor1,
+      ),
+      padding: EdgeInsets.all(7),
+      child: Container(
+        width: 90,
+        height: 70,
+        padding: EdgeInsets.only(left: 10, right: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: bgColor,
+        ),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "$leaveValues / $leaveTotal",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.black),
+              ),
+              Padding(padding: EdgeInsets.only(top: 6)),
+              Container(
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[800],
+                  ),
+                ),
+              ),
+            ]),
+      ),
+    );
+  }
+
 
   Widget planetThumbnail(BuildContext context, String statusText) {
     // _onDateRangeSelect(leaveList.strDate, leaveList.endDate);

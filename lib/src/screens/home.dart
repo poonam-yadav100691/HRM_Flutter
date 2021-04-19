@@ -79,6 +79,9 @@ class _MyHomePageState extends State<MyHomePage> {
     //   isLoading = true;
     // });
     // sharedPreferences = await SharedPreferences.getInstance();
+
+
+
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
 
     try {
@@ -87,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
         "Tokenkey": token,
       };
 
-      http.post(uri, body: body).then((response) {
+      http.post(uri, body: body).then((response)async {
         if (response.statusCode == 200) {
           var jsonResponse = jsonDecode(response.body);
           print("permission" + jsonResponse.toString());
@@ -111,9 +114,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
             print("ModelError: ${jsonResponse["ModelErrors"]}");
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-              GetToken().getToken().then((value) {
-                _register();
+            await  GetToken().getToken().then((value) {
+
               });
+            _register();
             } else {
               _scaffoldKey.currentState.showSnackBar(
                   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -564,40 +568,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _body() {
     Size size = MediaQuery.of(context).size;
+
+
+    print('size ${size.width}');
     return Container(
       height: size.height,
       child: Column(children: [
-        Container(
-          height: size.height * 0.11,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-          decoration: BoxDecoration(
-            // shape: BoxShape.circle,
-            // BoxShape.circle or BoxShape.retangle
-            color: leaveCardcolor,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.grey[800], blurRadius: 4.0, spreadRadius: 1),
-            ],
-          ),
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              for (var i = 0; i < balanceList.length; i++)
-                _homeSlider(balanceList[i].leaveName, balanceList[i].leaveUse,
-                    balanceList[i].leaveTotal, _color[i])
-            ],
-          ),
-        ),
+
         SingleChildScrollView(
           child: Container(
+
             margin: EdgeInsets.all(8),
-            height: size.height-(size.height*.09+size.height*.30),
+            height: size.height-(size.height*.30),
             child: GridView.count(
               primary: false,
               padding: const EdgeInsets.all(10),
-              crossAxisSpacing: 20,
-              mainAxisSpacing: 20,
-              crossAxisCount: 3,
+              crossAxisSpacing: size.width<350?10:20,
+              mainAxisSpacing:size.width<350?10: 20,
+              crossAxisCount: size.width<350?2: 3,
               children: getChildren(),
             ),
           ),

@@ -401,7 +401,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                         "approvedescription":
                                             resoneController.text ?? " ",
                                         "approveby": sharedPreferences
-                                            .getString(AppConstant.EMP_ID),
+                                            .getInt(AppConstant.EMP_ID).toString(),
                                         "approvedescription":
                                             resoneController.text ?? " ",
                                       };
