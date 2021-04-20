@@ -2,7 +2,6 @@ import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:async';
 
@@ -30,8 +29,8 @@ class _LandingState extends State<Landing> {
     if (token == null) {
       Navigator.pushNamedAndRemoveUntil(
           context, '/login', ModalRoute.withName('/login'));
-    } else{
-      Navigator.pushNamedAndRemoveUntil(context, homeRoute,(_)=> false);
+    } else {
+      Navigator.pushNamedAndRemoveUntil(context, homeRoute, (_) => false);
     }
   }
 

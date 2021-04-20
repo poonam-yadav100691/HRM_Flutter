@@ -96,9 +96,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     List<ResultObject> payslipLst = widget.payslipList;
-    print(payslipLst);
-    print("payslipDetails.length ${payslipLst[0].slipMonthYr}");
-    print(payslipDetails.length);
+
     if (!isLoading) {
       Size size = MediaQuery.of(context).size;
       return Background(
@@ -252,8 +250,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 color: Colors.white,
                                 child: new RichText(
                                   text: new TextSpan(
-                                    // Note: Styles for TextSpans must be explicitly defined.
-                                    // Child text spans will inherit styles from parent
                                     style: new TextStyle(
                                       fontSize: 14.0,
                                       color: Colors.black,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:HRMNew/localization/localization_constants.dart';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/screens/Task/TaskAll/taskAll.dart';
@@ -12,6 +13,7 @@ import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 
 import './background.dart';
 
@@ -49,8 +51,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       isLoading = true;
     });
     myTaskAllList.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.TaskList;
     Map body = {"Tokenkey": token, "lang": '2'};
     http.post(uri, body: body).then((response) {
@@ -62,7 +64,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         });
 
         print("j&&& $myRequest");
-        myTaskAllList = myRequest.resultObject??[];
+        myTaskAllList = myRequest.resultObject ?? [];
         for (int i = 0; i < myTaskAllList.length; i++) {
           if (myTaskAllList[i].taskStatus) {
             myTaskCompList.add(myTaskAllList[i]);
@@ -73,16 +75,15 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-         
-           GetToken().getToken().then((value) {
-           _getTaskList();
+          GetToken().getToken().then((value) {
+            _getTaskList();
           });
         } else {
           setState(() {
             isLoading = false;
           });
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
