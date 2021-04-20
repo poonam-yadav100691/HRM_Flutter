@@ -1,15 +1,12 @@
 import 'dart:convert';
-
-import 'package:HRMNew/components/MyCustomDate.dart';
-import 'package:HRMNew/components/MyCustomFileUpload.dart';
-import 'package:HRMNew/components/MyCustomTextField.dart';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
@@ -55,17 +52,17 @@ class _BodyState extends State<Body> {
 
   String date, startFrom, endOn;
 
-  ValueChanged _onDateTimeChanged(val) {
-    date = val.toString();
-  }
+  // ValueChanged _onDateTimeChanged(val) {
+  //   date = val.toString();
+  // }
 
-  ValueChanged _onstrDateChanged(val) {
-    startFrom = val.toString();
-  }
+  // ValueChanged _onstrDateChanged(val) {
+  //   startFrom = val.toString();
+  // }
 
-  ValueChanged _onendDateChanged(val) {
-    endOn = val.toString();
-  }
+  // ValueChanged _onendDateChanged(val) {
+  //   endOn = val.toString();
+  // }
 
   DateTime selecteddate = DateTime.now();
   bool dateSelectedselect = false;
@@ -329,9 +326,7 @@ class _BodyState extends State<Body> {
                                 isLoading = true;
                               });
 
-                              SharedPreferences sharedPreferences =
-                                  await SharedPreferences.getInstance();
-                              String token = sharedPreferences
+                              String token = globalMyLocalPrefes
                                   .getString(AppConstant.ACCESS_TOKEN);
                               String uri = Services.AddNewOT;
 
@@ -363,9 +358,18 @@ class _BodyState extends State<Body> {
                                       "ModelError: ${jsonResponse["ModelErrors"]}");
                                   if (jsonResponse["ModelErrors"] ==
                                       'Unauthorized') {
-                                    GetToken().getToken().then((value) {});
+                                    GetToken().getToken().then((value) {
+                                      Toast.show("Please try again!!!", context,
+                                          duration: Toast.LENGTH_LONG,
+                                          gravity: Toast.BOTTOM);
+                                    });
                                     // Future<String> token = getToken();
                                   } else {
+                                    Toast.show(
+                                        "Something went wrong, please try again later.",
+                                        context,
+                                        duration: Toast.LENGTH_LONG,
+                                        gravity: Toast.BOTTOM);
                                     // currentState.showSnackBar(
                                     //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
                                   }

@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/requestDetails.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveReqDetails/myLeaveReqDetails.dart';
@@ -52,15 +50,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           child: planetCard(
             context,
             empOtList[i],
-            // empOtList[i].empName,
-            // empOtList[i].empPosition,
-            // empOtList[i].dateRequest,
-            // empOtList[i].requestID),
           ),
         ),
       ));
     }
-    Size size = MediaQuery.of(context).size;
     return Background(child: ListView(children: children));
   }
 

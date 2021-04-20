@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/screens/Insurance/component/insuranceDetailsPODO.dart';
 import 'package:HRMNew/src/screens/Insurance/component/insuranceHeaderPODO.dart';
 import 'package:http/http.dart' as http;
@@ -8,7 +9,7 @@ import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import './background.dart';
 
 class Body extends StatefulWidget {
@@ -42,8 +43,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   Future<void> _getInsurHeader() async {
     insuHeader.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.InsuranceHeader;
     Map body = {"Tokenkey": token, "lang": '2'};
     http.post(uri, body: body).then((response) async {
@@ -71,23 +71,22 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           } else {
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
               print("ModelError: ${jsonResponse["ModelErrors"]}");
-             GetToken().getToken().then((value) {
-           _getInsurHeader();
-          });
-              
+              GetToken().getToken().then((value) {
+                _getInsurHeader();
+              });
             } else {
-              // currentState.showSnackBar(
-              //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+              Toast.show(
+                  "Something went wrong, please try again later.", context,
+                  duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
             }
           }
         });
       } else {
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           print("ModelError: ${jsonResponse["ModelErrors"]}");
-         GetToken().getToken().then((value) {
-           _getInsurHeader();
+          GetToken().getToken().then((value) {
+            _getInsurHeader();
           });
-          
         } else {
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

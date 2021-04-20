@@ -27,12 +27,7 @@ class _AttendanceState extends State<Attendance> {
         shadowColor: Colors.transparent,
         centerTitle: true,
         backgroundColor: leaveCardcolor,
-
         automaticallyImplyLeading: false,
-        // title: Text(getTranslated(context, 'MyAccount')),
-        // backgroundColor: leaveCardcolor,
-        // shadowColor: Colors.transparent,
-        // centerTitle: true,
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             color: Colors.white,
@@ -41,10 +36,7 @@ class _AttendanceState extends State<Attendance> {
             }),
         actions: <Widget>[
           Padding(
-            // margin: EdgeInsets.only(left: 0),
             padding: const EdgeInsets.all(8.0),
-            // width: 50,
-            // color: Colors.pink,
             child: DropdownButton<Language>(
               underline: SizedBox(),
               icon: Icon(

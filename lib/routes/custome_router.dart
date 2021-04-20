@@ -19,9 +19,9 @@ import 'package:HRMNew/src/screens/EmpRequest/EmpRequest.dart';
 import 'package:HRMNew/src/screens/EmpRequest/EmpLeaveRequest/EmpLeaveRequest.dart';
 import 'package:HRMNew/src/screens/EmpRequest/EmpOtRequest/EmpOtRequest.dart';
 
-import 'package:HRMNew/src/screens/Dashboard/approveHome/approve-home.dart';
-import 'package:HRMNew/src/screens/Dashboard/pendingHome/pending-home.dart';
-import 'package:HRMNew/src/screens/Dashboard/rejectHome/component/reject-home.dart';
+// import 'package:HRMNew/src/screens/Dashboard/approveHome/approve-home.dart';
+// import 'package:HRMNew/src/screens/Dashboard/pendingHome/pending-home.dart';
+// import 'package:HRMNew/src/screens/Dashboard/rejectHome/component/reject-home.dart';
 import 'package:HRMNew/src/screens/NewsPage/AddNews/addNews.dart';
 import 'package:HRMNew/src/screens/NewsPage/news-page.dart';
 import 'package:HRMNew/src/screens/Payslip/payslip.dart';
@@ -43,12 +43,12 @@ class CustomRouter {
         return MaterialPageRoute(builder: (_) => Account());
       case landingRoute:
         return MaterialPageRoute(builder: (_) => Landing());
-      case pendingHomeRoute:
-        return MaterialPageRoute(builder: (_) => PendingHome());
-      case approveHomeRoute:
-        return MaterialPageRoute(builder: (_) => ApproveHome());
-      case rejectHomeRoute:
-        return MaterialPageRoute(builder: (_) => RejectHome());
+      // case pendingHomeRoute:
+      //   return MaterialPageRoute(builder: (_) => PendingHome());
+      // case approveHomeRoute:
+      //   return MaterialPageRoute(builder: (_) => ApproveHome());
+      // case rejectHomeRoute:
+      //   return MaterialPageRoute(builder: (_) => RejectHome());
       case addRequestRoute:
         return MaterialPageRoute(builder: (_) => AddRequest());
       case loginRoute:

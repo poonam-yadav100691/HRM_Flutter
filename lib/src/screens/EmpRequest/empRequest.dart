@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -10,6 +11,7 @@ import 'package:HRMNew/src/screens/EmpRequest/EmpOTRequest/empOtRequest.dart';
 import 'package:HRMNew/src/screens/EmpRequest/empRequestPODO.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 
 class EmpRequest extends StatefulWidget {
   // final TabController tabBar;
@@ -61,24 +63,28 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
                 ),
                 body: TabBarView(
                   children: [
-                    isLoading? Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        child: Center(child: CircularProgressIndicator())): empLeaveReqList.isNotEmpty
-                        ? EmpLeaveRequest(data: empLeaveReqList)
-                        : Container(
+                    isLoading
+                        ? Container(
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.height,
-                            child: Center(child:Text('No Data Found'))),
-                    isLoading? Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        child: Center(child: CircularProgressIndicator())): empOtReqList.isNotEmpty
-                        ? EmpOTRequest(data: empOtReqList)
-                        : Container(
+                            child: Center(child: CircularProgressIndicator()))
+                        : empLeaveReqList.isNotEmpty
+                            ? EmpLeaveRequest(data: empLeaveReqList)
+                            : Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height,
+                                child: Center(child: Text('No Data Found'))),
+                    isLoading
+                        ? Container(
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.height,
-                            child:Center(child:Text('No Data Found')))
+                            child: Center(child: CircularProgressIndicator()))
+                        : empOtReqList.isNotEmpty
+                            ? EmpOTRequest(data: empOtReqList)
+                            : Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height,
+                                child: Center(child: Text('No Data Found')))
                   ],
                 ),
                 bottomNavigationBar: new TabBar(
@@ -115,8 +121,7 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
     setState(() {
       isLoading = true;
     });
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.EmpRequest;
     Map body = {"Tokenkey": token, "lang": '2'};
     http.post(uri, body: body).then((response) async {
@@ -137,16 +142,18 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
       } else {
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           print("ModelError: ${jsonResponse["ModelErrors"]}");
-           GetToken().getToken().then((value) {
-           _getEmpRequests();
+          GetToken().getToken().then((value) {
+            _getEmpRequests();
           });
-          
+
           // Future<String> token = getToken();
         } else {
-             setState(() {
-          isLoading = false;
-        });
-            print("ModelError: ${jsonResponse["ModelErrors"]}");
+          setState(() {
+            isLoading = false;
+          });
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          print("ModelError: ${jsonResponse["ModelErrors"]}");
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
         }

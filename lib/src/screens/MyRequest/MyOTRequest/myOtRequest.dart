@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class MyOTRequest extends StatelessWidget {
   MyOTRequest(this.data);
-List<ResultObject> data;
+  List<ResultObject> data;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,12 +14,7 @@ List<ResultObject> data;
         shadowColor: Colors.transparent,
         centerTitle: true,
         backgroundColor: leaveCardcolor,
-
         automaticallyImplyLeading: false,
-        // title: Text(getTranslated(context, 'MyAccount')),
-        // backgroundColor: leaveCardcolor,
-        // shadowColor: Colors.transparent,
-        // centerTitle: true,
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             color: Colors.white,

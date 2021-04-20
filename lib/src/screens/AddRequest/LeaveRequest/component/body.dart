@@ -1,20 +1,15 @@
 import 'dart:convert';
-import 'dart:math';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
-import 'package:HRMNew/src/constants/Network.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/constants/select_single_item_dialog.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetLeaveType.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetResponsiblePerson.dart';
-import 'package:HRMNew/src/screens/Login/PODO/loginResponse.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:HRMNew/src/screens/home.dart';
 
 class Body extends StatefulWidget {
@@ -27,7 +22,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   Animation<dynamic> animation;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  SharedPreferences sharedPreferences;
   var _focusNode = new FocusNode();
   bool showHalf = false;
   bool isLoading = true;
@@ -79,25 +73,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _onRadioChanged(val) {
-    print(val);
-    if (val == "Half Day") {
-      setState(() {
-        this.showHalf = true;
-      });
-    } else {
-      setState(() {
-        this.showHalf = false;
-      });
-    }
-  }
-
   DateTime strDate, endDate;
   void _onDateRangeSelect(DateTimeRange val) {
     strDate = val.start;
     endDate = val.end;
-
-    print('$strDate  $endDate ');
     final difference = this.endDate.difference(strDate).inDays;
     setState(() {
       totalDays = difference;
@@ -108,13 +87,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   int selectedLeaveRadio = 1;
   int selectedLeaveStartRadio = 1;
   DateTime returnDate;
-  void _onReturnDateSelect(val) {
-    returnDate = val;
-  }
-
-  ValueChanged _onhalfChanged = (val) => print(val);
-  ValueChanged _onLeaveChanged = (val) {};
-  // ValueChanged _onRadioChanged = (val) => print(val);
 
   @override
   Widget build(BuildContext context) {
@@ -531,8 +503,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     });
     leaveList.clear();
     leaveTypeList.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetLeaveType;
     print(uri);
     Map body = {"Tokenkey": token, "lang": '2'};
@@ -569,8 +541,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       isLoading = true;
     });
 
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.AddNewLeave;
     Map body = {
       "TokenKey": token,
@@ -639,10 +610,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     });
     resPersonList.clear();
     resPerLsit.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetResponsiblePer;
-    print(uri);
     Map body = {"Tokenkey": token, "lang": '2'};
     http.post(uri, body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);

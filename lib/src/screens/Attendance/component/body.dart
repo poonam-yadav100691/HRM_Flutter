@@ -11,8 +11,7 @@ import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
@@ -34,7 +33,7 @@ class _BodyState extends State<Body> {
   File pickedFile;
   Position position;
 
-  bool isChecking=globalMyLocalPrefes.getBool('isChecking')??false;
+  bool isChecking = globalMyLocalPrefes.getBool('isChecking') ?? false;
 
   bool isLoading = false;
 
@@ -45,7 +44,6 @@ class _BodyState extends State<Body> {
     _isCheckoutDisabled = !isChecking;
     _showSubmitBtn = false;
   }
-
 
   Image img;
   File imageFile;
@@ -75,22 +73,21 @@ class _BodyState extends State<Body> {
               ),
             ],
           );
-        }).then((exit1) async{
+        }).then((exit1) async {
       if (exit1 == null) return;
 
       if (exit1) {
         //  await Navigator.pop(context);
 
-          imageFile = await ImagePicker.pickImage(
-              source: ImageSource.camera,imageQuality: 60);
-          if (imageFile != null) {
-
-              setState(() {
-               result1=imageFile.path;
-               pickedFile=imageFile;
-               _showSubmitBtn=true;
-              });
-            }
+        imageFile = await ImagePicker.pickImage(
+            source: ImageSource.camera, imageQuality: 60);
+        if (imageFile != null) {
+          setState(() {
+            result1 = imageFile.path;
+            pickedFile = imageFile;
+            _showSubmitBtn = true;
+          });
+        }
 
         // user pressed Yes button
       } else {
@@ -149,18 +146,15 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> submitAttendance(bool checkinout) async {
-   setState(() {
+    setState(() {
       isLoading = true;
     });
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.MyAttendance;
 
-
-
-   base64Encode(pickedFile.readAsBytesSync());
-   var base64Image = base64Encode(pickedFile.readAsBytesSync());
-   print("Imageee::: ${base64Image}");
+    base64Encode(pickedFile.readAsBytesSync());
+    var base64Image = base64Encode(pickedFile.readAsBytesSync());
 
     Map body = {
       "TokenKey": token,
@@ -170,7 +164,7 @@ class _BodyState extends State<Body> {
       "checkInOut": checkinout ? "checkin" : "checkout",
       "picture": base64Image
     };
-    http.post(uri, body: body).then((response) async{
+    http.post(uri, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse : $jsonResponse");
 
@@ -178,7 +172,7 @@ class _BodyState extends State<Body> {
         setState(() {
           isLoading = false;
         });
-       await globalMyLocalPrefes.setBool('isChecking',!isChecking);
+        await globalMyLocalPrefes.setBool('isChecking', !isChecking);
 
         Navigator.pushNamed(context, homeRoute);
       } else {
@@ -187,11 +181,13 @@ class _BodyState extends State<Body> {
         });
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-           GetToken().getToken().then((value) {
-          submitAttendance(checkinout);
+          GetToken().getToken().then((value) {
+            submitAttendance(checkinout);
           });
-          
         } else {
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
         }
@@ -221,7 +217,6 @@ class _BodyState extends State<Body> {
             child: Text(
                 "Make sure you are in your geofance area tomake attendance. Please note your location is recorded for this attendance.",
                 style: TextStyle(color: Colors.grey[800]))),
-
         result1 != null
             ? Container(
                 height: 170,
@@ -229,7 +224,7 @@ class _BodyState extends State<Body> {
                     border: Border.all(width: 1.0, color: Colors.grey[700]),
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 child: Image.file(
-                 File(result1),
+                  File(result1),
                   fit: BoxFit.cover,
                 ),
               )
@@ -237,7 +232,6 @@ class _BodyState extends State<Body> {
         SizedBox(
           height: 50,
         ),
-
         _showSubmitBtn == true
             ? Container(
                 margin: const EdgeInsets.only(top: 20.0),
@@ -263,42 +257,45 @@ class _BodyState extends State<Body> {
                       style: TextStyle(fontSize: 25)),
                 ))
             : Container(),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            getPermissionObject('Attendance').app_add=="1"?  Container(
-                margin: const EdgeInsets.only(top: 20.0),
-                child: RaisedButton(
-                  color: leaveCardcolor,
-                  onPressed: _isCheckinDisabled == false
-                      ? () {
-                          _determinePosition('Check-In');
-                        }
-                      : null,
-                  textColor: Colors.white,
-                  padding: const EdgeInsets.all(10.0),
-                  child: const Text('Check-In', style: TextStyle(fontSize: 25)),
-                )):Container(),
-            getPermissionObject('Attendance').app_add=="1"? Container(
-                margin: const EdgeInsets.only(top: 20.0),
-                child: RaisedButton(
-                  disabledColor: kGreyLightColor,
-                  color: leaveCardcolor,
-                  // onPressed: _isButtonDisabled ? _determinePosition : null,
-                  onPressed: _isCheckoutDisabled == false
-                      ? () {
-                          _determinePosition('Check-Out');
-                        }
-                      : null,
-                  textColor: Colors.white,
-                  padding: const EdgeInsets.all(10.0),
-                  child:
-                      const Text('Check-Out', style: TextStyle(fontSize: 25)),
-                )):Container(),
+            getPermissionObject('Attendance').app_add == "1"
+                ? Container(
+                    margin: const EdgeInsets.only(top: 20.0),
+                    child: RaisedButton(
+                      color: leaveCardcolor,
+                      onPressed: _isCheckinDisabled == false
+                          ? () {
+                              _determinePosition('Check-In');
+                            }
+                          : null,
+                      textColor: Colors.white,
+                      padding: const EdgeInsets.all(10.0),
+                      child: const Text('Check-In',
+                          style: TextStyle(fontSize: 25)),
+                    ))
+                : Container(),
+            getPermissionObject('Attendance').app_add == "1"
+                ? Container(
+                    margin: const EdgeInsets.only(top: 20.0),
+                    child: RaisedButton(
+                      disabledColor: kGreyLightColor,
+                      color: leaveCardcolor,
+                      // onPressed: _isButtonDisabled ? _determinePosition : null,
+                      onPressed: _isCheckoutDisabled == false
+                          ? () {
+                              _determinePosition('Check-Out');
+                            }
+                          : null,
+                      textColor: Colors.white,
+                      padding: const EdgeInsets.all(10.0),
+                      child: const Text('Check-Out',
+                          style: TextStyle(fontSize: 25)),
+                    ))
+                : Container(),
           ],
         ),
-
         Expanded(
           child: ListView.builder(
             itemCount: _positionItems.length,
@@ -328,39 +325,13 @@ class _BodyState extends State<Body> {
             },
           ),
         ),
-
-
-        isLoading?LinearProgressIndicator():Container(),
+        isLoading ? LinearProgressIndicator() : Container(),
       ],
     )));
   }
 
   bool _isListening() => !(_positionStreamSubscription == null ||
       _positionStreamSubscription.isPaused);
-
-  Color _determineButtonColor() {
-    return _isListening() ? Colors.green : Colors.red;
-  }
-
-  void _toggleListening() {
-    if (_positionStreamSubscription == null) {
-      final positionStream = Geolocator.getPositionStream();
-      _positionStreamSubscription = positionStream.handleError((error) {
-        _positionStreamSubscription.cancel();
-        _positionStreamSubscription = null;
-      }).listen((position) => setState(() => _positionItems.add(
-          _PositionItem(_PositionItemType.position, position.toString()))));
-      _positionStreamSubscription.pause();
-    }
-
-    setState(() {
-      if (_positionStreamSubscription.isPaused) {
-        _positionStreamSubscription.resume();
-      } else {
-        _positionStreamSubscription.pause();
-      }
-    });
-  }
 
   @override
   void dispose() {

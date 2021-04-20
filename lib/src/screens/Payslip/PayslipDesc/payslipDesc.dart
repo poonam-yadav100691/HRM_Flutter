@@ -3,18 +3,24 @@ import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/Payslip/PayslipDesc/component/body.dart';
+import 'package:HRMNew/src/screens/Payslip/component/paySlipListPODO.dart';
 import 'package:flutter/material.dart';
 
 class PayslipDesc extends StatefulWidget {
   final String payslipDetailID;
-  PayslipDesc({Key key, @required this.payslipDetailID}) : super(key: key);
+  final List<ResultObject> payslipList;
+  PayslipDesc(
+      {Key key, @required this.payslipDetailID, @required this.payslipList})
+      : super(key: key);
   @override
-  _PayslipDescState createState() => _PayslipDescState(payslipDetailID);
+  _PayslipDescState createState() =>
+      _PayslipDescState(payslipDetailID, payslipList);
 }
 
 class _PayslipDescState extends State<PayslipDesc> {
   String payslipDetailID;
-  _PayslipDescState(this.payslipDetailID);
+  List payslipList;
+  _PayslipDescState(this.payslipDetailID, this.payslipList);
   void _changeLanguage(Language language) async {
     Locale _locale = await setLocale(language.languageCode);
     MyApp.setLocale(context, _locale);
@@ -22,9 +28,10 @@ class _PayslipDescState extends State<PayslipDesc> {
 
   @override
   Widget build(BuildContext context) {
+    print(payslipList[0].slipMonthYr);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Payslip Details'??""),
+        title: Text('Payslip Details' ?? ""),
         shadowColor: Colors.transparent,
         centerTitle: true,
         backgroundColor: leaveCardcolor,
@@ -70,7 +77,7 @@ class _PayslipDescState extends State<PayslipDesc> {
           ),
         ],
       ),
-      body: Body(data: payslipDetailID),
+      body: Body(data: payslipDetailID, payslipList: payslipList),
       resizeToAvoidBottomPadding: true,
     );
   }

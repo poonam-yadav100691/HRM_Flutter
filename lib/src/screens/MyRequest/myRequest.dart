@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:HRMNew/routes/route_names.dart';
@@ -9,7 +10,7 @@ import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveRequest.dart'
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/myOtRequest.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 
 class MyRequest extends StatefulWidget {
   // final TabController tabBar;
@@ -39,9 +40,6 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    MediaQueryData _mediaQueryData = MediaQuery.of(context);
-    var screenWidth = _mediaQueryData.size.width;
-    var screenHeight = _mediaQueryData.size.height;
     if (!isLoading) {
       return Align(
           alignment: Alignment.bottomLeft, // and bottomLeft
@@ -51,20 +49,6 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
               child: DefaultTabController(
                 length: 2,
                 child: new Scaffold(
-                  // appBar: AppBar(
-                  //   title: Text('My Request'),
-                  //   shadowColor: Colors.transparent,
-                  //   centerTitle: true,
-                  //   backgroundColor: leaveCardcolor,
-                  //   automaticallyImplyLeading: false,
-                  //   leading: IconButton(
-                  //       icon: Icon(Icons.arrow_back_ios),
-                  //       color: Colors.white,
-                  //       onPressed: () {
-                  //         Navigator.pop(context);
-                  //       }),
-                  // ),
-
                   floatingActionButton:
                       getPermissionObject('My Request').app_add == "1"
                           ? FloatingActionButton.extended(
@@ -78,7 +62,6 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                                 Icons.add,
                               ),
                               backgroundColor: Colors.pink,
-
                             )
                           : null,
                   body: TabBarView(
@@ -111,11 +94,9 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                     tabs: [
                       Tab(
                         text: 'LEAVE REQUEST',
-                        // icon: new Icon(Icons.home),
                       ),
                       Tab(
                         text: 'OT REQUEST',
-                        // icon: new Icon(Icons.rss_feed),
                       ),
                     ],
                     labelColor: Colors.black,
@@ -132,13 +113,11 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
-                  // backgroundColor: Colors.black,
                 ),
               )));
-      } else {
-        return Container(child: Center(child: CircularProgressIndicator()));
-      }
-
+    } else {
+      return Container(child: Center(child: CircularProgressIndicator()));
+    }
   }
 
   Future<void> _getRequests() async {
@@ -146,8 +125,8 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
       isLoading = true;
     });
     myRequestList.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.MyRequest;
     Map body = {"Tokenkey": token, "lang": '2'};
     http.post(uri, body: body).then((response) {
@@ -168,9 +147,6 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
         setState(() {
           isLoading = false;
         });
-        // print(myRequestList.toString());
-        print(leaveReqList.length);
-        print(otReqList.toString());
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
@@ -181,8 +157,8 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
           setState(() {
             isLoading = false;
           });
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });

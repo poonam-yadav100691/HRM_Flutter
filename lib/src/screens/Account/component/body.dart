@@ -1,13 +1,10 @@
 import 'package:HRMNew/components/textWithIcon.dart';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import './background.dart';
-
-import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 
 class Body extends StatefulWidget {
@@ -27,7 +24,6 @@ class _BodyState extends State<Body> {
       _email,
       _phoneno,
       _company;
-  SharedPreferences sharedPreferences;
 
   @override
   void initState() {
@@ -36,18 +32,18 @@ class _BodyState extends State<Body> {
   }
 
   _loadUserInfo() async {
-    sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       _accessToken =
-          (sharedPreferences.getString(AppConstant.ACCESS_TOKEN) ?? "");
+          (globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN) ?? "");
       // _userId =
-      //     (sharedPreferences.getInt(AppConstant.USER_ID.toString()) ?? "");
-      _username = (sharedPreferences.getString(AppConstant.USERNAME) ?? "");
-      _department = (sharedPreferences.getString(AppConstant.DEPARTMENT) ?? "");
-      _image = (sharedPreferences.getString(AppConstant.IMAGE) ?? "");
-      _email = (sharedPreferences.getString(AppConstant.EMAIL) ?? "");
-      _phoneno = (sharedPreferences.getString(AppConstant.PHONENO) ?? "");
-      _company = (sharedPreferences.getString(AppConstant.COMPANY) ?? "");
+      //     (globle.getInt(AppConstant.USER_ID.toString()) ?? "");
+      _username = (globalMyLocalPrefes.getString(AppConstant.USERNAME) ?? "");
+      _department =
+          (globalMyLocalPrefes.getString(AppConstant.DEPARTMENT) ?? "");
+      _image = (globalMyLocalPrefes.getString(AppConstant.IMAGE) ?? "");
+      _email = (globalMyLocalPrefes.getString(AppConstant.EMAIL) ?? "");
+      _phoneno = (globalMyLocalPrefes.getString(AppConstant.PHONENO) ?? "");
+      _company = (globalMyLocalPrefes.getString(AppConstant.COMPANY) ?? "");
       print("CompanyL : $_company");
     });
   }
@@ -65,14 +61,7 @@ class _BodyState extends State<Body> {
             children: <Widget>[
               _base64 == null
                   ? new Container()
-                  :
-                  // : Container(
-                  //     // padding: EdgeInsets.all(100),
-                  //     child: new CircleAvatar(
-                  //         radius: 40,
-                  //         child: ClipOval(child: new Image.memory(bytes)))),
-
-                  Container(
+                  : Container(
                       width: 100.0,
                       height: 100.0,
                       margin: const EdgeInsets.all(20.0),
