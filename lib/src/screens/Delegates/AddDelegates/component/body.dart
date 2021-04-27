@@ -166,12 +166,13 @@ class _BodyState extends State<Body> {
                     padding: EdgeInsets.all(16),
                     margin: EdgeInsets.all(8),
                     decoration: BoxDecoration(
+                        color: Colors.blueGrey[50],
                         border: Border.all(
                           color: Colors.grey,
                         ),
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Text('Applying for  ${totalDays.toString()} days')),
+                    child: Text('Applying for ${totalDays.toString()} days')),
                 GestureDetector(
                   onTap: () async {
                     final DateTime pickedDate = await showDatePicker(

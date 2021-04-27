@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:HRMNew/components/MyCustomDateRange.dart';
 import 'package:HRMNew/components/MyCustomFileUpload.dart';
 import 'package:HRMNew/components/MyCustomTextField.dart';
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -10,6 +11,7 @@ import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:HRMNew/utils/UIhelper.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
@@ -49,7 +51,6 @@ class _BodyState extends State<Body> {
     setState(() {
       isLoading = true;
     });
-    print("body ${body["rangeDate"][0]}");
     final uri = Services.AddNews;
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     var bodyFinal = {
@@ -67,20 +68,17 @@ class _BodyState extends State<Body> {
     http.post(uri, body: body1).then((response) {
       var jsonResponse = jsonDecode(response.body);
 
-      print("j&&&ffff $jsonResponse");
-
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
           isLoading = false;
         });
+        Toast.show(getTranslated(context, "AddNewsSuccessfully"), context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         Navigator.pushNamed(context, newsList);
-        _scaffoldKey.currentState
-            .showSnackBar(UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
       } else {
         setState(() {
           isLoading = false;
         });
-        print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           GetToken().getToken().then((value) {
             addNews(body);
@@ -110,24 +108,19 @@ class _BodyState extends State<Body> {
                     !isLoading
                         ? FormBuilder(
                             key: _fbKey,
-                            // initialValue: {
-                            //   'date': DateTime.now(),
-                            //   'accept_terms': false,
-                            // },
                             child: Column(
                               children: [
                                 MyCustomTextField(
-                                    title: "News Title", attrName: 'newsTitle'),
+                                    title: getTranslated(context, "NewsTitle"),
+                                    attrName: 'newsTitle'),
                                 MyCustomDateRange(
-                                  title: "Select News Date Range",
+                                  title: getTranslated(
+                                      context, "SelectNewsDateRange"),
                                   attrName: 'rangeDate',
                                   validator: (value) {
                                     print("Selected date rangr $value");
                                   },
                                 ),
-                                // MyCustomTextField(
-                                //   title: "News Description",
-                                // ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: FormBuilderTextField(
@@ -139,7 +132,8 @@ class _BodyState extends State<Body> {
                                     ],
                                     keyboardType: TextInputType.multiline,
                                     decoration: InputDecoration(
-                                      hintText: 'News Description',
+                                      hintText: getTranslated(
+                                          context, "NewsDescription"),
                                       hintStyle: TextStyle(color: Colors.grey),
                                       fillColor: Colors.white,
                                       border: _focusNode.hasFocus
@@ -159,7 +153,8 @@ class _BodyState extends State<Body> {
                                           bottom: 2.0,
                                           left: 10.0,
                                           right: 10.0),
-                                      labelText: "News Description",
+                                      labelText: getTranslated(
+                                          context, "NewsDescription"),
                                     ),
                                   ),
                                 ),
@@ -172,7 +167,7 @@ class _BodyState extends State<Body> {
                                       color: leaveCardcolor,
                                       textColor: kWhiteColor,
                                       child: Text(
-                                        "Send",
+                                        getTranslated(context, "Send"),
                                         style: TextStyle(fontSize: 20),
                                       ),
                                       onPressed: () {

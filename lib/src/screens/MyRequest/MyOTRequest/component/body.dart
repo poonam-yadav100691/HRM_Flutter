@@ -1,3 +1,4 @@
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/component/myOtRequest.dart';
@@ -116,11 +117,11 @@ class _BodyState extends State<Body> {
                   Row(
                     children: [
                       Text(
-                        'Manager :',
+                        getTranslated(context, 'manager'),
                         style: new TextStyle(),
                       ),
                       Text(
-                        '${object.managerName} ',
+                        ' : ${object.managerName}',
                         style: new TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ],

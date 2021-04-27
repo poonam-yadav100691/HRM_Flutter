@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:http/http.dart' as http;
@@ -57,7 +58,7 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                                 // Add your onPressed code here!
                               },
                               elevation: 4,
-                              label: Text('Request'),
+                              label: Text(getTranslated(context, 'Request')),
                               icon: Icon(
                                 Icons.add,
                               ),
@@ -93,10 +94,10 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                   bottomNavigationBar: new TabBar(
                     tabs: [
                       Tab(
-                        text: 'LEAVE REQUEST',
+                        text: getTranslated(context, 'LEAVEREQUEST'),
                       ),
                       Tab(
-                        text: 'OT REQUEST',
+                        text: getTranslated(context, 'OTREQUEST'),
                       ),
                     ],
                     labelColor: Colors.black,

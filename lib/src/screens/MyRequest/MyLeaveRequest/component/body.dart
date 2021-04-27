@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -285,11 +286,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           child: Row(
                             children: [
                               Text(
-                                'Date Of Request :',
+                                getTranslated(context, 'dateofrequest'),
                                 style: new TextStyle(),
                               ),
                               Text(
-                                returnDate,
+                                " : " + returnDate,
                                 style:
                                     new TextStyle(fontWeight: FontWeight.w500),
                               ),
@@ -301,11 +302,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                       ? Row(
                           children: [
                             Text(
-                              'Manager :',
+                              getTranslated(context, 'manager'),
                               style: new TextStyle(),
                             ),
                             Text(
-                              leaveList.managerName,
+                              " : " + leaveList.managerName,
                               style: new TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ],

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -90,6 +91,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    // String selectedDateRange = getTranslated(context, "SelectDateRange");
     Size size = MediaQuery.of(context).size;
     final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
     if (!isLoading) {
@@ -121,7 +123,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               children: [
                                 Row(
                                   children: [
-                                    Text('Leave Apply For'),
+                                    Text(
+                                      getTranslated(context, "LeaveApplyFor"),
+                                    ),
                                     Radio(
                                         value: selectedLeaveRadio,
                                         groupValue: 1,
@@ -131,7 +135,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                             showHalf = false;
                                           });
                                         }),
-                                    Text('Full Day')
+                                    Text(getTranslated(context, "FullDay"))
                                   ],
                                 ),
                                 Row(
@@ -145,7 +149,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                             showHalf = true;
                                           });
                                         }),
-                                    Text('Half Day')
+                                    Text(getTranslated(context, "HalfDay"))
                                   ],
                                 ),
                               ],
@@ -307,7 +311,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                       BorderRadius.all(Radius.circular(8))),
                               child: Text(dateSelectedreturn
                                   ? 'Return Date: $returndate'
-                                  : 'Return to Work date')),
+                                  : getTranslated(
+                                      context, "Returntoworkdate"))),
                         ),
 
                         Container(
@@ -331,7 +336,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               contentPadding: EdgeInsets.only(
                                   bottom: 10.0, left: 10.0, right: 10.0),
                               suffixIcon: Icon(Icons.keyboard_arrow_down),
-                              labelText: 'Select Type of Leave',
+                              labelText:
+                                  getTranslated(context, "Selecttypeofleave"),
                             ),
                             controller: leaveController,
                             validator: (String value) {
@@ -344,7 +350,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             onTap: () {
                               SelectItemDialog.showModal<String>(
                                 context,
-                                label: "Select Type of Leave",
+                                label:
+                                    getTranslated(context, "Selecttypeofleave"),
                                 titleStyle: TextStyle(color: Colors.black),
                                 showSearchBox: false,
                                 selectedValue: leaveLable,
@@ -352,7 +359,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 onChange: (String selected) {
                                   setState(() {
                                     leaveLable = (selected.isEmpty
-                                        ? 'Select Leave Type'
+                                        ? getTranslated(
+                                            context, "Selecttypeofleave")
                                         : selected);
                                     leaveController.text = leaveLable;
                                     for (int i = 0; i < leaveList.length; i++) {
@@ -391,12 +399,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               contentPadding: EdgeInsets.only(
                                   bottom: 10.0, left: 10.0, right: 10.0),
                               suffixIcon: Icon(Icons.keyboard_arrow_down),
-                              labelText: 'Select Responsible Person',
+                              labelText: getTranslated(
+                                  context, "SelectResponsiblePerson"),
                             ),
                             controller: responsiblePerController,
                             validator: (String value) {
                               if (value.isEmpty) {
-                                return 'Please Select Responsible Person';
+                                return getTranslated(
+                                    context, "SelectResponsiblePerson");
                               } else {
                                 return null;
                               }
@@ -404,7 +414,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             onTap: () {
                               SelectItemDialog.showModal<String>(
                                 context,
-                                label: "Select Responsible Person",
+                                label: getTranslated(
+                                    context, "SelectResponsiblePerson"),
                                 titleStyle: TextStyle(color: Colors.black),
                                 showSearchBox: false,
                                 selectedValue: respPerLable,
@@ -412,7 +423,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 onChange: (String selected) {
                                   setState(() {
                                     respPerLable = (selected.isEmpty
-                                        ? 'Select Responsible Person'
+                                        ? getTranslated(
+                                            context, "SelectResponsiblePerson")
                                         : selected);
                                     responsiblePerController.text =
                                         respPerLable;
@@ -453,7 +465,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               contentPadding: EdgeInsets.only(
                                   bottom: 10.0, left: 10.0, right: 10.0),
                               // suffixIcon: Icon(Icons.keyboard_arrow_down),
-                              labelText: 'Reason',
+                              labelText: getTranslated(context, "Reason"),
                             ),
                             controller: resoneController,
                             validator: (String value) {
@@ -475,7 +487,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               color: leaveCardcolor,
                               textColor: kWhiteColor,
                               child: Text(
-                                "Send",
+                                getTranslated(context, "Send"),
                                 style: TextStyle(fontSize: 20),
                               ),
                               onPressed: () {
@@ -598,7 +610,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     );
 
     setState(() {
-      selectedDateRange = '${picked.start.toUtc()}-${picked.end.toUtc()}';
+      selectedDateRange =
+          '${picked.start.day}/${picked.start.month}/${picked.start.year}  To  ${picked.end.day}/${picked.end.month}/${picked.end.year}';
     });
 
     _onDateRangeSelect(picked);

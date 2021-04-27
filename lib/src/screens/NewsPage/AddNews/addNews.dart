@@ -1,3 +1,4 @@
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/NewsPage/AddNews/component/body.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ class AddNews extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add News'),
+        title: Text(getTranslated(context, 'AddNews')),
         shadowColor: Colors.transparent,
         centerTitle: true,
         backgroundColor: leaveCardcolor,

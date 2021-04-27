@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -88,39 +89,6 @@ class _BodyState extends State<Body> {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
-                          // GestureDetector(
-                          //   onTap: () async {
-                          //     final DateTime pickedDate = await showDatePicker(
-                          //         context: context,
-                          //         initialDate: DateTime.now(),
-                          //         firstDate: DateTime.now(),
-                          //          onChanged: (val) {
-                          //           selectedstartdateTime = val;
-                          //         },
-                          //         lastDate: DateTime(DateTime.now().year + 1));
-                          //     if (pickedDate != null &&
-                          //         pickedDate != selecteddate)
-                          //       setState(() {
-                          //         selecteddate = pickedDate;
-                          //         dateSelectedselect = true;
-                          //       });
-                          //   },
-                          //   child: Container(
-                          //       width: MediaQuery.of(context).size.width,
-                          //       padding: EdgeInsets.all(16),
-                          //       margin: EdgeInsets.all(8),
-                          //       decoration: BoxDecoration(
-                          //           border: Border.all(
-                          //             color: Colors.grey,
-                          //           ),
-                          //           shape: BoxShape.rectangle,
-                          //           borderRadius:
-                          //               BorderRadius.all(Radius.circular(8))),
-                          //       child: Text(dateSelectedselect
-                          //           ? 'Selected OT Date : $selecteddate'
-                          //           : 'Select OT Date ')),
-                          // ),
-
                           Container(
                             child: Padding(
                               padding: const EdgeInsets.all(8),
@@ -132,14 +100,16 @@ class _BodyState extends State<Body> {
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: 'OT Start From'),
+                                      labelText: getTranslated(
+                                          context, "OTstartfrom")),
                                   initialValue:
                                       '${DateTime.now().add(Duration(minutes: 40))}',
                                   firstDate:
                                       DateTime.now().add(Duration(minutes: 40)),
                                   lastDate:
                                       DateTime.now().add(Duration(days: 8)),
-                                  dateLabelText: ' OT Start From',
+                                  dateLabelText:
+                                      getTranslated(context, "OTstartfrom"),
                                   style: Theme.of(context).textTheme.caption,
                                   onChanged: (val) {
                                     DateFormat dateFormat =
@@ -151,7 +121,7 @@ class _BodyState extends State<Body> {
 
                                     var formatter =
                                         new DateFormat('dd-MM-yyyy');
-                                    startTime = DateFormat('kk:mm:a')
+                                    startTime = DateFormat('kk:mm')
                                         .format(selectedstartdateTime);
                                     startDate =
                                         formatter.format(selectedstartdateTime);
@@ -180,21 +150,23 @@ class _BodyState extends State<Body> {
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: 'OT Ends On'),
+                                      labelText:
+                                          getTranslated(context, "OTendson")),
                                   initialValue:
                                       '${DateTime.now().add(Duration(minutes: 40))}',
                                   firstDate:
                                       DateTime.now().add(Duration(minutes: 40)),
                                   lastDate:
                                       DateTime.now().add(Duration(days: 8)),
-                                  dateLabelText: 'OT Ends On',
+                                  dateLabelText:
+                                      getTranslated(context, "OTendson"),
                                   style: Theme.of(context).textTheme.caption,
                                   onChanged: (val) {
                                     DateFormat dateFormat =
                                         DateFormat("yyyy-MM-dd HH:mm");
                                     DateTime dateTime = dateFormat.parse(val);
                                     selectedenddateTime = dateTime;
-                                    endTime = DateFormat('kk:mm:a')
+                                    endTime = DateFormat('kk:mm')
                                         .format(selectedenddateTime);
                                     print("date:: $startTime");
                                   },
@@ -208,38 +180,6 @@ class _BodyState extends State<Body> {
                             ),
                           ),
 
-                          // Container(
-                          //   padding: const EdgeInsets.all(9),
-                          //   child: TextFormField(
-                          //     decoration: new InputDecoration(
-                          //       fillColor: Colors.white,
-                          //       border: _focusNode.hasFocus
-                          //           ? OutlineInputBorder(
-                          //               borderRadius: BorderRadius.all(
-                          //                   Radius.circular(5.0)),
-                          //               borderSide:
-                          //                   BorderSide(color: leaveCardcolor))
-                          //           : OutlineInputBorder(
-                          //               borderRadius: BorderRadius.all(
-                          //                   Radius.circular(5.0)),
-                          //               borderSide:
-                          //                   BorderSide(color: Colors.grey)),
-                          //       filled: true,
-                          //       contentPadding: EdgeInsets.only(
-                          //           bottom: 10.0, left: 10.0, right: 10.0),
-                          //       // suffixIcon: Icon(Icons.keyboard_arrow_down),
-                          //       labelText: 'Manager',
-                          //     ),
-                          //     controller: managerController,
-                          //     validator: (String value) {
-                          //       if (value.isEmpty) {
-                          //         return 'Please Enter Manager';
-                          //       } else {
-                          //         return null;
-                          //       }
-                          //     },
-                          //   ),
-                          // ),
                           Container(
                             padding: const EdgeInsets.all(9),
                             child: TextFormField(
@@ -260,7 +200,7 @@ class _BodyState extends State<Body> {
                                 contentPadding: EdgeInsets.only(
                                     bottom: 10.0, left: 10.0, right: 10.0),
                                 // suffixIcon: Icon(Icons.keyboard_arrow_down),
-                                labelText: 'Subject',
+                                labelText: getTranslated(context, "Subject"),
                               ),
                               controller: subjectController,
                               validator: (String value) {
@@ -292,7 +232,7 @@ class _BodyState extends State<Body> {
                                 contentPadding: EdgeInsets.only(
                                     bottom: 10.0, left: 10.0, right: 10.0),
                                 // suffixIcon: Icon(Icons.keyboard_arrow_down),
-                                labelText: 'Reason',
+                                labelText: getTranslated(context, "Reason"),
                               ),
                               controller: reasonController,
                               validator: (String value) {
@@ -315,7 +255,7 @@ class _BodyState extends State<Body> {
                           color: leaveCardcolor,
                           textColor: kWhiteColor,
                           child: Text(
-                            "Send",
+                            getTranslated(context, "Send"),
                             style: TextStyle(fontSize: 20),
                           ),
                           onPressed: () async {

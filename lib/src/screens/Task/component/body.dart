@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -12,7 +11,6 @@ import 'package:HRMNew/src/screens/Task/TaskPending/taskPending.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 import './background.dart';

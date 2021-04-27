@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -169,9 +170,10 @@ class _BodyState extends State<Body> {
                               onTap: () {
                                 //To show a snackbar with the UNDO button
                                 Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text("Are you sure?"),
+                                    content: Text(
+                                        getTranslated(context, "AreYouSure")),
                                     action: SnackBarAction(
-                                        label: "Yes",
+                                        label: getTranslated(context, "Yes"),
                                         onPressed: () {
                                           //To undo deletion
                                           _deleteNews(newsLists[i].newsID);
@@ -192,7 +194,7 @@ class _BodyState extends State<Body> {
             // Add your onPressed code here!
           },
           elevation: 4,
-          label: Text('News'),
+          label: Text(getTranslated(context, 'News')),
           icon: Icon(
             Icons.add,
           ),

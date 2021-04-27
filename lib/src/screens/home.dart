@@ -362,15 +362,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 _cardList(
-                    "PROFILE",
+                    "MyProfile",
                     "lib/assets/images/viewProfile.png",
-                    "View your profile details",
+                    "Viewyourprofiledetails",
                     Icons.arrow_forward_ios,
                     accountRoute),
                 _cardList(
-                    "FY 2020 Holiday Sheet",
+                    "Holidays",
                     "lib/assets/images/vector-holiday.jpg",
-                    "Get holidays list of this finalcial year",
+                    "GetHolidayslistofthisfinancialyear",
                     Icons.arrow_forward_ios,
                     calendarViewRoute),
                 // _cardList(
@@ -416,8 +416,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon,
                   size: 15,
                 ),
-                title: Text(title),
-                subtitle: Text(subtitle,
+                title: Text(
+                  getTranslated(context, title),
+                ),
+                subtitle: Text(getTranslated(context, subtitle),
                     style: TextStyle(color: Color(0xFF797777), fontSize: 12.0)),
               ),
             ],
@@ -494,7 +496,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Padding(padding: EdgeInsets.only(top: 5)),
           Text(
-            title,
+            getTranslated(context, title),
             style: TextStyle(fontSize: 13, color: Colors.grey),
           ),
         ]),
@@ -515,7 +517,7 @@ class _MyHomePageState extends State<MyHomePage> {
             height: size.height - (size.height * .30),
             child: GridView.count(
               primary: false,
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(6),
               crossAxisSpacing: size.width < 350 ? 10 : 20,
               mainAxisSpacing: size.width < 350 ? 10 : 20,
               crossAxisCount: size.width < 350 ? 2 : 3,
@@ -536,11 +538,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (getPermissionObject('My Request')?.app_view == '1') {
-      list.add(_homeGrid(
-          "My Request",
-          "lib/assets/images/homeGrid/newMyReq.png",
-          myRequestRoute,
-          getPermissionObject('My Request')?.CountItem ?? '0'));
+      list.add(_homeGrid("MyRequest", "lib/assets/images/homeGrid/newMyReq.png",
+          myRequestRoute, getPermissionObject('My Request')?.CountItem ?? '0'));
     }
 
     if (getPermissionObject('Payslip')?.app_view == '1') {
@@ -563,7 +562,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (getPermissionObject('Holiday')?.app_view == '1') {
       list.add(_homeGrid(
-          "Holiday",
+          "Holidays",
           "lib/assets/images/homeGrid/newholidays.png",
           calendarViewRoute,
           null));
@@ -589,7 +588,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (getPermissionObject('Emp Request')?.app_view == '1') {
       list.add(_homeGrid(
-          "Emp Request",
+          "EmpRequest",
           "lib/assets/images/homeGrid/newEmpReq.png",
           empRequestRoute,
           getPermissionObject('Emp Request')?.CountItem ?? '0'));

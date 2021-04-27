@@ -236,12 +236,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Laon amount: ' +
+                              'Laon amount : ' +
                                   loanHeader[i].loanAmount.toString(),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              "Months: 5" +
+                              "Months : " +
                                   loanHeader[i].loanAmuntMonth.toString(),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -254,7 +254,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Monthly Fee :' +
+                              'Monthly Fee : ' +
                                   loanHeader[i].loanMonthlyFee.toString(),
                               style: TextStyle(fontWeight: FontWeight.normal),
                             ),
@@ -272,7 +272,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Total Balance :' +
+                              'Total Balance : ' +
                                   loanHeader[i].loanTotalBalance.toString(),
                               style: TextStyle(fontWeight: FontWeight.normal),
                             ),

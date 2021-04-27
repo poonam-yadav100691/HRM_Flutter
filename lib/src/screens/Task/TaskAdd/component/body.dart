@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:HRMNew/components/MyCustomFileUpload.dart';
 import 'package:HRMNew/components/MyCustomTextField.dart';
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -177,12 +178,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   contentPadding: EdgeInsets.only(
                                       bottom: 10.0, left: 10.0, right: 10.0),
                                   suffixIcon: Icon(Icons.keyboard_arrow_down),
-                                  labelText: 'Select Responsible Person',
+                                  labelText: getTranslated(
+                                      context, 'SelectResponsiblePerson'),
                                 ),
                                 controller: responsiblePerController,
                                 validator: (String value) {
                                   if (value.isEmpty) {
-                                    return 'Please Select Responsible Person';
+                                    return getTranslated(
+                                        context, 'SelectResponsiblePerson');
                                   } else {
                                     return null;
                                   }
@@ -190,7 +193,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 onTap: () {
                                   SelectItemDialog.showModal<String>(
                                     context,
-                                    label: "Select Responsible Person",
+                                    label: getTranslated(
+                                        context, 'SelectResponsiblePerson'),
                                     titleStyle: TextStyle(color: Colors.black),
                                     showSearchBox: false,
                                     selectedValue: respPerLable,
@@ -198,7 +202,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                     onChange: (String selected) {
                                       setState(() {
                                         respPerLable = (selected.isEmpty
-                                            ? 'Select Responsible Person'
+                                            ? getTranslated(context,
+                                                'SelectResponsiblePerson')
                                             : selected);
                                         responsiblePerController.text =
                                             respPerLable;
@@ -219,9 +224,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               ),
                             ),
                             MyCustomTextField(
-                                title: "Subject", attrName: 'subject'),
+                                title: getTranslated(context, 'Subject'),
+                                attrName: 'subject'),
                             MyCustomTextField(
-                                title: "Reason", attrName: 'reason'),
+                                title: getTranslated(context, 'Reason'),
+                                attrName: 'reason'),
                             MyCustomFileUpload(),
                           ],
                         ),
@@ -231,7 +238,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         RaisedButton(
-                            child: Text("Submit"),
+                            child: Text(getTranslated(context, 'Send')),
                             onPressed: () {
                               if (_fbKey.currentState.saveAndValidate()) {
                                 print(_fbKey.currentState.value);
@@ -239,7 +246,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               }
                             }),
                         RaisedButton(
-                            child: Text("Reset"),
+                            child: Text(getTranslated(context, 'Clear')),
                             onPressed: () {
                               _fbKey.currentState.reset();
                             })

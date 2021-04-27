@@ -1,3 +1,4 @@
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/component/body.dart';
@@ -10,7 +11,7 @@ class MyOTRequest extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My OT Requests'),
+        title: Text(getTranslated(context, 'MyOTRequest')),
         shadowColor: Colors.transparent,
         centerTitle: true,
         backgroundColor: leaveCardcolor,

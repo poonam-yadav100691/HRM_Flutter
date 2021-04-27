@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:HRMNew/components/TakePictureScreen.dart';
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -53,23 +54,22 @@ class _BodyState extends State<Body> {
         barrierDismissible: false,
         builder: (_) {
           return AlertDialog(
-            title: Text('Take Photo!!'),
+            title: Text(getTranslated(context, 'TakePic')),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text(
-                      'For completion of check-in process, you have to click photo of your work place and submit.'),
+                  Text(getTranslated(context, 'clickPictureTag')),
                 ],
               ),
             ),
             actions: [
               FlatButton(
                 onPressed: () => Navigator.pop(context, false), // passing false
-                child: Text('Cancel'),
+                child: Text(getTranslated(context, 'Cancel')),
               ),
               FlatButton(
                 onPressed: () => Navigator.pop(context, true), // passing true
-                child: Text('Ok'),
+                child: Text(getTranslated(context, 'Ok')),
               ),
             ],
           );
@@ -214,8 +214,7 @@ class _BodyState extends State<Body> {
         Container(
             // color: Colors.pink,
             padding: EdgeInsets.only(left: 15, right: 15),
-            child: Text(
-                "Make sure you are in your geofance area tomake attendance. Please note your location is recorded for this attendance.",
+            child: Text(getTranslated(context, 'attendanceTagline'),
                 style: TextStyle(color: Colors.grey[800]))),
         result1 != null
             ? Container(

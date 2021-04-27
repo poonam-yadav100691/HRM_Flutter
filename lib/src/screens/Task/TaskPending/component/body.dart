@@ -106,21 +106,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       return Background(
         child: Column(
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, addTaskRoute);
-              },
-              child: Card(
-                child: new Container(
-                  // padding: new EdgeInsets.all(5.0),
-                  child: ListTile(
-                    leading: Icon(Icons.add),
-                    title: Text('Add Task'),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-                  ),
-                ),
-              ),
-            ),
             valuefirst.indexOf(true) > -1
                 ? Container(
                     margin: EdgeInsets.all(5),

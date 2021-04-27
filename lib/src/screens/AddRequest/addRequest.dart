@@ -1,3 +1,4 @@
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/leaveRequest.dart';
 import 'package:HRMNew/src/screens/AddRequest/OTRequest/otRequest.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +26,11 @@ class _AddRequestState extends State<AddRequest> {
         bottomNavigationBar: new TabBar(
           tabs: [
             Tab(
-              text: 'LEAVE REQUEST',
+              text: getTranslated(context, "LEAVEREQUEST"),
               // icon: new Icon(Icons.home),
             ),
             Tab(
-              text: 'OT REQUEST',
+              text: getTranslated(context, "OTREQUEST"),
               // icon: new Icon(Icons.rss_feed),
             ),
           ],
