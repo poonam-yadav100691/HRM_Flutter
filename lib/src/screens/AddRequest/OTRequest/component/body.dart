@@ -346,7 +346,7 @@ class _BodyState extends State<Body> {
 
                               print(body);
 
-                              http.post(uri, body: body).then((response) {
+                              http.post(uri, body: body).then((response) async {
                                 var jsonResponse = jsonDecode(response.body);
                                 // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
 
@@ -363,7 +363,7 @@ class _BodyState extends State<Body> {
                                       "ModelError: ${jsonResponse["ModelErrors"]}");
                                   if (jsonResponse["ModelErrors"] ==
                                       'Unauthorized') {
-                                    GetToken().getToken().then((value) {});
+                                  await  GetToken().getToken().then((value) {});
                                     // Future<String> token = getToken();
                                   } else {
                                     // currentState.showSnackBar(

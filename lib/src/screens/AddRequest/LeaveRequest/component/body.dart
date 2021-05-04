@@ -536,7 +536,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final uri = Services.GetLeaveType;
     print(uri);
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) {
+    http.post(uri, body: body).then((response) async{
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...kk.." + jsonResponse.toString());
       GetLeaveType leave = new GetLeaveType.fromJson(jsonResponse);
@@ -553,7 +553,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          GetToken().getToken().then((value) {
+         await GetToken().getToken().then((value) {
             getTypeOfLeave();
           });
         } else {
@@ -588,7 +588,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     };
 
     print('$body');
-    http.post(uri, body: body).then((response) {
+    http.post(uri, body: body).then((response) async{
       var jsonResponse = jsonDecode(response.body);
       // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
@@ -601,7 +601,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          GetToken().getToken().then((value) {
+         await GetToken().getToken().then((value) {
             _placeRequests();
           });
           // Future<String> token = getToken();
@@ -644,7 +644,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final uri = Services.GetResponsiblePer;
     print(uri);
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) {
+    http.post(uri, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...resPerson.." + jsonResponse.toString());
       GetResponsiblePerson resPerson =
@@ -662,7 +662,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          GetToken().getToken().then((value) {
+         await GetToken().getToken().then((value) {
             getResponsiblePerson();
           });
         } else {

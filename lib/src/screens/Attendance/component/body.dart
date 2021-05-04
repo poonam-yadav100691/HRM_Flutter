@@ -187,7 +187,7 @@ class _BodyState extends State<Body> {
         });
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-           GetToken().getToken().then((value) {
+          await GetToken().getToken().then((value) {
           submitAttendance(checkinout);
           });
           

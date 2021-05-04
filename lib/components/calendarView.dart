@@ -406,7 +406,7 @@ class _CalendarViewState extends State<CalendarView>
       "lang": '2',
       "yearView":'2021'
     };
-    http.post(uri, body: body).then((response) {
+    http.post(uri, body: body).then((response) async{
       var jsonResponse = jsonDecode(response.body);
       print(response.body);
       MyRequestsCalender myRequest = new MyRequestsCalender.fromJson(jsonResponse);
@@ -424,7 +424,7 @@ class _CalendarViewState extends State<CalendarView>
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          GetToken().getToken().then((value) {
+         await GetToken().getToken().then((value) {
             _getRequests();
           });
 
