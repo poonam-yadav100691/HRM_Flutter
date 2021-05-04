@@ -1,6 +1,6 @@
 class PayslipDetails {
   String modelErrors;
-  List<ResultObject> resultObject;
+  List<ResultObjectDetails> resultObject;
   int statusCode;
   bool isSuccess;
   String commonErrors;
@@ -15,9 +15,9 @@ class PayslipDetails {
   PayslipDetails.fromJson(Map<String, dynamic> json) {
     modelErrors = json['ModelErrors'];
     if (json['ResultObject'] != null) {
-      resultObject = new List<ResultObject>();
+      resultObject = new List<ResultObjectDetails>();
       json['ResultObject'].forEach((v) {
-        resultObject.add(new ResultObject.fromJson(v));
+        resultObject.add(new ResultObjectDetails.fromJson(v));
       });
     }
     statusCode = json['StatusCode'];
@@ -38,21 +38,21 @@ class PayslipDetails {
   }
 }
 
-class ResultObject {
+class ResultObjectDetails {
   List<EarningObject> earningObject;
   double totalEarning;
   List<DeductionObject> deductionObject;
   double totalDeduction;
   double netSalary;
 
-  ResultObject(
+  ResultObjectDetails(
       {this.earningObject,
       this.totalEarning,
       this.deductionObject,
       this.totalDeduction,
       this.netSalary});
 
-  ResultObject.fromJson(Map<String, dynamic> json) {
+  ResultObjectDetails.fromJson(Map<String, dynamic> json) {
     if (json['earningObject'] != null) {
       earningObject = new List<EarningObject>();
       json['earningObject'].forEach((v) {

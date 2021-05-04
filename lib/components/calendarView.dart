@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/models/calenderPodo.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -7,10 +7,8 @@ import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
-
 
 // Example holidays
 final Map<DateTime, List> _holidays = {
@@ -398,21 +396,26 @@ class _CalendarViewState extends State<CalendarView>
     //   isLoading = true;
     // });
     myRequestList.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+
+    var date = new DateTime.now().toString();
+    var dateParse = DateTime.parse(date);
+
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.PublicHolidays;
+
     Map body = {
       "Tokenkey": token,
       "lang": '2',
-      "yearView":'2021'
+      "yearView": dateParse.year.toString()
     };
-    http.post(uri, body: body).then((response) async{
+    http.post(uri, body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print(response.body);
-      MyRequestsCalender myRequest = new MyRequestsCalender.fromJson(jsonResponse);
+      MyRequestsCalender myRequest =
+          new MyRequestsCalender.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
-          myRequestMain= myRequest;
+          myRequestMain = myRequest;
           isLoading = false;
         });
 
@@ -424,7 +427,7 @@ class _CalendarViewState extends State<CalendarView>
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-         await GetToken().getToken().then((value) {
+          GetToken().getToken().then((value) {
             _getRequests();
           });
 

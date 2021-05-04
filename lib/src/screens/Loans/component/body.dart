@@ -1,13 +1,13 @@
 import 'dart:convert';
 
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/screens/Loans/component/loanDetailsPODO.dart';
 import 'package:HRMNew/src/screens/Loans/component/loanPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:http/http.dart' as http;
 
@@ -53,8 +53,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   Future<void> _getLoanHeader() async {
     loanHeader.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.LoanHeader;
     Map body = {"Tokenkey": token, "lang": '2'};
     http.post(uri, body: body).then((response) async {
@@ -69,13 +68,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           print("ModelError: ${jsonResponse["ModelErrors"]}");
-         GetToken().getToken().then((value) {
-           _getLoanHeader();
+          GetToken().getToken().then((value) {
+            _getLoanHeader();
           });
-         
         } else {
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
@@ -86,10 +84,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       isLoading = true;
     });
     loanDetails.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     Map body = {"Tokenkey": token, "loanID": id, "lang": '2'};
-    
+
     final uri1 = Services.LoanDetail;
     http.post(uri1, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
@@ -111,13 +109,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         });
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           print("ModelError: ${jsonResponse["ModelErrors"]}");
-         GetToken().getToken().then((value) {
-           _getLoanDetails(id);
+          GetToken().getToken().then((value) {
+            _getLoanDetails(id);
           });
-         
         } else {
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
@@ -191,7 +188,13 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           child: Container(
             child: Column(
               children: <Widget>[
-                Container(child: loanList(context)),
+                loanHeader.length > 0
+                    ? Container(child: loanList(context))
+                    : Container(
+                        child: Text(
+                        "No Loans",
+                        style: TextStyle(fontWeight: FontWeight.normal),
+                      )),
               ],
             ),
           ),
@@ -233,12 +236,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Laon amount: ' +
+                              'Laon amount : ' +
                                   loanHeader[i].loanAmount.toString(),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              "Months: 5" +
+                              "Months : " +
                                   loanHeader[i].loanAmuntMonth.toString(),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -251,7 +254,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Monthly Fee :' +
+                              'Monthly Fee : ' +
                                   loanHeader[i].loanMonthlyFee.toString(),
                               style: TextStyle(fontWeight: FontWeight.normal),
                             ),
@@ -269,7 +272,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Total Balance :' +
+                              'Total Balance : ' +
                                   loanHeader[i].loanTotalBalance.toString(),
                               style: TextStyle(fontWeight: FontWeight.normal),
                             ),
@@ -283,7 +286,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             )));
       }
     } else {
-      children.add(Container());
+      children.add(Container(
+          child: Text(
+        "No Loans",
+        style: TextStyle(fontWeight: FontWeight.normal),
+      )));
     }
 
     return Expanded(
@@ -344,7 +351,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         ));
       }
     } else {
-      children.add(Container());
+      children.add(Container(
+          child: Text(
+        "No Loans",
+        style: TextStyle(fontWeight: FontWeight.normal),
+      )));
     }
 
     return Expanded(

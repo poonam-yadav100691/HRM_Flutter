@@ -1,3 +1,4 @@
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/component/myOtRequest.dart';
@@ -16,7 +17,6 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     final children = <Widget>[];
     for (var i = 0; i < widget.leaveList.length; i++) {
       children.add(
@@ -54,10 +54,11 @@ class _BodyState extends State<Body> {
 
   Widget planetThumbnail(BuildContext context, String statusText) {
     // _onDateRangeSelect(leaveList.strDate, leaveList.endDate);
+
     return Container(
       child: new Image(
         image: new AssetImage(
-            "lib/assets/images/${statusText[0].toUpperCase()}${statusText.substring(1)}.png"),
+            "lib/assets/images/${statusText[0].toLowerCase()}${statusText.substring(1)}.png"),
         height: 40.0,
         width: 40.0,
       ),
@@ -81,7 +82,7 @@ class _BodyState extends State<Body> {
         ],
       ),
       child: Container(
-        padding: EdgeInsets.only(left: 30),
+        padding: EdgeInsets.only(left: 15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -93,38 +94,34 @@ class _BodyState extends State<Body> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Text(
+                        '${object.submitDate} ',
+                        style: new TextStyle(fontWeight: FontWeight.w500),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5.0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              '${object.requestType} : ',
+                              '${object.statusText} ',
                               style: new TextStyle(
                                   color: kRedColor,
                                   fontWeight: FontWeight.w500),
                             ),
-                            // Text(
-                            //   '{Full Day}',
-                            //   style: new TextStyle(),
-                            // ),
                           ],
                         ),
-                      ),
-                      Text(
-                        '${object.submitDate} ',
-                        style: new TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
                   Row(
                     children: [
                       Text(
-                        'Manager :',
+                        getTranslated(context, 'manager'),
                         style: new TextStyle(),
                       ),
                       Text(
-                        '${object.managerName} ',
+                        ' : ${object.managerName}',
                         style: new TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ],

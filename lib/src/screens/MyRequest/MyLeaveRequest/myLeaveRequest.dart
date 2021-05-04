@@ -1,3 +1,4 @@
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/component/body.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
@@ -10,13 +11,11 @@ class MyLeaveRequest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("***********>>> $data");
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Requests'),
+        title: Text(getTranslated(context, 'MyRequest')),
         shadowColor: Colors.transparent,
         centerTitle: true,
-
         backgroundColor: leaveCardcolor,
         automaticallyImplyLeading: false,
         leading: IconButton(

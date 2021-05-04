@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
-
 import 'package:HRMNew/classes/language.dart';
 import 'package:HRMNew/components/LogoutOverlay.dart';
 import 'package:HRMNew/localization/localization_constants.dart';
@@ -12,16 +11,14 @@ import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Network.dart';
 import 'package:HRMNew/src/constants/Services.dart';
-import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/models/balancePodo.dart';
 import 'package:HRMNew/src/screens/Login/PODO/loginResponse.dart';
 import 'package:HRMNew/utils/UIhelper.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
+import 'package:toast/toast.dart';
 
 List<Permission> listOfPermission = [];
 
@@ -75,13 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // List<Permission> listOfPermission1 = [];
   Future _register() async {
-    // setState(() {
-    //   isLoading = true;
-    // });
-    // sharedPreferences = await SharedPreferences.getInstance();
-
-
-
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
 
     try {
@@ -90,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
         "Tokenkey": token,
       };
 
-      http.post(uri, body: body).then((response)async {
+      http.post(uri, body: body).then((response) async {
         if (response.statusCode == 200) {
           var jsonResponse = jsonDecode(response.body);
           print("permission" + jsonResponse.toString());
@@ -106,18 +96,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
             setState(() {
               // listOfPermission1 = _permissions;
-              listOfPermission=_permissions;
+              listOfPermission = _permissions;
             });
 
             getLeaveCounts();
           } else {
-
             print("ModelError: ${jsonResponse["ModelErrors"]}");
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-            await  GetToken().getToken().then((value) {
-
+              await GetToken().getToken().then((value) {
+                _register();
               });
-            _register();
             } else {
               _scaffoldKey.currentState.showSnackBar(
                   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -137,8 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> getLeaveCounts() async {
     balanceList.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.LeaveBalance;
 
     setState(() {
@@ -153,9 +140,9 @@ class _MyHomePageState extends State<MyHomePage> {
         balanceList = balance.resultObject;
         setState(() {
           isLoading = false;
-          username = sharedPreferences.getString(AppConstant.USERNAME);
-          department = sharedPreferences.getString(AppConstant.DEPARTMENT);
-          image = sharedPreferences.getString(AppConstant.IMAGE);
+          username = globalMyLocalPrefes.getString(AppConstant.USERNAME);
+          department = globalMyLocalPrefes.getString(AppConstant.DEPARTMENT);
+          image = globalMyLocalPrefes.getString(AppConstant.IMAGE);
         });
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
@@ -164,8 +151,8 @@ class _MyHomePageState extends State<MyHomePage> {
             getLeaveCounts();
           });
         } else {
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
@@ -192,18 +179,10 @@ class _MyHomePageState extends State<MyHomePage> {
           // backgroundColor: leaveCardcolor1,
           shadowColor: Colors.transparent,
           centerTitle: true,
-          // leading: IconButton(
-          //     icon: Icon(Icons.notifications),
-          //     color: Colors.white,
-          //     onPressed: () {
-          //       Navigator.pushNamed(context, notificationRoute);
-          //     }),
+
           actions: <Widget>[
             Padding(
-              // margin: EdgeInsets.only(left: 0),
               padding: const EdgeInsets.all(8.0),
-              // width: 50,
-              // color: Colors.pink,
               child: DropdownButton<Language>(
                 underline: SizedBox(),
                 icon: Icon(
@@ -383,15 +362,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 _cardList(
-                    "PROFILE",
+                    "MyProfile",
                     "lib/assets/images/viewProfile.png",
-                    "View your profile details",
+                    "Viewyourprofiledetails",
                     Icons.arrow_forward_ios,
                     accountRoute),
                 _cardList(
-                    "FY 2020 Holiday Sheet",
+                    "Holidays",
                     "lib/assets/images/vector-holiday.jpg",
-                    "Get holidays list of this finalcial year",
+                    "GetHolidayslistofthisfinancialyear",
                     Icons.arrow_forward_ios,
                     calendarViewRoute),
                 // _cardList(
@@ -437,8 +416,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon,
                   size: 15,
                 ),
-                title: Text(title),
-                subtitle: Text(subtitle,
+                title: Text(
+                  getTranslated(context, title),
+                ),
+                subtitle: Text(getTranslated(context, subtitle),
                     style: TextStyle(color: Color(0xFF797777), fontSize: 12.0)),
               ),
             ],
@@ -515,7 +496,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Padding(padding: EdgeInsets.only(top: 5)),
           Text(
-            title,
+            getTranslated(context, title),
             style: TextStyle(fontSize: 13, color: Colors.grey),
           ),
         ]),
@@ -523,69 +504,23 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _homeSlider(
-      String title, String leaveValues, String leaveTotal, Color bgColor) {
-    return Container(
-      decoration: BoxDecoration(
-        // shape: BoxShape.circle, // BoxShape.circle or BoxShape.retangle
-        color: leaveCardcolor1,
-      ),
-      padding: EdgeInsets.all(7),
-      child: Container(
-        width: 90,
-        height: 70,
-        padding: EdgeInsets.only(left: 10, right: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: bgColor,
-        ),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "$leaveValues / $leaveTotal",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.black),
-              ),
-              Padding(padding: EdgeInsets.only(top: 6)),
-              Container(
-                child: Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[800],
-                  ),
-                ),
-              ),
-            ]),
-      ),
-    );
-  }
-
   Widget _body() {
     Size size = MediaQuery.of(context).size;
-
 
     print('size ${size.width}');
     return Container(
       height: size.height,
       child: Column(children: [
-
         SingleChildScrollView(
           child: Container(
-
             margin: EdgeInsets.all(8),
-            height: size.height-(size.height*.30),
+            height: size.height - (size.height * .30),
             child: GridView.count(
               primary: false,
-              padding: const EdgeInsets.all(10),
-              crossAxisSpacing: size.width<350?10:20,
-              mainAxisSpacing:size.width<350?10: 20,
-              crossAxisCount: size.width<350?2: 3,
+              padding: const EdgeInsets.all(6),
+              crossAxisSpacing: size.width < 350 ? 10 : 20,
+              mainAxisSpacing: size.width < 350 ? 10 : 20,
+              crossAxisCount: size.width < 350 ? 2 : 3,
               children: getChildren(),
             ),
           ),
@@ -603,11 +538,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (getPermissionObject('My Request')?.app_view == '1') {
-      list.add(_homeGrid(
-          "My Request",
-          "lib/assets/images/homeGrid/newMyReq.png",
-          myRequestRoute,
-          getPermissionObject('My Request')?.CountItem ?? '0'));
+      list.add(_homeGrid("MyRequest", "lib/assets/images/homeGrid/newMyReq.png",
+          myRequestRoute, getPermissionObject('My Request')?.CountItem ?? '0'));
     }
 
     if (getPermissionObject('Payslip')?.app_view == '1') {
@@ -630,7 +562,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (getPermissionObject('Holiday')?.app_view == '1') {
       list.add(_homeGrid(
-          "Holiday",
+          "Holidays",
           "lib/assets/images/homeGrid/newholidays.png",
           calendarViewRoute,
           null));
@@ -656,7 +588,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (getPermissionObject('Emp Request')?.app_view == '1') {
       list.add(_homeGrid(
-          "Emp Request",
+          "EmpRequest",
           "lib/assets/images/homeGrid/newEmpReq.png",
           empRequestRoute,
           getPermissionObject('Emp Request')?.CountItem ?? '0'));
@@ -671,7 +603,8 @@ class GetToken {
     Network().check().then((intenet) async {
       if (intenet != null && intenet) {
         // sharedPreferences = await SharedPreferences.getInstance();
-        String username = globalMyLocalPrefes.getString(AppConstant.LoginGmailID);
+        String username =
+            globalMyLocalPrefes.getString(AppConstant.LoginGmailID);
         String password = globalMyLocalPrefes.getString(AppConstant.PASSWORD);
         String urname = globalMyLocalPrefes.getString(AppConstant.USERNAME);
 
@@ -683,28 +616,31 @@ class GetToken {
             "UserPassword": password
           };
 
-          http.post(uri, body: body).then((response) async{
+          http.post(uri, body: body).then((response) async {
             if (response.statusCode == 200) {
               var jsonResponse = jsonDecode(response.body);
               if (jsonResponse["StatusCode"] == 200) {
                 LoginResponse login =
                     new LoginResponse.fromJson(jsonResponse["ResultObject"][0]);
 
-               await globalMyLocalPrefes.setInt(
+                await globalMyLocalPrefes.setInt(
                     AppConstant.USER_ID.toString(), login.userId);
-              await  globalMyLocalPrefes.setString(AppConstant.EMP_ID, login.emp_no);
-               await globalMyLocalPrefes.setString(
+                await globalMyLocalPrefes.setString(
+                    AppConstant.EMP_ID, login.emp_no);
+                await globalMyLocalPrefes.setString(
                     AppConstant.ACCESS_TOKEN, login.tokenKey);
 
-               await globalMyLocalPrefes.setString(
+                await globalMyLocalPrefes.setString(
                     AppConstant.USERNAME, login.eng_fullname);
-               await globalMyLocalPrefes.setString(AppConstant.IMAGE, login.emp_photo);
-               await globalMyLocalPrefes.setString(
+                await globalMyLocalPrefes.setString(
+                    AppConstant.IMAGE, login.emp_photo);
+                await globalMyLocalPrefes.setString(
                     AppConstant.PHONENO, login.emp_mobile);
-               await globalMyLocalPrefes.setString(AppConstant.EMAIL, login.userEmail);
-               await globalMyLocalPrefes.setString(
+                await globalMyLocalPrefes.setString(
+                    AppConstant.EMAIL, login.userEmail);
+                await globalMyLocalPrefes.setString(
                     AppConstant.DEPARTMENT, login.emp_dep);
-               await  globalMyLocalPrefes .setString(
+                await globalMyLocalPrefes.setString(
                     AppConstant.COMPANY, login.emp_company);
                 return login.tokenKey;
               } else {

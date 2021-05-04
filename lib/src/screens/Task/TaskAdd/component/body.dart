@@ -1,22 +1,20 @@
 import 'dart:convert';
-
-import 'package:HRMNew/components/MyCustomDropDown.dart';
 import 'package:HRMNew/components/MyCustomFileUpload.dart';
 import 'package:HRMNew/components/MyCustomTextField.dart';
+import 'package:HRMNew/localization/localization_constants.dart';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/constants/select_single_item_dialog.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetResponsiblePerson.dart';
-import 'package:HRMNew/src/screens/Task/task.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 class Body extends StatefulWidget {
   final String title;
@@ -65,8 +63,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     });
     resPersonList.clear();
     resPerLsit.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetResponsiblePer;
     print(uri);
     Map body = {"Tokenkey": token, "lang": '2'};
@@ -93,8 +90,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             getResponsiblePerson();
           });
         } else {
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
@@ -102,8 +99,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   Future<void> _addTask(data) async {
     print(data["subject"]);
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
 
     setState(() {
       isLoading = true;
@@ -140,8 +136,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           setState(() {
             isLoading = false;
           });
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     }).catchError((onError) => {print("onError:: $onError")});
@@ -182,12 +178,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   contentPadding: EdgeInsets.only(
                                       bottom: 10.0, left: 10.0, right: 10.0),
                                   suffixIcon: Icon(Icons.keyboard_arrow_down),
-                                  labelText: 'Select Responsible Person',
+                                  labelText: getTranslated(
+                                      context, 'SelectResponsiblePerson'),
                                 ),
                                 controller: responsiblePerController,
                                 validator: (String value) {
                                   if (value.isEmpty) {
-                                    return 'Please Select Responsible Person';
+                                    return getTranslated(
+                                        context, 'SelectResponsiblePerson');
                                   } else {
                                     return null;
                                   }
@@ -195,7 +193,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 onTap: () {
                                   SelectItemDialog.showModal<String>(
                                     context,
-                                    label: "Select Responsible Person",
+                                    label: getTranslated(
+                                        context, 'SelectResponsiblePerson'),
                                     titleStyle: TextStyle(color: Colors.black),
                                     showSearchBox: false,
                                     selectedValue: respPerLable,
@@ -203,7 +202,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                     onChange: (String selected) {
                                       setState(() {
                                         respPerLable = (selected.isEmpty
-                                            ? 'Select Responsible Person'
+                                            ? getTranslated(context,
+                                                'SelectResponsiblePerson')
                                             : selected);
                                         responsiblePerController.text =
                                             respPerLable;
@@ -224,9 +224,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               ),
                             ),
                             MyCustomTextField(
-                                title: "Subject", attrName: 'subject'),
+                                title: getTranslated(context, 'Subject'),
+                                attrName: 'subject'),
                             MyCustomTextField(
-                                title: "Reason", attrName: 'reason'),
+                                title: getTranslated(context, 'Reason'),
+                                attrName: 'reason'),
                             MyCustomFileUpload(),
                           ],
                         ),
@@ -236,7 +238,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         RaisedButton(
-                            child: Text("Submit"),
+                            child: Text(getTranslated(context, 'Send')),
                             onPressed: () {
                               if (_fbKey.currentState.saveAndValidate()) {
                                 print(_fbKey.currentState.value);
@@ -244,7 +246,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               }
                             }),
                         RaisedButton(
-                            child: Text("Reset"),
+                            child: Text(getTranslated(context, 'Clear')),
                             onPressed: () {
                               _fbKey.currentState.reset();
                             })

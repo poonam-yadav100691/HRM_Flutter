@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -9,9 +9,8 @@ import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveReqDetails/my
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:intl/intl.dart';
+import 'package:toast/toast.dart';
 
 class MyOTReqDetails extends StatefulWidget {
   final String levReqDetailID;
@@ -38,20 +37,6 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
     super.initState();
     String levDetails = widget.levReqDetailID;
     _getReqDetails(levDetails);
-  }
-
-  void _onDateRangeSelect(startdate, enddate) async {
-    DateTime tempDate1 =
-    new DateFormat("MM/dd/yyyy hh:mm:ss a").parse(startdate);
-    DateTime tempDate = new DateFormat("MM/dd/yyyy hh:mm:ss a").parse(enddate);
-
-    final startDate = tempDate1;
-    final endDate = tempDate;
-    final difference = await endDate.difference(startDate).inDays;
-    setState(() {
-      totalDays = difference;
-    });
-    print(difference);
   }
 
   List<Widget> _getrequestItemObjectUI() {
@@ -86,15 +71,14 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
     myReqTitleObj.clear();
     approvedObject.clear();
     requestItemObject.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.MyLevReqDetails;
     Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
     http.post(uri, body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse---2 : $jsonResponse");
       GetLevReqDetails getLevReqDetails =
-      new GetLevReqDetails.fromJson(jsonResponse);
+          new GetLevReqDetails.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
           isLoading = false;
@@ -111,20 +95,18 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
           });
           // Future<String> token = getToken();
         } else {
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
   }
 
   Future<void> cancelMyRequest(reqID) async {
-    print("reqID66:::$reqID");
     setState(() {
       isLoading = true;
     });
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.CancelMyrequest;
     Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
     http.post(uri, body: body).then((response) {
@@ -148,8 +130,8 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
 
           // Future<String> token = getToken();
         } else {
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
@@ -195,25 +177,25 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                                 children: [
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Padding(
                                         padding:
-                                        const EdgeInsets.only(bottom: 5.0),
+                                            const EdgeInsets.only(bottom: 5.0),
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             myReqTitleObj[0].requestID != null
                                                 ? Text(
-                                              "Request No. : " +
-                                                  myReqTitleObj[0]
-                                                      .requestID,
-                                              style: new TextStyle(
-                                                  color: kRedColor,
-                                                  fontWeight:
-                                                  FontWeight.w500),
-                                            )
+                                                    "Request No. : " +
+                                                        myReqTitleObj[0]
+                                                            .requestID,
+                                                    style: new TextStyle(
+                                                        color: kRedColor,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  )
                                                 : Container(),
                                           ],
                                         ),
@@ -221,11 +203,11 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
 
                                       myReqTitleObj[0].statusText != null
                                           ? Text(
-                                        myReqTitleObj[0].statusText,
-                                        style: new TextStyle(
-                                            color: kRedColor,
-                                            fontWeight: FontWeight.w500),
-                                      )
+                                              myReqTitleObj[0].statusText,
+                                              style: new TextStyle(
+                                                  color: kRedColor,
+                                                  fontWeight: FontWeight.w500),
+                                            )
                                           : Container(),
 
                                       // totalDays.toString(),
@@ -234,39 +216,39 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
 
                                   myReqTitleObj[0].submitDate != null
                                       ? Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 5.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Date Of Request : ',
-                                          style: new TextStyle(),
-                                        ),
-                                        Text(
-                                          myReqTitleObj[0].submitDate,
-                                          style: new TextStyle(
-                                              fontWeight:
-                                              FontWeight.w500),
-                                        ),
-                                      ],
-                                    ),
-                                  )
+                                          padding: const EdgeInsets.only(
+                                              bottom: 5.0),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'Date Of Request : ',
+                                                style: new TextStyle(),
+                                              ),
+                                              Text(
+                                                myReqTitleObj[0].submitDate,
+                                                style: new TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                        )
                                       : Container(),
                                   // : Container(),
                                   myReqTitleObj[0].managerName != null
                                       ? Row(
-                                    children: [
-                                      Text(
-                                        'Manager : ',
-                                        style: new TextStyle(),
-                                      ),
-                                      Text(
-                                        myReqTitleObj[0].managerName,
-                                        style: new TextStyle(
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ],
-                                  )
+                                          children: [
+                                            Text(
+                                              'Manager : ',
+                                              style: new TextStyle(),
+                                            ),
+                                            Text(
+                                              myReqTitleObj[0].managerName,
+                                              style: new TextStyle(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        )
                                       : Container(),
                                 ],
                               ),
@@ -296,21 +278,24 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                           children: _getrequestItemObjectUI(),
                         )),
                     (myReqTitleObj[0].statusText != null &&
-                        myReqTitleObj[0].statusText == 'Pending')
+                            myReqTitleObj[0].statusText == 'Pending')
                         ? Container(
-                        padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                        child: Column(children: [
-                          getPermissionObject('My Request').app_edit=="1"?  OutlineButton(
-                            onPressed: () {
-                              cancelMyRequest(myReqTitleObj[0].requestID);
-                            },
-                            child: Text('Cancel Request',
-                                style: TextStyle(color: Colors.red)),
-                            borderSide: BorderSide(
-                              color: Colors.red,
-                            ),
-                          ):Container()
-                        ]))
+                            padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                            child: Column(children: [
+                              getPermissionObject('My Request').app_edit == "1"
+                                  ? OutlineButton(
+                                      onPressed: () {
+                                        cancelMyRequest(
+                                            myReqTitleObj[0].requestID);
+                                      },
+                                      child: Text('Cancel Request',
+                                          style: TextStyle(color: Colors.red)),
+                                      borderSide: BorderSide(
+                                        color: Colors.red,
+                                      ),
+                                    )
+                                  : Container()
+                            ]))
                         : Container(),
                   ],
                 ),
@@ -340,7 +325,6 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
     var inputDate2 = inputFormat.parse(reqItmObj.returnDate);
     var returnDate = outputFormat.format(inputDate2);
 
-    Size size = MediaQuery.of(context).size;
     return Container(
       decoration: new BoxDecoration(
         color: kWhiteColor,
@@ -375,33 +359,33 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                             padding: const EdgeInsets.only(bottom: 5.0),
                             child: reqItmObj.itemType != null
                                 ? Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Leave Type : ",
-                                  style: new TextStyle(
-                                      color: kRedColor,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                reqItmObj.itemType != null
-                                    ? Text(
-                                  reqItmObj.itemType,
-                                  style: new TextStyle(
-                                      color: kRedColor,
-                                      fontWeight: FontWeight.w500),
-                                )
-                                    : Container(),
-                                reqItmObj.requestFor != null
-                                    ? Text(
-                                  "(" + reqItmObj.itemType + ")",
-                                  style: new TextStyle(
-                                      color: kRedColor,
-                                      fontWeight: FontWeight.w500),
-                                )
-                                    : Container(),
-                              ],
-                            )
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Leave Type : ",
+                                        style: new TextStyle(
+                                            color: kRedColor,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      reqItmObj.itemType != null
+                                          ? Text(
+                                              reqItmObj.itemType,
+                                              style: new TextStyle(
+                                                  color: kRedColor,
+                                                  fontWeight: FontWeight.w500),
+                                            )
+                                          : Container(),
+                                      reqItmObj.requestFor != null
+                                          ? Text(
+                                              "(" + reqItmObj.itemType + ")",
+                                              style: new TextStyle(
+                                                  color: kRedColor,
+                                                  fontWeight: FontWeight.w500),
+                                            )
+                                          : Container(),
+                                    ],
+                                  )
                                 : Container(),
                           ),
                           Text(
@@ -413,72 +397,72 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                       ),
                       startDate != null
                           ? Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Period : ',
-                              style: new TextStyle(),
-                            ),
-                            Text(
-                              startDate + " To " + endDate,
-                              style: new TextStyle(
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      )
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Period : ',
+                                    style: new TextStyle(),
+                                  ),
+                                  Text(
+                                    startDate + " To " + endDate,
+                                    style: new TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            )
                           : Container(),
                       returnDate != null
                           ? Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Return Date :',
-                              style: new TextStyle(),
-                            ),
-                            Text(
-                              returnDate,
-                              style: new TextStyle(
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      )
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Return Date :',
+                                    style: new TextStyle(),
+                                  ),
+                                  Text(
+                                    returnDate,
+                                    style: new TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            )
                           : Container(),
                       reqItmObj.requestReason != null
                           ? Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Reason : ',
-                              style: new TextStyle(),
-                            ),
-                            Text(
-                              reqItmObj.requestReason,
-                              style: new TextStyle(
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      )
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Reason : ',
+                                    style: new TextStyle(),
+                                  ),
+                                  Text(
+                                    reqItmObj.requestReason,
+                                    style: new TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            )
                           : Container(),
                       reqItmObj.responseName != null
                           ? Row(
-                        children: [
-                          Text(
-                            'Delegation : ',
-                            style: new TextStyle(),
-                          ),
-                          Text(
-                            reqItmObj.responseName,
-                            style: new TextStyle(
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      )
+                              children: [
+                                Text(
+                                  'Delegation : ',
+                                  style: new TextStyle(),
+                                ),
+                                Text(
+                                  reqItmObj.responseName,
+                                  style: new TextStyle(
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            )
                           : Container()
                     ],
                   ),
@@ -541,7 +525,7 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                                 padding: EdgeInsets.only(bottom: 10),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Text(
@@ -574,30 +558,6 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _itemBuilder(label, textValue) {
-    return Container(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 15.0, bottom: 15),
-            child: Row(
-              children: [
-                Text(
-                  label,
-                  style: new TextStyle(fontWeight: FontWeight.w400),
-                ),
-                Text(
-                  textValue,
-                  style: new TextStyle(fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

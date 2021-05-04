@@ -1,13 +1,14 @@
 import 'dart:convert';
 
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/screens/Payslip/PayslipDesc/payslipDesc.dart';
 import 'package:HRMNew/src/screens/Payslip/component/paySlipListPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:toast/toast.dart';
 import './background.dart';
 
 class Body extends StatefulWidget {
@@ -46,8 +47,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   Future<void> _getInsurHeader() async {
     payslipList.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.PayslipList;
     Map body = {"Tokenkey": token, "lang": '2'};
     http.post(uri, body: body).then((response) async {
@@ -66,8 +66,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             _getInsurHeader();
           });
         } else {
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
@@ -76,7 +76,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   void takeAction(id) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PayslipDesc(payslipDetailID: id)),
+      MaterialPageRoute(
+          builder: (context) =>
+              PayslipDesc(payslipDetailID: id, payslipList: payslipList)),
     );
   }
 
@@ -84,11 +86,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     Size size = MediaQuery.of(context).size;
     return Container(
       padding: new EdgeInsets.only(left: 10.0, right: 10.0, top: 10),
-      // decoration: new BoxDecoration(color: Colors.blue),
-      // child: new Column(
-      //   crossAxisAlignment: CrossAxisAlignment.center,
-      //   // mainAxisSize: MainAxisSize.min,
-      //   children: [
       child: new InkWell(
         child: Card(
           child: Row(
@@ -99,8 +96,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                   children: <Widget>[
                     Center(
                       child: Container(
-                        // margin: EdgeInsets.all(10),
-                        // padding: EdgeInsets.all(10),
                         width: 50,
                         height: 50,
                         child: Center(
@@ -148,10 +143,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             style: new TextStyle(
                                 fontSize: 16.0, fontWeight: FontWeight.bold),
                           ),
-                          // Text(
-                          //   PayslipList.date,
-                          //   style: new TextStyle(fontSize: 14.0),
-                          // ), // new Placeholder(),
                         ],
                       ),
                     ),
@@ -181,17 +172,26 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     if (!isLoading) {
-    return Background(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: payslipList.map((p) {
-            return notiDetailCard(p);
-          }).toList()
-          // SizedBox(height: size.height * 0.03),
+      return Background(
+        child: payslipList.length > 0
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: payslipList.map((p) {
+                  return notiDetailCard(p);
+                }).toList()
+                // SizedBox(height: size.height * 0.03),
 
-          ),
-    );
-     } else {
+                )
+            : Container(
+                child: Text(
+                  "No payslip",
+                  textAlign: TextAlign.center,
+                  style:
+                      new TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+      );
+    } else {
       return Center(child: CircularProgressIndicator());
     }
   }

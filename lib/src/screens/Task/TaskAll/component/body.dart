@@ -65,7 +65,13 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         ),
       );
     } else {
-      return Container(child: Center(child: CircularProgressIndicator()));
+      return Container(
+          child: Center(
+        child: Text(
+          'No Task.',
+          style: TextStyle(fontSize: 20.0),
+        ),
+      ));
     }
   }
 }

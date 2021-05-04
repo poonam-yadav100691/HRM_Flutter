@@ -1,3 +1,4 @@
+import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/component/body.dart';
@@ -5,21 +6,16 @@ import 'package:flutter/material.dart';
 
 class MyOTRequest extends StatelessWidget {
   MyOTRequest(this.data);
-List<ResultObject> data;
+  List<ResultObject> data;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My OT Requests'),
+        title: Text(getTranslated(context, 'MyOTRequest')),
         shadowColor: Colors.transparent,
         centerTitle: true,
         backgroundColor: leaveCardcolor,
-
         automaticallyImplyLeading: false,
-        // title: Text(getTranslated(context, 'MyAccount')),
-        // backgroundColor: leaveCardcolor,
-        // shadowColor: Colors.transparent,
-        // centerTitle: true,
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             color: Colors.white,

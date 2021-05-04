@@ -1,6 +1,6 @@
 import 'dart:convert';
-
-import 'package:HRMNew/routes/route_names.dart';
+import 'package:HRMNew/localization/localization_constants.dart';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
@@ -9,10 +9,11 @@ import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveReqDetails/my
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+
 class Body extends StatefulWidget {
   final List<ResultObject> leaveList;
   Body({Key key, @required this.leaveList}) : super(key: key);
@@ -24,69 +25,45 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> with TickerProviderStateMixin {
   List<ResultObject> leaveList;
 
-  // var totalDays = 0;
-
   _BodyState(this.leaveList);
 
- void initState() {
-    // animationController = AnimationController(
-    //     duration: const Duration(milliseconds: 1000), vsync: this);
-   getLeaveCounts();
+  void initState() {
+    getLeaveCounts();
     super.initState();
-
   }
-  // void _onDateRangeSelect(startdate, enddate) async {
-  //   DateTime tempDate1 =
-  //       new DateFormat("MM/dd/yyyy hh:mm:ss a").parse(startdate);
-  //   DateTime tempDate = new DateFormat("MM/dd/yyyy hh:mm:ss a").parse(enddate);
-  //   print("enddate-- ${tempDate}");
-  //   print("startdate ${tempDate1}");
 
-  //   // DateTime tempDate = DateTime.parse(startdate);
-  //   // new DateFormat("MM-dd-yyyy hh:mm:ss a").parse(startdate);
-
-  //   final startDate = tempDate1;
-  //   final endDate = tempDate;
-  //   final difference = await endDate.difference(startDate).inDays;
-  //   setState(() {
-  //     totalDays = difference;
-  //   });
-  //   print(difference);
-  // }
   bool isLoading;
   String _username, firstName, lastName, username, department, image;
   Future<void> getLeaveCounts() async {
     balanceList.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.LeaveBalance;
 
     setState(() {
       isLoading = true;
     });
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) async{
+    http.post(uri, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("j&&&&&&&&&&&&&&&&&&&&&&&" + jsonResponse.toString());
       GetBalance balance = new GetBalance.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
-
         setState(() {
           isLoading = false;
-          username = sharedPreferences.getString(AppConstant.USERNAME);
-          department = sharedPreferences.getString(AppConstant.DEPARTMENT);
-          image = sharedPreferences.getString(AppConstant.IMAGE);
+          username = globalMyLocalPrefes.getString(AppConstant.USERNAME);
+          department = globalMyLocalPrefes.getString(AppConstant.DEPARTMENT);
+          image = globalMyLocalPrefes.getString(AppConstant.IMAGE);
           balanceList = balance.resultObject;
         });
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-         await GetToken().getToken().then((value) {
+          await GetToken().getToken().then((value) {
             getLeaveCounts();
           });
         } else {
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
@@ -122,7 +99,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             child: new Stack(
               children: <Widget>[
                 planetCard(context, leaveList[i]),
-                  planetThumbnail(context, leaveList[i].statusText.toLowerCase()),
+                planetThumbnail(context, leaveList[i].statusText.toLowerCase()),
               ],
             ),
           ),
@@ -130,43 +107,47 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       );
     }
     Size size = MediaQuery.of(context).size;
-    return Background(child: Container(
+    return Background(
+        child: Container(
       height: MediaQuery.of(context).size.height,
-      width:  MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width,
       child: Column(
         children: [
-
-         isLoading?Container(): Container(
-            height: size.height * 0.13,
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            decoration: BoxDecoration(
-              // shape: BoxShape.circle,
-              // BoxShape.circle or BoxShape.retangle
-              color: leaveCardcolor,
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey[800], blurRadius: 4.0, spreadRadius: 1),
-              ],
-            ),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                for (var i = 0; i < balanceList.length; i++)
-                  _homeSlider(balanceList[i].leaveName, balanceList[i].leaveUse,
-                      balanceList[i].leaveTotal, _color[i])
-              ],
-            ),
-          ),
-
+          isLoading
+              ? Container()
+              : Container(
+                  height: size.height * 0.13,
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  decoration: BoxDecoration(
+                    // shape: BoxShape.circle,
+                    // BoxShape.circle or BoxShape.retangle
+                    color: leaveCardcolor,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey[800],
+                          blurRadius: 4.0,
+                          spreadRadius: 1),
+                    ],
+                  ),
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      for (var i = 0; i < balanceList.length; i++)
+                        _homeSlider(
+                            balanceList[i].leaveName,
+                            balanceList[i].leaveUse,
+                            balanceList[i].leaveTotal,
+                            _color[i])
+                    ],
+                  ),
+                ),
           Expanded(
-            child: Container(
-                child: ListView(children: children)),
+            child: Container(child: ListView(children: children)),
           ),
         ],
       ),
     ));
   }
-
 
   var _color = [
     Colors.pink[200],
@@ -222,7 +203,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       ),
     );
   }
-
 
   Widget planetThumbnail(BuildContext context, String statusText) {
     // _onDateRangeSelect(leaveList.strDate, leaveList.endDate);
@@ -300,28 +280,17 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                       // totalDays.toString(),
                     ],
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(bottom: 5.0),
-                  //   child: Row(
-                  //     children: [
-                  //       Text(
-                  //         startDate + "  To  " + endDate,
-                  //         style: new TextStyle(fontWeight: FontWeight.w500),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   leaveList.submitDate != null
                       ? Padding(
                           padding: const EdgeInsets.only(bottom: 5.0),
                           child: Row(
                             children: [
                               Text(
-                                'Date Of Request :',
+                                getTranslated(context, 'dateofrequest'),
                                 style: new TextStyle(),
                               ),
                               Text(
-                                returnDate,
+                                " : " + returnDate,
                                 style:
                                     new TextStyle(fontWeight: FontWeight.w500),
                               ),
@@ -333,11 +302,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                       ? Row(
                           children: [
                             Text(
-                              'Manager :',
+                              getTranslated(context, 'manager'),
                               style: new TextStyle(),
                             ),
                             Text(
-                              leaveList.managerName,
+                              " : " + leaveList.managerName,
                               style: new TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ],

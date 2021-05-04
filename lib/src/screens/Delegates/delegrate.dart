@@ -22,7 +22,7 @@ class Delegate extends StatelessWidget {
           // Add your onPressed code here!
         },
         elevation: 4,
-        label: Text('Delegates'),
+        label: Text(getTranslated(context, 'Delegates')),
         icon: Icon(
           Icons.add,
         ),

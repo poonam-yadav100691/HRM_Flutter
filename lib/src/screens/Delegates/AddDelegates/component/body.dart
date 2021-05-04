@@ -1,9 +1,5 @@
 import 'dart:convert';
-
-import 'package:HRMNew/components/MyCustomDate.dart';
-import 'package:HRMNew/components/MyCustomDateRange.dart';
-import 'package:HRMNew/components/MyCustomFileUpload.dart';
-import 'package:HRMNew/components/MyCustomTextField.dart';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -11,13 +7,11 @@ import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/constants/select_single_item_dialog.dart';
 import 'package:HRMNew/src/screens/Delegates/AddDelegates/delegatePODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 class Body extends StatefulWidget {
   final String title;
@@ -69,10 +63,9 @@ class _BodyState extends State<Body> {
     });
     delPersonList.clear();
     delPerList.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.DelegatePerson;
-    print(uri);
+
     Map body = {"Tokenkey": token, "lang": '2'};
     http.post(uri, body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
@@ -91,20 +84,18 @@ class _BodyState extends State<Body> {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-            GetToken().getToken().then((value) {
-           getDelegatePerson();
+          GetToken().getToken().then((value) {
+            getDelegatePerson();
           });
-         
         } else {
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
   }
 
   String selectedDateRange = 'Select Date Range';
-
 
   dateTimeRangePicker() async {
     DateTimeRange picked = await showDateRangePicker(
@@ -120,7 +111,8 @@ class _BodyState extends State<Body> {
     );
 
     setState(() {
-      selectedDateRange = '${picked.start.toUtc().toString().substring(0,10)} to ${picked.end.toUtc().toString().substring(0,10)}';
+      selectedDateRange =
+          '${picked.start.toUtc().toString().substring(0, 10)} to ${picked.end.toUtc().toString().substring(0, 10)}';
     });
 
     _onDateRangeSelect(picked);
@@ -141,11 +133,9 @@ class _BodyState extends State<Body> {
   DateTime returndate = DateTime.now();
   bool dateSelectedreturn = false;
   final TextEditingController resoneController = new TextEditingController();
-  final TextEditingController subject =
-  new TextEditingController();
+  final TextEditingController subject = new TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
     return Background(
         child: FormBuilder(
             child: Column(
@@ -168,8 +158,7 @@ class _BodyState extends State<Body> {
                             color: Colors.grey,
                           ),
                           shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(8))),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: Text('$selectedDateRange')),
                 ),
                 Container(
@@ -177,14 +166,13 @@ class _BodyState extends State<Body> {
                     padding: EdgeInsets.all(16),
                     margin: EdgeInsets.all(8),
                     decoration: BoxDecoration(
+                        color: Colors.blueGrey[50],
                         border: Border.all(
                           color: Colors.grey,
                         ),
                         shape: BoxShape.rectangle,
-                        borderRadius:
-                        BorderRadius.all(Radius.circular(8))),
-                    child: Text(
-                        'Applying for  ${totalDays.toString()} days')),
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Text('Applying for ${totalDays.toString()} days')),
                 GestureDetector(
                   onTap: () async {
                     final DateTime pickedDate = await showDatePicker(
@@ -207,10 +195,9 @@ class _BodyState extends State<Body> {
                             color: Colors.grey,
                           ),
                           shape: BoxShape.rectangle,
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(8))),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: Text(dateSelectedreturn
-                          ? 'Return Date: ${returndate.toString().substring(0,10)}'
+                          ? 'Return Date: ${returndate.toString().substring(0, 10)}'
                           : 'Return to Work date')),
                 ),
 
@@ -278,15 +265,13 @@ class _BodyState extends State<Body> {
                       fillColor: Colors.white,
                       border: _focusNode.hasFocus
                           ? OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(5.0)),
-                          borderSide:
-                          BorderSide(color: leaveCardcolor))
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(color: leaveCardcolor))
                           : OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(5.0)),
-                          borderSide:
-                          BorderSide(color: Colors.grey)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(color: Colors.grey)),
                       filled: true,
                       contentPadding: EdgeInsets.only(
                           bottom: 10.0, left: 10.0, right: 10.0),
@@ -310,15 +295,13 @@ class _BodyState extends State<Body> {
                       fillColor: Colors.white,
                       border: _focusNode.hasFocus
                           ? OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(5.0)),
-                          borderSide:
-                          BorderSide(color: leaveCardcolor))
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(color: leaveCardcolor))
                           : OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(5.0)),
-                          borderSide:
-                          BorderSide(color: Colors.grey)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(color: Colors.grey)),
                       filled: true,
                       contentPadding: EdgeInsets.only(
                           bottom: 10.0, left: 10.0, right: 10.0),
@@ -344,88 +327,70 @@ class _BodyState extends State<Body> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width*.8,
+              width: MediaQuery.of(context).size.width * .8,
               child: RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Text("Submit",style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Text(
+                    "Submit",
+                    style: Theme.of(context).textTheme.button.copyWith(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                   color: Colors.green,
                   onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
 
+                    String token =
+                        globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
+                    int id = globalMyLocalPrefes.getInt(AppConstant.EMP_ID);
+                    String uri = Services.AddDelegate;
 
+                    Map body = {
+                      "tokenKey": token,
+                      "toEmp": '$id',
+                      "noted": "",
+                      "startDate": strDate.toString().substring(0, 10),
+                      "endDate": endDate.toString().substring(0, 10)
+                    };
 
+                    print(body);
 
+                    http.post(uri, body: body).then((response) {
+                      var jsonResponse = jsonDecode(response.body);
+                      // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+
+                      print(jsonResponse.toString());
+                      if (jsonResponse["StatusCode"] == 200) {
                         setState(() {
-                          isLoading = true;
+                          isLoading = false;
                         });
 
-                        SharedPreferences sharedPreferences =
-                            await SharedPreferences.getInstance();
-                        String token = sharedPreferences
-                            .getString(AppConstant.ACCESS_TOKEN);
-                        int id = sharedPreferences
-                            .getInt(AppConstant.EMP_ID);
-                        String  uri = Services.AddDelegate;
-
-                        Map body = {
-
-
-                            "tokenKey": token,
-                            "toEmp": '$id',
-                            "noted": "",
-                            "startDate": strDate.toString().substring(0,10),
-                            "endDate": endDate.toString().substring(0,10)
-                          };
-
-                          // "tokenKey": token,
-                          // "lang": '2',
-                          // "OTDate": date,
-                          // "stTime": selectedstartdateTime,
-                          // "endTime": selectedenddateTime,
-                          // "otTitle": subjectController.text,
-                          // "otReason": reasonController.text,
-                          // // "reasone": .text,
-                          // "empId": id,
-
-
-                        print(body);
-
-                        http.post(uri, body: body).then((response) {
-                          var jsonResponse = jsonDecode(response.body);
-                          // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
-
-                          print(jsonResponse.toString());
-                          if (jsonResponse["StatusCode"] == 200) {
-                            setState(() {
-                              isLoading = false;
-                            });
-
-                            print("j&&& $jsonResponse");
-                            Navigator.pushReplacementNamed(context,delegateRoute);
-                          } else {
-                            print(
-                                "ModelError: ${jsonResponse["ModelErrors"]}");
-                            if (jsonResponse["ModelErrors"] ==
-                                'Unauthorized') {
-                              GetToken().getToken().then((value) {});
-                              // Future<String> token = getToken();
-                            } else {
-                              // currentState.showSnackBar(
-                              //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
-                            }
-                          }
-                        });
+                        print("j&&& $jsonResponse");
+                        Navigator.pushReplacementNamed(context, delegateRoute);
+                      } else {
+                        print("ModelError: ${jsonResponse["ModelErrors"]}");
+                        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+                          GetToken().getToken().then((value) {
+                            Toast.show("Please try again!!!", context,
+                                duration: Toast.LENGTH_LONG,
+                                gravity: Toast.BOTTOM);
+                          });
+                          // Future<String> token = getToken();
+                        } else {
+                          Toast.show(
+                              "Something went wrong, please try again later.",
+                              context,
+                              duration: Toast.LENGTH_LONG,
+                              gravity: Toast.BOTTOM);
+                        }
                       }
-                  ),
+                    });
+                  }),
             ),
-            // RaisedButton(
-            //     child: Text("Reset",style: Theme.of(context).textTheme.button.copyWith(color: Colors.white,fontWeight: FontWeight.bold),),
-            //     color: Colors.red,
-            //     onPressed: () {
-            //       _fbKey.currentState.reset();
-            //     })
           ],
         ),
-        isLoading?LinearProgressIndicator():Container(),
+        isLoading ? LinearProgressIndicator() : Container(),
       ],
     )));
   }

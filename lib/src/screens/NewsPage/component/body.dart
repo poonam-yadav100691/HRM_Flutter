@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'package:HRMNew/localization/localization_constants.dart';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/screens/NewsPage/component/PODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -18,7 +20,6 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   bool isLoading = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  SharedPreferences sharedPreferences;
 
   List<ResultObject> newsLists = new List();
   bool invisible = true;
@@ -34,8 +35,7 @@ class _BodyState extends State<Body> {
   Future<void> _getNewsList() async {
     final uri = Services.GetNewsList;
     newsLists.clear();
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
 
     Map body = {"Tokenkey": token};
     http.post(uri, body: body).then((response) {
@@ -44,10 +44,9 @@ class _BodyState extends State<Body> {
 
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
-
           newsLists = newsList.resultObject;
 
-          userID = sharedPreferences.getInt(AppConstant.USER_ID.toString());
+          userID = globalMyLocalPrefes.getInt(AppConstant.USER_ID.toString());
           isLoading = false;
         });
       } else {
@@ -62,8 +61,8 @@ class _BodyState extends State<Body> {
           setState(() {
             isLoading = false;
           });
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
@@ -74,8 +73,7 @@ class _BodyState extends State<Body> {
     setState(() {
       isLoading = true;
     });
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.DelNews;
     Map body = {"Tokenkey": token, "newsID": newsID};
     http.post(uri, body: body).then((response) {
@@ -97,8 +95,8 @@ class _BodyState extends State<Body> {
             _deleteNews(newsID);
           });
         } else {
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
@@ -172,9 +170,10 @@ class _BodyState extends State<Body> {
                               onTap: () {
                                 //To show a snackbar with the UNDO button
                                 Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text("Are you sure?"),
+                                    content: Text(
+                                        getTranslated(context, "AreYouSure")),
                                     action: SnackBarAction(
-                                        label: "Yes",
+                                        label: getTranslated(context, "Yes"),
                                         onPressed: () {
                                           //To undo deletion
                                           _deleteNews(newsLists[i].newsID);
@@ -195,7 +194,7 @@ class _BodyState extends State<Body> {
             // Add your onPressed code here!
           },
           elevation: 4,
-          label: Text('News'),
+          label: Text(getTranslated(context, 'News')),
           icon: Icon(
             Icons.add,
           ),

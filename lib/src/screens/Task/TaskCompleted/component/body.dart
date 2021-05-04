@@ -25,31 +25,37 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           children: [
             Expanded(
               child: ListView.builder(
-                 itemCount:taskComList.length,
+                  itemCount: taskComList.length,
                   itemBuilder: (BuildContext context, int index) {
-                return new Card(
-                  child: new Container(
-                    padding: new EdgeInsets.all(15.0),
-                    child: new Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Text(taskComList[index].taskName),
+                    return new Card(
+                      child: new Container(
+                        padding: new EdgeInsets.all(15.0),
+                        child: new Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(taskComList[index].taskName),
+                            ),
+                            Text(taskComList[index].taskDetail),
+                          ],
                         ),
-                        Text(taskComList[index].taskDetail),
-                      ],
-                    ),
-                  ),
-                );
-              }),
+                      ),
+                    );
+                  }),
             ),
           ],
         ),
       );
     } else {
-      return Container(child: Center(child: CircularProgressIndicator()));
+      return Container(
+          child: Center(
+        child: Text(
+          'No Completed Task.',
+          style: TextStyle(fontSize: 20.0),
+        ),
+      ));
     }
   }
 }

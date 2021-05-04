@@ -1,7 +1,7 @@
 import 'dart:io';
 
 class AppConstant {
-  static final int USER_ID = 0;
+  static final String USER_ID = "userId";
   static final String EMP_ID = "0";
 
   static final String LoginGmailID = "loginGmailId";

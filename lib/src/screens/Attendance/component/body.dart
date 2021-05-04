@@ -11,8 +11,7 @@ import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
@@ -55,42 +54,40 @@ class _BodyState extends State<Body> {
         barrierDismissible: false,
         builder: (_) {
           return AlertDialog(
-            title: Text('Take Photo!!'),
+            title: Text(getTranslated(context, 'TakePic')),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text(
-                      'For completion of check-in process, you have to click photo of your work place and submit.'),
+                  Text(getTranslated(context, 'clickPictureTag')),
                 ],
               ),
             ),
             actions: [
               FlatButton(
                 onPressed: () => Navigator.pop(context, false), // passing false
-                child: Text('Cancel'),
+                child: Text(getTranslated(context, 'Cancel')),
               ),
               FlatButton(
                 onPressed: () => Navigator.pop(context, true), // passing true
-                child: Text('Ok'),
+                child: Text(getTranslated(context, 'Ok')),
               ),
             ],
           );
-        }).then((exit1) async{
+        }).then((exit1) async {
       if (exit1 == null) return;
 
       if (exit1) {
         //  await Navigator.pop(context);
 
-          imageFile = await ImagePicker.pickImage(
-              source: ImageSource.camera,imageQuality: 60);
-          if (imageFile != null) {
-
-              setState(() {
-               result1=imageFile.path;
-               pickedFile=imageFile;
-               _showSubmitBtn=true;
-              });
-            }
+        imageFile = await ImagePicker.pickImage(
+            source: ImageSource.camera, imageQuality: 60);
+        if (imageFile != null) {
+          setState(() {
+            result1 = imageFile.path;
+            pickedFile = imageFile;
+            _showSubmitBtn = true;
+          });
+        }
 
         // user pressed Yes button
       } else {
@@ -152,8 +149,8 @@ class _BodyState extends State<Body> {
    setState(() {
       isLoading = true;
     });
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.MyAttendance;
 
 
@@ -187,11 +184,14 @@ class _BodyState extends State<Body> {
         });
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          await GetToken().getToken().then((value) {
+           GetToken().getToken().then((value) {
           submitAttendance(checkinout);
           });
           
         } else {
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
         }
@@ -218,8 +218,7 @@ class _BodyState extends State<Body> {
         Container(
             // color: Colors.pink,
             padding: EdgeInsets.only(left: 15, right: 15),
-            child: Text(
-                "Make sure you are in your geofance area tomake attendance. Please note your location is recorded for this attendance.",
+            child: Text(getTranslated(context, 'attendanceTagline'),
                 style: TextStyle(color: Colors.grey[800]))),
 
         result1 != null
@@ -267,35 +266,40 @@ class _BodyState extends State<Body> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            getPermissionObject('Attendance').app_add=="1"?  Container(
-                margin: const EdgeInsets.only(top: 20.0),
-                child: RaisedButton(
-                  color: leaveCardcolor,
-                  onPressed: _isCheckinDisabled == false
-                      ? () {
-                          _determinePosition('Check-In');
-                        }
-                      : null,
-                  textColor: Colors.white,
-                  padding: const EdgeInsets.all(10.0),
-                  child: const Text('Check-In', style: TextStyle(fontSize: 25)),
-                )):Container(),
-            getPermissionObject('Attendance').app_add=="1"? Container(
-                margin: const EdgeInsets.only(top: 20.0),
-                child: RaisedButton(
-                  disabledColor: kGreyLightColor,
-                  color: leaveCardcolor,
-                  // onPressed: _isButtonDisabled ? _determinePosition : null,
-                  onPressed: _isCheckoutDisabled == false
-                      ? () {
-                          _determinePosition('Check-Out');
-                        }
-                      : null,
-                  textColor: Colors.white,
-                  padding: const EdgeInsets.all(10.0),
-                  child:
-                      const Text('Check-Out', style: TextStyle(fontSize: 25)),
-                )):Container(),
+            getPermissionObject('Attendance').app_add == "1"
+                ? Container(
+                    margin: const EdgeInsets.only(top: 20.0),
+                    child: RaisedButton(
+                      color: leaveCardcolor,
+                      onPressed: _isCheckinDisabled == false
+                          ? () {
+                              _determinePosition('Check-In');
+                            }
+                          : null,
+                      textColor: Colors.white,
+                      padding: const EdgeInsets.all(10.0),
+                      child: const Text('Check-In',
+                          style: TextStyle(fontSize: 25)),
+                    ))
+                : Container(),
+            getPermissionObject('Attendance').app_add == "1"
+                ? Container(
+                    margin: const EdgeInsets.only(top: 20.0),
+                    child: RaisedButton(
+                      disabledColor: kGreyLightColor,
+                      color: leaveCardcolor,
+                      // onPressed: _isButtonDisabled ? _determinePosition : null,
+                      onPressed: _isCheckoutDisabled == false
+                          ? () {
+                              _determinePosition('Check-Out');
+                            }
+                          : null,
+                      textColor: Colors.white,
+                      padding: const EdgeInsets.all(10.0),
+                      child: const Text('Check-Out',
+                          style: TextStyle(fontSize: 25)),
+                    ))
+                : Container(),
           ],
         ),
 
@@ -328,9 +332,7 @@ class _BodyState extends State<Body> {
             },
           ),
         ),
-
-
-        isLoading?LinearProgressIndicator():Container(),
+        isLoading ? LinearProgressIndicator() : Container(),
       ],
     )));
   }

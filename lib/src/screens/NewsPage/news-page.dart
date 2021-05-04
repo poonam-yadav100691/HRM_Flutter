@@ -19,18 +19,6 @@ class NewsPage extends StatelessWidget {
         backgroundColor: leaveCardcolor,
       ),
       body: Body(),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   onPressed: () {
-      //     Navigator.pushNamed(context, addNewsRoute);
-      //     // Add your onPressed code here!
-      //   },
-      //   elevation: 4,
-      //   label: Text('News'),
-      //   icon: Icon(
-      //     Icons.add,
-      //   ),
-      //   backgroundColor: Colors.pink,
-      // ),
     );
   }
 }

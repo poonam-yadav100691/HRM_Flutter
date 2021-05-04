@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:HRMNew/src/constants/colors.dart';
@@ -51,27 +50,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     } else {
       children.add(Container());
     }
-    Size size = MediaQuery.of(context).size;
     return Background(child: ListView(children: children));
   }
-  // Widget build(BuildContext context) {
-  //   return Background(
-
-  //       child: Column(
-  //     children: [
-  //       Padding(
-  //         padding: const EdgeInsets.all(10.0),
-  //         child: planetCard(context, "Juil", "Backend Developer", '29/09/2020'),
-  //       ),
-  //       Padding(
-  //         padding: const EdgeInsets.only(
-  //             bottom: 5.0, top: 5.0, left: 10.0, right: 10),
-  //         child:
-  //             planetCard(context, "Mike", "Front End Developer", '04/09/2020'),
-  //       ),
-  //     ],
-  //   ));
-  // }
 
   Widget planetCard(BuildContext context, name, design, date, id, empPhoto) {
     var inputFormat = DateFormat('MM/dd/yyyy HH:mm:ss a');

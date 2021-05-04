@@ -1,15 +1,13 @@
 import 'dart:convert';
-
-import 'package:HRMNew/components/MyCustomDate.dart';
-import 'package:HRMNew/components/MyCustomFileUpload.dart';
-import 'package:HRMNew/components/MyCustomTextField.dart';
+import 'package:HRMNew/localization/localization_constants.dart';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
@@ -135,14 +133,16 @@ class _BodyState extends State<Body> {
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: 'OT Start From'),
+                                      labelText: getTranslated(
+                                          context, "OTstartfrom")),
                                   initialValue:
                                       '${DateTime.now().add(Duration(minutes: 40))}',
                                   firstDate:
                                       DateTime.now().add(Duration(minutes: 40)),
                                   lastDate:
                                       DateTime.now().add(Duration(days: 8)),
-                                  dateLabelText: ' OT Start From',
+                                  dateLabelText:
+                                      getTranslated(context, "OTstartfrom"),
                                   style: Theme.of(context).textTheme.caption,
                                   onChanged: (val) {
                                     DateFormat dateFormat =
@@ -183,14 +183,16 @@ class _BodyState extends State<Body> {
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(),
                                       prefixIcon: Icon(Icons.calendar_today),
-                                      labelText: 'OT Ends On'),
+                                      labelText:
+                                          getTranslated(context, "OTendson")),
                                   initialValue:
                                       '${DateTime.now().add(Duration(minutes: 40))}',
                                   firstDate:
                                       DateTime.now().add(Duration(minutes: 40)),
                                   lastDate:
                                       DateTime.now().add(Duration(days: 8)),
-                                  dateLabelText: 'OT Ends On',
+                                  dateLabelText:
+                                      getTranslated(context, "OTendson"),
                                   style: Theme.of(context).textTheme.caption,
                                   onChanged: (val) {
                                     DateFormat dateFormat =
@@ -263,7 +265,7 @@ class _BodyState extends State<Body> {
                                 contentPadding: EdgeInsets.only(
                                     bottom: 10.0, left: 10.0, right: 10.0),
                                 // suffixIcon: Icon(Icons.keyboard_arrow_down),
-                                labelText: 'Subject',
+                                labelText: getTranslated(context, "Subject"),
                               ),
                               controller: subjectController,
                               validator: (String value) {
@@ -295,7 +297,7 @@ class _BodyState extends State<Body> {
                                 contentPadding: EdgeInsets.only(
                                     bottom: 10.0, left: 10.0, right: 10.0),
                                 // suffixIcon: Icon(Icons.keyboard_arrow_down),
-                                labelText: 'Reason',
+                                labelText: getTranslated(context, "Reason"),
                               ),
                               controller: reasonController,
                               validator: (String value) {
@@ -329,9 +331,7 @@ class _BodyState extends State<Body> {
                                 isLoading = true;
                               });
 
-                              SharedPreferences sharedPreferences =
-                                  await SharedPreferences.getInstance();
-                              String token = sharedPreferences
+                              String token = globalMyLocalPrefes
                                   .getString(AppConstant.ACCESS_TOKEN);
                               String uri = Services.AddNewOT;
 
@@ -346,7 +346,7 @@ class _BodyState extends State<Body> {
 
                               print(body);
 
-                              http.post(uri, body: body).then((response) async {
+                              http.post(uri, body: body).then((response) {
                                 var jsonResponse = jsonDecode(response.body);
                                 // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
 
@@ -363,9 +363,18 @@ class _BodyState extends State<Body> {
                                       "ModelError: ${jsonResponse["ModelErrors"]}");
                                   if (jsonResponse["ModelErrors"] ==
                                       'Unauthorized') {
-                                  await  GetToken().getToken().then((value) {});
+                                    GetToken().getToken().then((value) {
+                                      Toast.show("Please try again!!!", context,
+                                          duration: Toast.LENGTH_LONG,
+                                          gravity: Toast.BOTTOM);
+                                    });
                                     // Future<String> token = getToken();
                                   } else {
+                                    Toast.show(
+                                        "Something went wrong, please try again later.",
+                                        context,
+                                        duration: Toast.LENGTH_LONG,
+                                        gravity: Toast.BOTTOM);
                                     // currentState.showSnackBar(
                                     //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
                                   }

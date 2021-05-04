@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
@@ -14,7 +13,6 @@ import 'package:HRMNew/utils/UIhelper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -124,10 +122,10 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             "PassKey": "a486f489-76c0-4c49-8ff0-d0fdec0a162b",
             "UserName": usernameController.text.trim(),
             "UserPassword": passwordController.text.trim(),
-            "Device_token":token,
+            "Device_token": token,
           };
 
-          print('token fcm $token');
+          print('token body $token');
           http.post(uri, body: body).then((response) async {
             if (response.statusCode == 200) {
               var jsonResponse = jsonDecode(response.body);
@@ -139,17 +137,19 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 print("login.tokenKey: ${login.tokenKey}");
                 print("userId---3 : ${login.userId}");
 
-               await globalMyLocalPrefes.setInt(
+                await globalMyLocalPrefes.setInt(
                     AppConstant.USER_ID.toString(), login.userId);
 
                 await globalMyLocalPrefes.setString(
                     AppConstant.ACCESS_TOKEN, login.tokenKey);
                 await globalMyLocalPrefes.setString(
                     AppConstant.USERNAME, login.eng_fullname);
-                await globalMyLocalPrefes.setString(AppConstant.IMAGE, login.emp_photo);
+                await globalMyLocalPrefes.setString(
+                    AppConstant.IMAGE, login.emp_photo);
                 await globalMyLocalPrefes.setString(
                     AppConstant.PHONENO, login.emp_mobile);
-                await globalMyLocalPrefes.setString(AppConstant.EMAIL, login.userEmail);
+                await globalMyLocalPrefes.setString(
+                    AppConstant.EMAIL, login.userEmail);
                 await globalMyLocalPrefes.setString(
                     AppConstant.DEPARTMENT, login.emp_dep);
 
@@ -160,10 +160,13 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                     AppConstant.LoginGmailID, usernameController.text.trim());
                 await globalMyLocalPrefes.setString(
                     AppConstant.PASSWORD, passwordController.text.trim());
-                
-                // sharedPreferences.setString(AppConstant.EMP_ID, login.emp_no);
+
+                await globalMyLocalPrefes.setString(
+                    AppConstant.EMP_ID, login.emp_no);
                 print(
                     "Ge ${globalMyLocalPrefes.getInt(AppConstant.USER_ID.toString())}");
+                print(
+                    "EMP_ID ${globalMyLocalPrefes.getString(AppConstant.EMP_ID.toString())}");
 
                 setState(() {
                   _state = 2;
@@ -277,23 +280,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        // InkWell(
-                        //   child: Container(
-                        //     width: ScreenUtil.getInstance().setWidth(330),
-                        //     height: ScreenUtil.getInstance().setHeight(100),
-                        //     decoration: BoxDecoration(
-                        //         gradient: LinearGradient(colors: [
-                        //           splashScreenColorBottom,
-                        //           Color(0xFF6078ea)
-                        //         ]),
-                        //         borderRadius: BorderRadius.circular(6.0),
-                        //         boxShadow: [
-                        //           BoxShadow(
-                        //               color: Color(0xFF6078ea).withOpacity(.3),
-                        //               offset: Offset(0.0, 8.0),
-                        //               blurRadius: 8.0)
-                        //         ]),
-                        //  child:
                         ButtonTheme(
                           minWidth: 164.0,
                           height: 55.0,
@@ -310,25 +296,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
-
-                        // child: Material(
-                        //   color: Colors.transparent,
-                        //   child: InkWell(
-                        //     onTap: _handleSubmitted,
-                        //     child: Center(
-                        //       child: Text(buttonText,
-                        //           style: TextStyle(
-                        //               color: Colors.white,
-                        //               fontFamily: "Poppins-Bold",
-                        //               fontSize: 18,
-                        //               fontWeight: FontWeight.bold,
-                        //               letterSpacing: 1.0)),
-                        //     ),
-                        //   ),
-                        // ),
-
-                        //   ),
-                        // )
                       ],
                     ),
                     SizedBox(
@@ -584,14 +551,11 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     });
   }
 
-
   String token = '';
   void generateTocken() async {
-   await  Firebase.initializeApp();
+    await Firebase.initializeApp();
     token = await FirebaseMessaging().getToken();
-
   }
-
 
   Color getColor() {
     if (_state == 0) {
@@ -603,5 +567,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     } else if (_state == 3) {
       return Colors.red;
     }
+    return AppTheme.buttonAccessColor;
   }
 }

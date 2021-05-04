@@ -1,15 +1,12 @@
-import 'dart:typed_data';
-
 import 'package:HRMNew/components/approvalAction.dart';
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/empReqDetailPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
-import 'package:HRMNew/utils/UIhelper.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import './background.dart';
 import 'dart:async';
@@ -35,7 +32,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   int totalDays;
 
-    String errortext;
+  String errortext;
   _BodyState(this.data);
 
   @override
@@ -56,18 +53,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   DateTime strDate, endDate;
 
-  int _onDateRangeSelect(String startDate, String endstrDate) {
-    DateFormat format = DateFormat.yMd();
-
-    strDate = format.parse(startDate);
-    endDate = format.parse(endstrDate);
-
-    print('$strDate  $endDate ');
-    final difference = endDate.difference(strDate).inDays;
-
-    return difference;
-  }
-
   Future<void> _getEmpReqDetails(reqID) async {
     print("reqID:::$reqID");
     setState(() {
@@ -77,8 +62,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     approvedObject.clear();
     requestItemObject.clear();
 
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
+    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
 
     final uri = Services.EmpRequestDetails;
     Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
@@ -103,8 +87,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           });
           // Future<String> token = getToken();
         } else {
-          // currentState.showSnackBar(
-          //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
         setState(() {
           isLoading = false;
@@ -322,11 +306,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                           isLoading = true;
                                         });
 
-                                        SharedPreferences sharedPreferences =
-                                            await SharedPreferences
-                                                .getInstance();
                                         String token =
-                                            sharedPreferences.getString(
+                                            globalMyLocalPrefes.getString(
                                                 AppConstant.ACCESS_TOKEN);
                                         final uri = Services.RejectOT;
                                         Map body = {
@@ -358,11 +339,21 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                                 "ModelError: ${jsonResponse["ModelErrors"]}");
                                             if (jsonResponse["ModelErrors"] ==
                                                 'Unauthorized') {
-                                              Future<String> token =
-                                                  GetToken().getToken();
+                                              GetToken()
+                                                  .getToken()
+                                                  .then((value) {
+                                                Toast.show(
+                                                    "Please try again!!!",
+                                                    context,
+                                                    duration: Toast.LENGTH_LONG,
+                                                    gravity: Toast.BOTTOM);
+                                              });
                                             } else {
-                                              // .showSnackBar(
-                                              //     currentState   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+                                              Toast.show(
+                                                  "Something went wrong, please try again later.",
+                                                  context,
+                                                  duration: Toast.LENGTH_LONG,
+                                                  gravity: Toast.BOTTOM);
                                             }
                                           }
                                         });
@@ -389,9 +380,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                         isLoading = true;
                                       });
 
-                                      SharedPreferences sharedPreferences =
-                                          await SharedPreferences.getInstance();
-                                      String token = sharedPreferences
+                                      String token = globalMyLocalPrefes
                                           .getString(AppConstant.ACCESS_TOKEN);
                                       final uri = Services.ApproveOT;
                                       Map body = {
@@ -400,8 +389,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                         "requestID": myReqTitleObj[0].requestID,
                                         "approvedescription":
                                             resoneController.text ?? " ",
-                                        "approveby": sharedPreferences
-                                            .getInt(AppConstant.EMP_ID).toString(),
+                                        "approveby": globalMyLocalPrefes
+                                            .getInt(AppConstant.EMP_ID)
+                                            .toString(),
                                         "approvedescription":
                                             resoneController.text ?? " ",
                                       };
@@ -425,11 +415,18 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                               "ModelError: ${jsonResponse["ModelErrors"]}");
                                           if (jsonResponse["ModelErrors"] ==
                                               'Unauthorized') {
-                                            Future<String> token =
-                                                GetToken().getToken();
+                                            GetToken().getToken().then((value) {
+                                              Toast.show("Please try again!!!",
+                                                  context,
+                                                  duration: Toast.LENGTH_LONG,
+                                                  gravity: Toast.BOTTOM);
+                                            });
                                           } else {
-                                            // .showSnackBar(
-                                            //     currentState   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
+                                            Toast.show(
+                                                "Something went wrong, please try again later.",
+                                                context,
+                                                duration: Toast.LENGTH_LONG,
+                                                gravity: Toast.BOTTOM);
                                           }
                                         }
                                       });
@@ -485,151 +482,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       });
     }
     return list;
-  }
-
-  List<Widget> getRequestedLeaves() {
-    List<Widget> list = [];
-
-    myReqTitleObj.forEach((element) {
-      //todo pending implementation of my request
-
-      // list.add(Column(
-      //   children: [
-      //     _itemBuilder(
-      //         'Leave Type : ', element.requestType),
-      //     SizedBox(
-      //       width: size.width,
-      //       height: 1.0,
-      //       child: Container(
-      //         color: Colors.grey[300],
-      //       ),
-      //     ),
-      //     _itemBuilder('Period : ', element.dateRequest),
-      //     SizedBox(
-      //       width: size.width,
-      //       height: 1.0,
-      //       child: Container(
-      //         color: Colors.grey[300],
-      //       ),
-      //     ),
-      //     _itemBuilder('Duration : ', element.),
-      //     SizedBox(
-      //       width: size.width,
-      //       height: 1.0,
-      //       child: Container(
-      //         color: Colors.grey[300],
-      //       ),
-      //     ),
-      //     _itemBuilder(
-      //         'Note : ', "Attendance brother-in-law'\s marriage"),
-      //     SizedBox(
-      //       width: size.width,
-      //       height: 1.0,
-      //       child: Container(
-      //         color: Colors.grey[300],
-      //       ),
-      //     ),
-      //     _itemBuilder('Manager : ', 'Ta Manager'),
-      //     SizedBox(
-      //       width: size.width,
-      //       height: 1.0,
-      //       child: Container(
-      //         color: Colors.grey[300],
-      //       ),
-      //     ),
-      //     _itemBuilder(
-      //         'Leave Entry At : ', '12 Mar 2020 - 11:04 AM'),
-      //     SizedBox(
-      //       width: size.width,
-      //       height: 1.0,
-      //       child: Container(
-      //         color: Colors.grey[300],
-      //       ),
-      //     ),
-      //     Form(
-      //       key: _formKey,
-      //       child: Column(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         children: <Widget>[
-      //           Padding(
-      //             padding: const EdgeInsets.only(
-      //                 top: 10.0, bottom: 10),
-      //             child: TextFormField(
-      //               maxLines: 4,
-      //               scrollPadding: EdgeInsets.all(10),
-      //               textAlign: TextAlign.start,
-      //               decoration: new InputDecoration(
-      //                 fillColor: Colors.white,
-      //                 border: OutlineInputBorder(
-      //                     borderRadius: BorderRadius.all(
-      //                         Radius.circular(5.0)),
-      //                     borderSide:
-      //                     BorderSide(color: leaveCardcolor)),
-      //                 filled: true,
-      //                 contentPadding: EdgeInsets.only(
-      //                     bottom: 10.0,
-      //                     left: 10.0,
-      //                     right: 10.0,
-      //                     top: 16),
-      //                 labelText: "Manager Reason",
-      //               ),
-      //               validator: (value) {
-      //                 if (value.isEmpty) {
-      //                   return 'Please enter reason here..';
-      //                 }
-      //                 return null;
-      //               },
-      //             ),
-      //           ),
-      //           Row(
-      //             mainAxisAlignment:
-      //             MainAxisAlignment.spaceEvenly,
-      //             children: <Widget>[
-      //               RaisedButton(
-      //                 color: Colors.red,
-      //                 child: Text(
-      //                   'REJECT',
-      //                   textAlign: TextAlign.center,
-      //                   style: TextStyle(
-      //                       color: Colors.white,
-      //                       fontWeight: FontWeight.bold,
-      //                       fontSize: 16.0),
-      //                 ),
-      //                 onPressed: () {
-      //                   if (_formKey.currentState.validate()) {
-      //                     takeAction("Reject");
-      //                   }
-      //                 },
-      //
-      //                 ///_handleLogout()
-      //               ),
-      //               RaisedButton(
-      //                 color: Colors.green,
-      //                 child: Text(
-      //                   'APPROVE',
-      //                   textAlign: TextAlign.center,
-      //                   style: TextStyle(
-      //                       color: kWhiteColor,
-      //                       fontWeight: FontWeight.bold,
-      //                       fontSize: 16.0),
-      //                 ),
-      //                 onPressed: () {
-      //                   if (_formKey.currentState.validate()) {
-      //                     takeAction("Approve");
-      //                   }
-      //                 },
-      //               ),
-      //               // )),
-      //             ],
-      //           )
-      //         ],
-      //       ),
-      //     )
-      //     ,
-      //   ]
-      //   ,
-      // ););
-    });
   }
 }
 
