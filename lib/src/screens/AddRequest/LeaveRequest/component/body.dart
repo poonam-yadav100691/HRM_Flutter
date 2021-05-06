@@ -91,7 +91,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     endDate = dateFormat.parse(val.end.toString());
     final difference = this.endDate.difference(strDate).inDays;
     setState(() {
-      totalDays = (difference==0)?0.5:difference.toDouble();
+      totalDays = (difference==0)?selectedLeaveStartRadio==2?0.5:1:difference.toDouble();
     });
   }
 
@@ -573,10 +573,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       "strDate": selectedLeaveRadio==2?'${selecteddate.day}/${selecteddate.month}/${selecteddate.year}': '${strDate.day}/${strDate.month}/${strDate.year}',
       "endDate": selectedLeaveRadio==2?'${selecteddate.day}/${selecteddate.month}/${selecteddate.year}':'${endDate.day}/${endDate.month}/${endDate.year}' ,
       "ReturnDate":'${returndate.day}/${returndate.month}/${returndate.year}',
-      "TotalDays": totalDays==0?selectedLeaveRadio==2? '0.5':'1':totalDays.toString(),
+      "TotalDays": totalDays==0?selectedLeaveStartRadio==2? '0.5':'1':totalDays.toString(),
       "reasone": resoneController.text,
       "responsiblePersonID": respPerId,
-      "LeaveFor": selectedLeaveRadio==2?"half day":"full day",
+      "LeaveFor": selectedLeaveStartRadio==2?"half day":"full day",
     };
 
     print('$body');
