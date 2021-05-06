@@ -576,7 +576,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       "TotalDays": totalDays==0?selectedLeaveRadio==2? '0.5':'1':totalDays.toString(),
       "reasone": resoneController.text,
       "responsiblePersonID": respPerId,
-      "LeaveFor": "",
+      "LeaveFor": selectedLeaveRadio==2?"half day":"full day",
     };
 
     print('$body');
