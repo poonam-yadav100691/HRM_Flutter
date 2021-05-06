@@ -7,6 +7,7 @@ import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/constants/select_single_item_dialog.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetLeaveType.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetResponsiblePerson.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -43,19 +44,28 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   String leaveLable = "Leave";
   String leaveId;
-  int totalDays = 0;
+  double totalDays = 0;
 
   String respPerLable = "Leave";
   String respPerId;
 
-  DateTime returndate = DateTime.now();
+  DateFormat dateFormat =
+  DateFormat("yyyy-MM-dd");
+
+  DateTime returndate ;
+
   bool dateSelectedreturn = false;
 
-  DateTime selecteddate = DateTime.now();
+  DateTime selecteddate;
   bool dateSelectedselect = false;
 
   _focusListener() {
     setState(() {});
+  }
+
+  void getStartDate(){
+    selecteddate= dateFormat.parse(DateTime.now().toString());
+    returndate= dateFormat.parse(DateTime.now().toString());
   }
 
   @override
@@ -63,6 +73,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     _focusNode.addListener(_focusListener);
     getTypeOfLeave();
     getResponsiblePerson();
+    getStartDate();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     super.initState();
@@ -76,11 +87,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   DateTime strDate, endDate;
   void _onDateRangeSelect(DateTimeRange val) {
-    strDate = val.start;
-    endDate = val.end;
+    strDate =dateFormat.parse(val.start.toString()) ;
+    endDate = dateFormat.parse(val.end.toString());
     final difference = this.endDate.difference(strDate).inDays;
     setState(() {
-      totalDays = difference;
+      totalDays = (difference==0)?0.5:difference.toDouble();
     });
   }
 
@@ -232,7 +243,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   if (pickedDate != null &&
                                       pickedDate != selecteddate)
                                     setState(() {
-                                      selecteddate = pickedDate;
+                                      selecteddate = dateFormat.parse(pickedDate.toString());
                                       dateSelectedselect = true;
                                     });
                                 },
@@ -248,7 +259,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(8))),
                                     child: Text(dateSelectedselect
-                                        ? 'Selected Date: $selecteddate'
+                                        ? 'Selected Date: ${selecteddate.day}/${selecteddate.month}/${selecteddate.year}'
                                         : 'Select Date')),
                               )
                             : GestureDetector(
@@ -289,12 +300,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           onTap: () async {
                             final DateTime pickedDate = await showDatePicker(
                                 context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime(DateTime.now().year + 1));
+                                initialDate:dateFormat.parse( DateTime.now().toString()),
+                                firstDate: dateFormat.parse( DateTime.now().toString()),
+                                lastDate:dateFormat.parse( DateTime(DateTime.now().year + 1).toString()));
                             if (pickedDate != null && pickedDate != returndate)
                               setState(() {
-                                returndate = pickedDate;
+                                returndate =dateFormat.parse(pickedDate.toString()) ;
                                 dateSelectedreturn = true;
                               });
                           },
@@ -310,7 +321,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8))),
                               child: Text(dateSelectedreturn
-                                  ? 'Return Date: $returndate'
+                                  ? 'Return Date: ${returndate.day}/${returndate.month}/${returndate.year}'
                                   : getTranslated(
                                       context, "Returntoworkdate"))),
                         ),
@@ -559,12 +570,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       "TokenKey": token,
       "lang": '2',
       "LeaveTypeId": leaveId,
-      "strDate": selectedLeaveStartRadio == 2
-          ? leaveController.text
-          : strDate.toString(),
-      "endDate": endDate.toString(),
-      "ReturnDate": returnDate.toString(),
-      "TotalDays": totalDays.toString(),
+      "strDate": selectedLeaveRadio==2?'${selecteddate.day}/${selecteddate.month}/${selecteddate.year}': '${strDate.day}/${strDate.month}/${strDate.year}',
+      "endDate": selectedLeaveRadio==2?'${selecteddate.day}/${selecteddate.month}/${selecteddate.year}':'${endDate.day}/${endDate.month}/${endDate.year}' ,
+      "ReturnDate":'${returndate.day}/${returndate.month}/${returndate.year}',
+      "TotalDays": totalDays==0?selectedLeaveRadio==2? '0.5':'1':totalDays.toString(),
       "reasone": resoneController.text,
       "responsiblePersonID": respPerId,
       "LeaveFor": "",

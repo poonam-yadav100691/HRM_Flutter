@@ -101,7 +101,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                   Expanded(
                     child: Row(
                       children: [
-                        Container(
+                        object.empPhoto==null?Container():  Container(
                           padding: const EdgeInsets.only(left: 6.0),
                           child: ClipOval(
                             child: Image.memory(

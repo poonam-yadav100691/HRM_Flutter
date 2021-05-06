@@ -349,7 +349,7 @@ class _BodyState extends State<Body> {
                     Map body = {
                       "tokenKey": token,
                       "toEmp": '$id',
-                      "noted": "",
+                      "noted": resoneController.text,
                       "startDate": strDate.toString().substring(0, 10),
                       "endDate": endDate.toString().substring(0, 10)
                     };

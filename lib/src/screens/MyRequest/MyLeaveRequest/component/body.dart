@@ -113,10 +113,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       width: MediaQuery.of(context).size.width,
       child: Column(
         children: [
+
           isLoading
-              ? Container()
-              : Container(
-                  height: size.height * 0.13,
+              ?LinearProgressIndicator():Container(),
+          AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInToLinear,
+                  height: isLoading
+                      ?0:size.height * 0.13,
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   decoration: BoxDecoration(
                     // shape: BoxShape.circle,

@@ -108,7 +108,7 @@ class _CalendarViewState extends State<CalendarView>
   }
 
   void _onDaySelected(DateTime day, List events, List holidays) {
-    print('CALLBACK: _onDaySelected');
+    print('CALLBACK: _onDaySelected ${day}');
     setState(() {
       _selectedEvents = events;
     });
@@ -118,6 +118,9 @@ class _CalendarViewState extends State<CalendarView>
       DateTime first, DateTime last, CalendarFormat format) {
     print('CALLBACK: _onVisibleDaysChanged');
   }
+
+
+
 
   void _onCalendarCreated(
       DateTime first, DateTime last, CalendarFormat format) {
@@ -171,6 +174,30 @@ class _CalendarViewState extends State<CalendarView>
         List<String> eventNames=[];
         eventNames.add(element1.eventNoted);
         events[DateTime.parse(DateFormat("MM/dd/yyyy").parse(element1.eventDate.split(" ")[0]).toString())]=eventNames;
+      });
+
+    });
+
+
+    return events;
+  }
+
+
+
+  Map<DateTime, List> getCurrentMonthEvents(){
+    Map<DateTime, List> events=Map();
+    myRequestMain.resultObject.forEach((element) {
+
+      print(element.Events[0].eventDate.split(" ")[0].replaceAll('/', '-'));
+      element.Events.forEach((element1) {
+       if(        DateTime.parse(DateFormat("MM/dd/yyyy").parse(element1.eventDate.split(" ")[0]).toString()).month==DateTime.parse(DateFormat("MM/dd/yyyy").parse(DateTime.now().toString()).toString()).month) {
+         print(element1.eventDate.split(" ")[0].replaceAll('/', '-'));
+         List<String> eventNames = [];
+         eventNames.add(element1.eventNoted);
+         events[DateTime.parse(DateFormat("MM/dd/yyyy")
+             .parse(element1.eventDate.split(" ")[0])
+             .toString())] = eventNames;
+       }
       });
 
     });

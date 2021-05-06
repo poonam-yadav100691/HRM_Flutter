@@ -154,7 +154,7 @@ class _BodyState extends State<Body> {
 
                                     var formatter =
                                         new DateFormat('dd-MM-yyyy');
-                                    startTime = DateFormat('kk:mm:a')
+                                    startTime = DateFormat('kk:mm')
                                         .format(selectedstartdateTime);
                                     startDate =
                                         formatter.format(selectedstartdateTime);
@@ -199,7 +199,7 @@ class _BodyState extends State<Body> {
                                         DateFormat("yyyy-MM-dd HH:mm");
                                     DateTime dateTime = dateFormat.parse(val);
                                     selectedenddateTime = dateTime;
-                                    endTime = DateFormat('kk:mm:a')
+                                    endTime = DateFormat('kk:mm')
                                         .format(selectedenddateTime);
                                     print("date:: $startTime");
                                   },
