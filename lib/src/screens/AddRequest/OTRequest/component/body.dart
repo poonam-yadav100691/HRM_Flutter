@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
+import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
@@ -89,39 +90,6 @@ class _BodyState extends State<Body> {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
-                          // GestureDetector(
-                          //   onTap: () async {
-                          //     final DateTime pickedDate = await showDatePicker(
-                          //         context: context,
-                          //         initialDate: DateTime.now(),
-                          //         firstDate: DateTime.now(),
-                          //          onChanged: (val) {
-                          //           selectedstartdateTime = val;
-                          //         },
-                          //         lastDate: DateTime(DateTime.now().year + 1));
-                          //     if (pickedDate != null &&
-                          //         pickedDate != selecteddate)
-                          //       setState(() {
-                          //         selecteddate = pickedDate;
-                          //         dateSelectedselect = true;
-                          //       });
-                          //   },
-                          //   child: Container(
-                          //       width: MediaQuery.of(context).size.width,
-                          //       padding: EdgeInsets.all(16),
-                          //       margin: EdgeInsets.all(8),
-                          //       decoration: BoxDecoration(
-                          //           border: Border.all(
-                          //             color: Colors.grey,
-                          //           ),
-                          //           shape: BoxShape.rectangle,
-                          //           borderRadius:
-                          //               BorderRadius.all(Radius.circular(8))),
-                          //       child: Text(dateSelectedselect
-                          //           ? 'Selected OT Date : $selecteddate'
-                          //           : 'Select OT Date ')),
-                          // ),
-
                           Container(
                             child: Padding(
                               padding: const EdgeInsets.all(8),
@@ -213,38 +181,6 @@ class _BodyState extends State<Body> {
                             ),
                           ),
 
-                          // Container(
-                          //   padding: const EdgeInsets.all(9),
-                          //   child: TextFormField(
-                          //     decoration: new InputDecoration(
-                          //       fillColor: Colors.white,
-                          //       border: _focusNode.hasFocus
-                          //           ? OutlineInputBorder(
-                          //               borderRadius: BorderRadius.all(
-                          //                   Radius.circular(5.0)),
-                          //               borderSide:
-                          //                   BorderSide(color: leaveCardcolor))
-                          //           : OutlineInputBorder(
-                          //               borderRadius: BorderRadius.all(
-                          //                   Radius.circular(5.0)),
-                          //               borderSide:
-                          //                   BorderSide(color: Colors.grey)),
-                          //       filled: true,
-                          //       contentPadding: EdgeInsets.only(
-                          //           bottom: 10.0, left: 10.0, right: 10.0),
-                          //       // suffixIcon: Icon(Icons.keyboard_arrow_down),
-                          //       labelText: 'Manager',
-                          //     ),
-                          //     controller: managerController,
-                          //     validator: (String value) {
-                          //       if (value.isEmpty) {
-                          //         return 'Please Enter Manager';
-                          //       } else {
-                          //         return null;
-                          //       }
-                          //     },
-                          //   ),
-                          // ),
                           Container(
                             padding: const EdgeInsets.all(9),
                             child: TextFormField(
@@ -355,9 +291,12 @@ class _BodyState extends State<Body> {
                                   setState(() {
                                     isLoading = false;
                                   });
-
+                                  Toast.show("OT Request Added Successfully!!!",
+                                      context,
+                                      duration: Toast.LENGTH_LONG,
+                                      gravity: Toast.BOTTOM);
                                   print("j&&& $jsonResponse");
-                                  Navigator.pop(context);
+                                  Navigator.pushNamed(context, myRequestRoute);
                                 } else {
                                   print(
                                       "ModelError: ${jsonResponse["ModelErrors"]}");

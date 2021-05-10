@@ -61,6 +61,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                     );
                   }),
             ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.2,
+            )
           ],
         ),
       );

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
+import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
@@ -9,6 +10,7 @@ import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetLeaveType.dar
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetResponsiblePerson.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
@@ -49,10 +51,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   String respPerLable = "Leave";
   String respPerId;
 
-  DateFormat dateFormat =
-  DateFormat("yyyy-MM-dd");
+  DateFormat dateFormat = DateFormat("yyyy-MM-dd");
 
-  DateTime returndate ;
+  DateTime returndate;
 
   bool dateSelectedreturn = false;
 
@@ -63,9 +64,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     setState(() {});
   }
 
-  void getStartDate(){
-    selecteddate= dateFormat.parse(DateTime.now().toString());
-    returndate= dateFormat.parse(DateTime.now().toString());
+  void getStartDate() {
+    selecteddate = dateFormat.parse(DateTime.now().toString());
+    returndate = dateFormat.parse(DateTime.now().toString());
   }
 
   @override
@@ -87,11 +88,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   DateTime strDate, endDate;
   void _onDateRangeSelect(DateTimeRange val) {
-    strDate =dateFormat.parse(val.start.toString()) ;
+    strDate = dateFormat.parse(val.start.toString());
     endDate = dateFormat.parse(val.end.toString());
     final difference = this.endDate.difference(strDate).inDays;
     setState(() {
-      totalDays = (difference==0)?0.5:difference.toDouble();
+      totalDays = (difference == 0) ? 0.5 : difference.toDouble();
     });
   }
 
@@ -243,7 +244,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   if (pickedDate != null &&
                                       pickedDate != selecteddate)
                                     setState(() {
-                                      selecteddate = dateFormat.parse(pickedDate.toString());
+                                      selecteddate = dateFormat
+                                          .parse(pickedDate.toString());
                                       dateSelectedselect = true;
                                     });
                                 },
@@ -300,12 +302,17 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           onTap: () async {
                             final DateTime pickedDate = await showDatePicker(
                                 context: context,
-                                initialDate:dateFormat.parse( DateTime.now().toString()),
-                                firstDate: dateFormat.parse( DateTime.now().toString()),
-                                lastDate:dateFormat.parse( DateTime(DateTime.now().year + 1).toString()));
+                                initialDate:
+                                    dateFormat.parse(DateTime.now().toString()),
+                                firstDate:
+                                    dateFormat.parse(DateTime.now().toString()),
+                                lastDate: dateFormat.parse(
+                                    DateTime(DateTime.now().year + 1)
+                                        .toString()));
                             if (pickedDate != null && pickedDate != returndate)
                               setState(() {
-                                returndate =dateFormat.parse(pickedDate.toString()) ;
+                                returndate =
+                                    dateFormat.parse(pickedDate.toString());
                                 dateSelectedreturn = true;
                               });
                           },
@@ -531,7 +538,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final uri = Services.GetLeaveType;
     print(uri);
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) async{
+    http.post(uri, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...kk.." + jsonResponse.toString());
       GetLeaveType leave = new GetLeaveType.fromJson(jsonResponse);
@@ -548,7 +555,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-         await GetToken().getToken().then((value) {
+          await GetToken().getToken().then((value) {
             getTypeOfLeave();
           });
         } else {
@@ -570,34 +577,46 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       "TokenKey": token,
       "lang": '2',
       "LeaveTypeId": leaveId,
-      "strDate": selectedLeaveRadio==2?'${selecteddate.day}/${selecteddate.month}/${selecteddate.year}': '${strDate.day}/${strDate.month}/${strDate.year}',
-      "endDate": selectedLeaveRadio==2?'${selecteddate.day}/${selecteddate.month}/${selecteddate.year}':'${endDate.day}/${endDate.month}/${endDate.year}' ,
-      "ReturnDate":'${returndate.day}/${returndate.month}/${returndate.year}',
-      "TotalDays": totalDays==0?selectedLeaveRadio==2? '0.5':'1':totalDays.toString(),
+      "strDate": selectedLeaveRadio == 2
+          ? '${selecteddate.year}-${selecteddate.month}-${selecteddate.day}'
+          : '${strDate.year}-${strDate.month}-${strDate.day}',
+      "endDate": selectedLeaveRadio == 2
+          ? '${selecteddate.year}-${selecteddate.month}-${selecteddate.day}'
+          : '${endDate.year}-${endDate.month}-${endDate.day}',
+      "ReturnDate": '${returndate.year}-${returndate.month}-${returndate.day}',
+      "TotalDays": totalDays == 0
+          ? selectedLeaveRadio == 2
+              ? '0.5'
+              : '1'
+          : totalDays.toString(),
       "reasone": resoneController.text,
       "responsiblePersonID": respPerId,
-      "LeaveFor": selectedLeaveRadio==2?"half day":"full day",
+      "LeaveFor": selectedLeaveRadio == 2 ? "half day" : "full day",
     };
 
     print('$body');
-    http.post(uri, body: body).then((response) async{
+    http.post(uri, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
           isLoading = false;
         });
-
+        Toast.show("Leave Request Added Successfully!!!", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         print("j&&& $jsonResponse");
-        Navigator.pop(context);
+
+        Navigator.pushNamed(context, myRequestRoute);
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-         await GetToken().getToken().then((value) {
+          await GetToken().getToken().then((value) {
             _placeRequests();
           });
           // Future<String> token = getToken();
         } else {
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
         }
@@ -653,7 +672,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-         await GetToken().getToken().then((value) {
+          await GetToken().getToken().then((value) {
             getResponsiblePerson();
           });
         } else {
