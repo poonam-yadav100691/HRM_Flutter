@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> {
   final FirebaseMessaging firebaseMessaging=FirebaseMessaging.instance;
   setLocale(Locale locale) {
     setState(() {
-      print("&455&&& $locale");
+      print("&455&&& ${locale}");
       _locale = locale;
     });
   }
