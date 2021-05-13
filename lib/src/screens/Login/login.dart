@@ -349,7 +349,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   Widget formCard() {
     return new Container(
       width: double.infinity,
-      // height: 250,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),

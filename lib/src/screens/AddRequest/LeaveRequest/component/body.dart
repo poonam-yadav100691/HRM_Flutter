@@ -531,7 +531,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final uri = Services.GetLeaveType;
     print(uri);
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) async{
+    http.post(uri, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...kk.." + jsonResponse.toString());
       GetLeaveType leave = new GetLeaveType.fromJson(jsonResponse);
@@ -548,7 +548,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-         await GetToken().getToken().then((value) {
+          await GetToken().getToken().then((value) {
             getTypeOfLeave();
           });
         } else {
@@ -570,34 +570,46 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       "TokenKey": token,
       "lang": '2',
       "LeaveTypeId": leaveId,
-      "strDate": selectedLeaveRadio==2?'${selecteddate.day}/${selecteddate.month}/${selecteddate.year}': '${strDate.day}/${strDate.month}/${strDate.year}',
-      "endDate": selectedLeaveRadio==2?'${selecteddate.day}/${selecteddate.month}/${selecteddate.year}':'${endDate.day}/${endDate.month}/${endDate.year}' ,
-      "ReturnDate":'${returndate.day}/${returndate.month}/${returndate.year}',
-      "TotalDays": totalDays==0?selectedLeaveStartRadio==2? '0.5':'1':totalDays.toString(),
+      "strDate": selectedLeaveRadio == 2
+          ? '${selecteddate.year}-${selecteddate.month}-${selecteddate.day}'
+          : '${strDate.year}-${strDate.month}-${strDate.day}',
+      "endDate": selectedLeaveRadio == 2
+          ? '${selecteddate.year}-${selecteddate.month}-${selecteddate.day}'
+          : '${endDate.year}-${endDate.month}-${endDate.day}',
+      "ReturnDate": '${returndate.year}-${returndate.month}-${returndate.day}',
+      "TotalDays": totalDays == 0
+          ? selectedLeaveRadio == 2
+              ? '0.5'
+              : '1'
+          : totalDays.toString(),
       "reasone": resoneController.text,
       "responsiblePersonID": respPerId,
-      "LeaveFor": selectedLeaveStartRadio==2?"half day":"full day",
+      "LeaveFor": selectedLeaveRadio == 2 ? "half day" : "full day",
     };
 
     print('$body');
-    http.post(uri, body: body).then((response) async{
+    http.post(uri, body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
           isLoading = false;
         });
-
+        Toast.show("Leave Request Added Successfully!!!", context,
+            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         print("j&&& $jsonResponse");
-        Navigator.pop(context);
+
+        Navigator.pushNamed(context, myRequestRoute);
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-         await GetToken().getToken().then((value) {
+          await GetToken().getToken().then((value) {
             _placeRequests();
           });
           // Future<String> token = getToken();
         } else {
+          Toast.show("Something went wrong, please try again later.", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
         }

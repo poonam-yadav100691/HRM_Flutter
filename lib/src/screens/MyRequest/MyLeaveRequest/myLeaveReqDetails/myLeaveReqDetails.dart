@@ -76,10 +76,10 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
     Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
     http.post(uri, body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
-      print("Reponse---2 : $jsonResponse");
       GetLevReqDetails getLevReqDetails =
           new GetLevReqDetails.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
+        print(".requestItemObject---2 : ${getLevReqDetails.requestItemObject}");
         setState(() {
           myReqTitleObj = getLevReqDetails.requestTitleObject;
           approvedObject = getLevReqDetails.approvedObject;
@@ -138,6 +138,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
 
   @override
   Widget build(BuildContext context) {
+    print("requestItemObject[0] :: $requestItemObject");
     Size size = MediaQuery.of(context).size;
     if (!isLoading) {
       return Scaffold(
@@ -242,12 +243,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                       color: Colors.grey[300],
                                     ),
                                   ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 8),
-                                    child: Text(
-                                        'Requested For: ${(requestItemObject.isNotEmpty && requestItemObject != null) ? requestItemObject[0].requestFor : "-"}'),
-                                  ),
+                                 
                                 ],
                               ),
                             ),
@@ -322,7 +318,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
   TextEditingController resoneController = TextEditingController();
 
   Widget leaveReqItems(BuildContext context, reqItmObj) {
-    var inputFormat = DateFormat('MM/dd/yyyy HH:mm:ss a');
+    var inputFormat = DateFormat('M/d/yyyy HH:mm:ss a');
     var outputFormat = DateFormat('dd/MM/yy');
     var inputDate = inputFormat.parse(reqItmObj.strDate);
     var startDate = outputFormat.format(inputDate);
@@ -471,7 +467,13 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 ),
                               ],
                             )
-                          : Container()
+                          : Container(),
+                           Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Requested For: ${(reqItmObj != null) ? (reqItmObj.requestFor) : "-"}'),
+                                  ),
                     ],
                   ),
                 ),
