@@ -44,7 +44,7 @@ class AuthProvider with ChangeNotifier {
     };
 
     final response = await http.post(
-      url,
+     Uri.parse(url) ,
       body: body,
     );
 

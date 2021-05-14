@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
         "Tokenkey": token,
       };
 
-      http.post(uri, body: body).then((response) async {
+      http.post(Uri.parse(uri), body: body).then((response) async {
         if (response.statusCode == 200) {
           var jsonResponse = jsonDecode(response.body);
           print("permission" + jsonResponse.toString());
@@ -132,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
       isLoading = true;
     });
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("j&&&&&&&&&&&&&&&&&&&&&&&" + jsonResponse.toString());
       GetBalance balance = new GetBalance.fromJson(jsonResponse);
@@ -616,7 +616,7 @@ class GetToken {
             "UserPassword": password
           };
 
-          http.post(uri, body: body).then((response) async {
+          http.post(Uri.parse(uri), body: body).then((response) async {
             if (response.statusCode == 200) {
               var jsonResponse = jsonDecode(response.body);
               if (jsonResponse["StatusCode"] == 200) {

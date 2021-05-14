@@ -24,7 +24,7 @@ class MyOTRequest extends StatelessWidget {
             }),
       ),
       body: Body(this.data),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

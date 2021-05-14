@@ -70,7 +70,7 @@ class _AttendanceState extends State<Attendance> {
         ],
       ),
       body: Body(),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

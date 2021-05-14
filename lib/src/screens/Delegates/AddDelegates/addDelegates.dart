@@ -73,7 +73,7 @@ class _AddDelegatesState extends State<AddDelegates> {
         ],
       ),
       body: Body(),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

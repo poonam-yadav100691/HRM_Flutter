@@ -80,7 +80,7 @@ class _BodyState extends State<Body> {
       if (exit1) {
         //  await Navigator.pop(context);
 
-        imageFile = await ImagePicker.pickImage(
+         await ImagePicker.platform.pickImage(
             source: ImageSource.camera, imageQuality: 60);
         if (imageFile != null) {
           setState(() {
@@ -168,7 +168,7 @@ class _BodyState extends State<Body> {
       "checkInOut": checkinout ? "checkin" : "checkout",
       "picture": base64Image
     };
-    http.post(uri, body: body).then((response) async{
+    http.post(Uri.parse(uri), body: body).then((response) async{
       var jsonResponse = jsonDecode(response.body);
       print("Reponse : $jsonResponse");
 

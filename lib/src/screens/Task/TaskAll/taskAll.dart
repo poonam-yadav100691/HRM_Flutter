@@ -10,7 +10,7 @@ class TaskAll extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Body(taskAll: data),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

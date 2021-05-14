@@ -67,7 +67,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final uri = Services.GetResponsiblePer;
     print(uri);
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("...resPerson.." + jsonResponse.toString());
       if (jsonResponse["StatusCode"] == 200) {
@@ -117,7 +117,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     };
 
     print("j&&& $body");
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse:: $jsonResponse");
       if (jsonResponse["StatusCode"] == 200) {

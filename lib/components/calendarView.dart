@@ -27,9 +27,9 @@ class CalendarView extends StatefulWidget {
 class _CalendarViewState extends State<CalendarView>
     with TickerProviderStateMixin {
   Map<DateTime, List> _events;
-  List _selectedEvents;
+  // List _selectedEvents;
   AnimationController _animationController;
-  CalendarController _calendarController;
+  // CalendarController _calendarController;
 
   @override
   void initState() {
@@ -90,7 +90,7 @@ class _CalendarViewState extends State<CalendarView>
     // };
 
     _selectedEvents = _events[_selectedDay] ?? [];
-    _calendarController = CalendarController();
+    // _calendarController = CalendarController();
 
     _animationController = AnimationController(
       vsync: this,
@@ -103,15 +103,39 @@ class _CalendarViewState extends State<CalendarView>
   @override
   void dispose() {
     _animationController.dispose();
-    _calendarController.dispose();
+    // _calendarController.dispose();
     super.dispose();
   }
 
-  void _onDaySelected(DateTime day, List events, List holidays) {
-    print('CALLBACK: _onDaySelected ${day}');
-    setState(() {
-      _selectedEvents = events;
+  List<String> getSelectedDayEvents(DateTime selectedDate){
+    List<String> list=[];
+
+    _events.keys.forEach((element) {
+      if(element==selectedDate){
+       return _events[element];
+      }
+
     });
+
+    return list;
+  }
+
+   List<String> _selectedEvents=[];
+  DateTime _selectedDay=DateTime.now();
+  DateTime _focusedDay=DateTime.now();
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    print('CALLBACK: _onVisibleDaysSelected');
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = selectedDay;
+        _selectedEvents = getSelectedDayEvents(selectedDay);
+      });
+
+
+
+    }
   }
 
   void _onVisibleDaysChanged(
@@ -144,7 +168,39 @@ class _CalendarViewState extends State<CalendarView>
                 decoration: BoxDecoration(
                     border: Border.all(width: 1.0, color: Colors.grey[700]),
                     borderRadius: BorderRadius.all(Radius.circular(7.0))),
-                child: _buildTableCalendar()),
+                 child:isLoading?LinearProgressIndicator(): TableCalendar<String>(
+
+                   // calendarController: _calendarController,
+                   // events:isLoading?_events:getEvents(),
+                   // holidays: _holidays,
+                   focusedDay: _focusedDay,
+                   pageAnimationCurve: Curves.bounceInOut,
+                   firstDay: DateTime.utc(2021, 1, 1),
+                   lastDay: DateTime.utc(2021, 12, 31),
+                   startingDayOfWeek: StartingDayOfWeek.monday,
+                   calendarStyle: CalendarStyle(
+                     // Use `CalendarStyle` to customize the UI
+                     outsideDaysVisible: false,
+                     isTodayHighlighted: true,
+                   ),
+
+
+                   headerStyle: HeaderStyle(
+                     formatButtonTextStyle:
+                     TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
+                     formatButtonDecoration: BoxDecoration(
+                       color: Colors.deepOrange[400],
+                       borderRadius: BorderRadius.circular(16.0),
+                     ),
+                   ),
+
+                   // daysOfWeekStyle: DaysOfWeekStyle(
+                   //     weekdayStyle: TextStyle(backgroundColor: Colors.pink)),
+                   onDaySelected: _onDaySelected,
+                   // onVisibleDaysChanged: _onVisibleDaysChanged,
+                   // onCalendarCreated: _onCalendarCreated,
+                 ),
+            ),
           ),
           // _buildTableCalendarWithBuilders(),
           const SizedBox(height: 8.0),
@@ -208,153 +264,122 @@ class _CalendarViewState extends State<CalendarView>
 
 
   // Simple TableCalendar configuration (using Styles)
-  Widget _buildTableCalendar() {
-    return isLoading?LinearProgressIndicator(): TableCalendar(
-      calendarController: _calendarController,
-      events:isLoading?_events:getEvents(),
-      holidays: _holidays,
-
-      startingDayOfWeek: StartingDayOfWeek.monday,
-      calendarStyle: CalendarStyle(
-          selectedColor: Colors.deepOrange[400],
-          todayColor: Colors.deepOrange[200],
-          markersColor: Colors.grey[500],
-          markersPositionBottom: 0,
-          outsideDaysVisible: false,
-          holidayStyle: TextStyle(backgroundColor: Colors.pink, color: white)),
-      headerStyle: HeaderStyle(
-        formatButtonTextStyle:
-            TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
-        formatButtonDecoration: BoxDecoration(
-          color: Colors.deepOrange[400],
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-      ),
-
-      // daysOfWeekStyle: DaysOfWeekStyle(
-      //     weekdayStyle: TextStyle(backgroundColor: Colors.pink)),
-      onDaySelected: _onDaySelected,
-      onVisibleDaysChanged: _onVisibleDaysChanged,
-      onCalendarCreated: _onCalendarCreated,
-    );
-  }
 
   // More advanced TableCalendar configuration (using Builders & Styles)
-  Widget _buildTableCalendarWithBuilders() {
-    return TableCalendar(
-      locale: 'pl_PL',
-      calendarController: _calendarController,
-      events: _events,
-      holidays: _holidays,
-      initialCalendarFormat: CalendarFormat.month,
-      formatAnimation: FormatAnimation.slide,
-      startingDayOfWeek: StartingDayOfWeek.sunday,
-      availableGestures: AvailableGestures.all,
-      availableCalendarFormats: const {
-        CalendarFormat.month: '',
-        CalendarFormat.week: '',
-      },
-      calendarStyle: CalendarStyle(
-        outsideDaysVisible: false,
-        weekendStyle: TextStyle().copyWith(color: Colors.blue[800]),
-        holidayStyle: TextStyle().copyWith(color: Colors.blue[800]),
-      ),
-      daysOfWeekStyle: DaysOfWeekStyle(
-        weekendStyle: TextStyle().copyWith(color: Colors.blue[600]),
-      ),
-      headerStyle: HeaderStyle(
-        centerHeaderTitle: true,
-        formatButtonVisible: false,
-      ),
-      builders: CalendarBuilders(
-        selectedDayBuilder: (context, date, _) {
-          return FadeTransition(
-            opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),
-            child: Container(
-              margin: const EdgeInsets.all(4.0),
-              padding: const EdgeInsets.only(top: 5.0, left: 6.0),
-              color: Colors.deepOrange[300],
-              width: 100,
-              height: 100,
-              child: Text(
-                '${date.day}',
-                style: TextStyle().copyWith(fontSize: 16.0),
-              ),
-            ),
-          );
-        },
-        todayDayBuilder: (context, date, _) {
-          return Container(
-            margin: const EdgeInsets.all(4.0),
-            padding: const EdgeInsets.only(top: 5.0, left: 6.0),
-            color: Colors.amber[400],
-            width: 100,
-            height: 100,
-            child: Text(
-              '${date.day}',
-              style: TextStyle().copyWith(fontSize: 16.0),
-            ),
-          );
-        },
-        markersBuilder: (context, date, events, holidays) {
-          final children = <Widget>[];
+  // Widget _buildTableCalendarWithBuilders() {
+  //   return TableCalendar(
+  //     locale: 'pl_PL',
+  //     calendarController: _calendarController,
+  //     events: _events,
+  //     holidays: _holidays,
+  //     initialCalendarFormat: CalendarFormat.month,
+  //     formatAnimation: FormatAnimation.slide,
+  //     startingDayOfWeek: StartingDayOfWeek.sunday,
+  //     availableGestures: AvailableGestures.all,
+  //     availableCalendarFormats: const {
+  //       CalendarFormat.month: '',
+  //       CalendarFormat.week: '',
+  //     },
+  //     calendarStyle: CalendarStyle(
+  //       outsideDaysVisible: false,
+  //       weekendStyle: TextStyle().copyWith(color: Colors.blue[800]),
+  //       holidayStyle: TextStyle().copyWith(color: Colors.blue[800]),
+  //     ),
+  //     daysOfWeekStyle: DaysOfWeekStyle(
+  //       weekendStyle: TextStyle().copyWith(color: Colors.blue[600]),
+  //     ),
+  //     headerStyle: HeaderStyle(
+  //       centerHeaderTitle: true,
+  //       formatButtonVisible: false,
+  //     ),
+  //     builders: CalendarBuilders(
+  //       selectedDayBuilder: (context, date, _) {
+  //         return FadeTransition(
+  //           opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),
+  //           child: Container(
+  //             margin: const EdgeInsets.all(4.0),
+  //             padding: const EdgeInsets.only(top: 5.0, left: 6.0),
+  //             color: Colors.deepOrange[300],
+  //             width: 100,
+  //             height: 100,
+  //             child: Text(
+  //               '${date.day}',
+  //               style: TextStyle().copyWith(fontSize: 16.0),
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //       todayDayBuilder: (context, date, _) {
+  //         return Container(
+  //           margin: const EdgeInsets.all(4.0),
+  //           padding: const EdgeInsets.only(top: 5.0, left: 6.0),
+  //           color: Colors.amber[400],
+  //           width: 100,
+  //           height: 100,
+  //           child: Text(
+  //             '${date.day}',
+  //             style: TextStyle().copyWith(fontSize: 16.0),
+  //           ),
+  //         );
+  //       },
+  //       markersBuilder: (context, date, events, holidays) {
+  //         final children = <Widget>[];
+  //
+  //         if (events.isNotEmpty) {
+  //           children.add(
+  //             Positioned(
+  //               right: 1,
+  //               bottom: 1,
+  //               child: _buildEventsMarker(date, events),
+  //             ),
+  //           );
+  //         }
+  //
+  //         if (holidays.isNotEmpty) {
+  //           children.add(
+  //             Positioned(
+  //               right: -2,
+  //               top: -2,
+  //               child: _buildHolidaysMarker(),
+  //             ),
+  //           );
+  //         }
+  //
+  //         return children;
+  //       },
+  //     ),
+  //     onDaySelected: (selectedDay, focusedDay) {
+  //       // _onDaySelected(date, events, holidays);
+  //       _animationController.forward(from: 0.0);
+  //     },
+  //     onCalendarCreated: _onCalendarCreated,
+  //   );
+  // }
 
-          if (events.isNotEmpty) {
-            children.add(
-              Positioned(
-                right: 1,
-                bottom: 1,
-                child: _buildEventsMarker(date, events),
-              ),
-            );
-          }
-
-          if (holidays.isNotEmpty) {
-            children.add(
-              Positioned(
-                right: -2,
-                top: -2,
-                child: _buildHolidaysMarker(),
-              ),
-            );
-          }
-
-          return children;
-        },
-      ),
-      onDaySelected: (date, events, holidays) {
-        _onDaySelected(date, events, holidays);
-        _animationController.forward(from: 0.0);
-      },
-      onVisibleDaysChanged: _onVisibleDaysChanged,
-      onCalendarCreated: _onCalendarCreated,
-    );
-  }
-
-  Widget _buildEventsMarker(DateTime date, List events) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: _calendarController.isSelected(date)
-            ? Colors.brown[500]
-            : _calendarController.isToday(date)
-                ? Colors.brown[300]
-                : Colors.blue[400],
-      ),
-      width: 16.0,
-      height: 16.0,
-      child: Center(
-        child: Text(
-          '${events.length}',
-          style: TextStyle().copyWith(
-            color: Colors.white,
-            fontSize: 12.0,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildEventsMarker(DateTime date, List events) {
+  //   return AnimatedContainer(
+  //     duration: const Duration(milliseconds: 300),
+  //     decoration: BoxDecoration(
+  //       shape: BoxShape.rectangle,
+  //       color: _calendarController.isSelected(date)
+  //           ? Colors.brown[500]
+  //           : _calendarController.isToday(date)
+  //               ? Colors.brown[300]
+  //               : Colors.blue[400],
+  //     ),
+  //     width: 16.0,
+  //     height: 16.0,
+  //     child: Center(
+  //       child: Text(
+  //         '${events.length}',
+  //         style: TextStyle().copyWith(
+  //           color: Colors.white,
+  //           fontSize: 12.0,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildHolidaysMarker() {
     return Icon(
@@ -435,7 +460,7 @@ class _CalendarViewState extends State<CalendarView>
       "lang": '2',
       "yearView": dateParse.year.toString()
     };
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print(response.body);
       MyRequestsCalender myRequest =

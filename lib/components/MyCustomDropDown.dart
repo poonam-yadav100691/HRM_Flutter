@@ -36,11 +36,11 @@ class _MyCustomDropDownState extends State<MyCustomDropDown> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: FormBuilderDropdown(
-        attribute: "gender",
+        name: "gender",
 
         // initialValue: 'Male',
         // hint: Text('Select Responsible Person..'),
-        validators: [FormBuilderValidators.required()],
+        // validator: [FormBuilderValidators.required()],
         items: ['Male', 'Female', 'Other']
             .map((gender) =>
                 DropdownMenuItem(value: gender, child: Text("$gender")))

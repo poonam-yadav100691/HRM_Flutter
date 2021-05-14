@@ -10,7 +10,7 @@ class TaskPending extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Body(taskPenList: data),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

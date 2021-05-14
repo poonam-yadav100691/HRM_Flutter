@@ -43,7 +43,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       isLoading = true;
     });
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) async {
+    http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("j&&&&&&&&&&&&&&&&&&&&&&&" + jsonResponse.toString());
       GetBalance balance = new GetBalance.fromJson(jsonResponse);

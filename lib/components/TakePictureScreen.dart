@@ -105,7 +105,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
              var file = File(path);
             if (file != null) {
               print("helo");
-              await _controller.takePicture(path);
+              await _controller.takePicture();
               base64Encode(file.readAsBytesSync());
               var base64Image = base64Encode(file.readAsBytesSync());
               print("Imageee::: ${base64Image}");

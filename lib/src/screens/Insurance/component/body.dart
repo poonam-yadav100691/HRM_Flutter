@@ -46,7 +46,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.InsuranceHeader;
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) async {
+    http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       InsuHeaderData insuranceHeaderLst =
           new InsuHeaderData.fromJson(jsonResponse);
@@ -58,7 +58,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         print("DDDDDDD--->>>${insuHeader.toString()}");
 
         final uri1 = Services.InsuranceDetail;
-        http.post(uri1, body: body).then((response) async {
+        http.post(Uri.parse(uri1), body: body).then((response) async {
           var jsonResponse = jsonDecode(response.body);
           InsuranceDetails insuranceDetailsLst =
               new InsuranceDetails.fromJson(jsonResponse);

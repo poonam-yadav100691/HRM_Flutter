@@ -23,7 +23,7 @@ class OTRequest extends StatelessWidget {
             }),
       ),
       body: Body(),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

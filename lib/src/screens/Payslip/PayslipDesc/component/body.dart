@@ -65,7 +65,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
     final uri1 = Services.PayslipDetails;
     print(uri1);
-    http.post(uri1, body: body).then((response) async {
+    http.post(Uri.parse(uri1), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       PayslipDetails payslipDetailsLst =
           new PayslipDetails.fromJson(jsonResponse);

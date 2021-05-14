@@ -42,7 +42,7 @@ class _MyCustomTextFieldState extends State<MyCustomTextField> {
         autocorrect: false,
 
         focusNode: _focusNode,
-        attribute: widget.attrName,
+        name: widget.attrName,
         style: TextStyle(color: Colors.black),
         decoration: new InputDecoration(
           fillColor: Colors.white,
@@ -58,7 +58,7 @@ class _MyCustomTextFieldState extends State<MyCustomTextField> {
               EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
           labelText: widget.title,
         ),
-        validators: [FormBuilderValidators.required()],
+        // validators: [FormBuilderValidators.required()],
         // validators: [widget.validator],
         onChanged: _onChanged,
         // onSaved: (String newValue) {

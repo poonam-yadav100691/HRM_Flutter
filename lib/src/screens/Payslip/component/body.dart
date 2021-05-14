@@ -50,7 +50,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.PayslipList;
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) async {
+    http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       PayslipList payslipLists = new PayslipList.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {

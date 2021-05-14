@@ -17,7 +17,7 @@ class _TaskState extends State<Task> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Body(),
-        resizeToAvoidBottomPadding: true,
+
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             Navigator.pushNamed(context, addTaskRoute);

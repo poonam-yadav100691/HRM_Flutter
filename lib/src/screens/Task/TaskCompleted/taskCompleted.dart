@@ -9,7 +9,7 @@ class TaskCompleted extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Body(taskComList: data),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

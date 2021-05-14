@@ -38,7 +38,7 @@ class _BodyState extends State<Body> {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
 
     Map body = {"Tokenkey": token};
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       News newsList = new News.fromJson(jsonResponse);
 
@@ -76,7 +76,7 @@ class _BodyState extends State<Body> {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.DelNews;
     Map body = {"Tokenkey": token, "newsID": newsID};
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse---44432222 : $jsonResponse");
 

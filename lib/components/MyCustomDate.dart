@@ -37,7 +37,7 @@ class _MyCustomDateState extends State<MyCustomDate> {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: FormBuilderDateTimePicker(
-          attribute: "date",
+          name: "date",
           inputType: InputType.date,
           format: DateFormat("dd-MM-yyyy"),
           // initialValue: DateTime.now(),

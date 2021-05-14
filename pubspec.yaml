@@ -25,31 +25,32 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  shared_preferences: ^0.5.6+2
-  provider: ^3.0.0
-  flutter_spinkit: ^4.1.2+1
-  flutter_screenutil: ^0.4.2
-  sliding_up_panel: ^1.0.2
-  back_button_interceptor: ^4.3.1
-  url_launcher: ^5.7.2
-  double_back_to_close_app: ^1.2.0
-  flutter_form_builder: ^3.12.0
-  table_calendar: ^2.3.0
-  connectivity: ^0.4.8+1
+  shared_preferences: ^2.0.5
+  provider: ^5.0.0
+  flutter_spinkit: ^5.0.0
+  flutter_screenutil: ^5.0.0+2
+  sliding_up_panel: ^2.0.0+1
+  back_button_interceptor: ^5.0.0
+  url_launcher: ^6.0.3
+  double_back_to_close_app: ^2.0.1
+  flutter_form_builder: ^6.0.0
+  table_calendar: ^3.0.0
+  connectivity: ^3.0.3
   toast: ^0.1.5
-  select_dialog: ^1.2.1
-  firebase_analytics: ^7.0.1
-  firebase_core: ^0.7.0
-  firebase_messaging: ^8.0.0-dev.14
-  flutter_local_notifications: ^3.0.3
-  intl: ^0.16.1
-  image_picker: ^0.6.7+7
+  select_dialog: ^2.0.0
+  firebase_analytics: ^8.0.4
+  firebase_core: ^1.1.1
+  firebase_messaging: ^9.1.4
+  flutter_local_notifications: ^5.0.0+4
+  intl: ^0.17.0
+  image_picker: ^0.7.5
   # file_picker: ^2.0.10
-  date_time_picker: ^1.0.2
+  date_time_picker: ^2.0.0
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
-  geolocator: ^6.1.12
+  geolocator: ^7.0.3
   camera:
   path_provider:
   path:
@@ -57,7 +58,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  change_app_package_name: ^0.1.2
+  change_app_package_name: ^1.0.0
 
 #dependency_overrides:
 #  intl: ^0.16.1

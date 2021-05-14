@@ -37,7 +37,7 @@ class _BodyState extends State<Body> {
     Map body = {"Tokenkey": token};
 
     print('req ${body.toString()}');
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       DelegateList delegate = new DelegateList.fromJson(jsonResponse);
       print("j&&&jsonResponse $jsonResponse");

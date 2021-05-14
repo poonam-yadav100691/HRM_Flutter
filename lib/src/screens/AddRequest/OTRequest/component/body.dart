@@ -8,6 +8,7 @@ import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -282,7 +283,7 @@ class _BodyState extends State<Body> {
 
                               print(body);
 
-                              http.post(uri, body: body).then((response) {
+                              http.post(  Uri.parse(uri) , body: body).then((response) {
                                 var jsonResponse = jsonDecode(response.body);
                                 // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
 

@@ -23,7 +23,7 @@ class AddNews extends StatelessWidget {
             }),
       ),
       body: Body(),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

@@ -88,7 +88,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
-          width: ScreenUtil.getInstance().setWidth(120),
+          width: 120,
           height: 1.0,
           color: Colors.black26.withOpacity(.2),
         ),
@@ -126,7 +126,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           };
 
           print('token body $token');
-          http.post(uri, body: body).then((response) async {
+          http.post(Uri.parse(uri), body: body).then((response) async {
             if (response.statusCode == 200) {
               var jsonResponse = jsonDecode(response.body);
               print("Reponse---2 : $jsonResponse");
@@ -145,7 +145,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 await globalMyLocalPrefes.setString(
                     AppConstant.USERNAME, login.eng_fullname);
                 await globalMyLocalPrefes.setString(
-                    AppConstant.IMAGE, login.emp_photo);
+                    AppConstant.IMAGE, login.emp_photo??"");
                 await globalMyLocalPrefes.setString(
                     AppConstant.PHONENO, login.emp_mobile);
                 await globalMyLocalPrefes.setString(
@@ -210,13 +210,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     Size size = MediaQuery.of(context).size;
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
-    ScreenUtil.instance =
-        ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
     return new Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
-      resizeToAvoidBottomPadding: true,
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -236,7 +232,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         SizedBox(
-                          width: ScreenUtil.getInstance().setWidth(40),
+                          width: 40,
                         ),
                         Expanded(
                           child: Column(
@@ -249,7 +245,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                       fontFamily: "Poppins-Bold",
                                       color: leaveCardcolor,
                                       fontSize:
-                                          ScreenUtil.getInstance().setSp(90),
+                                          40,
                                       letterSpacing: .6,
                                       fontWeight: FontWeight.bold)),
                               Text("Human Resource Management System",
@@ -258,7 +254,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                       fontFamily: "Poppins-Bold",
                                       color: leaveCardcolor1,
                                       fontSize:
-                                          ScreenUtil.getInstance().setSp(30),
+                                          24,
                                       letterSpacing: 0.2,
                                       fontWeight: FontWeight.bold)),
                             ],
@@ -299,7 +295,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                       ],
                     ),
                     SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(40),
+                      height: 40,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -314,10 +310,10 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                       ],
                     ),
                     SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(40),
+                      height: 40,
                     ),
                     SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(30),
+                      height: 30,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -372,11 +368,11 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
               Text("Login",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: ScreenUtil.getInstance().setSp(40),
+                      fontSize: 24,
                       fontFamily: "Poppins-Bold",
                       letterSpacing: .6)),
               SizedBox(
-                height: ScreenUtil.getInstance().setHeight(30),
+                height:30,
               ),
               Container(
                 height: 55,
@@ -441,7 +437,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                           color: dashBoardColor,
                           fontWeight: FontWeight.w500,
                           fontFamily: "Poppins-Medium",
-                          fontSize: ScreenUtil.getInstance().setSp(28)),
+                          fontSize: 24),
                     )
                   ],
                 ),
@@ -553,7 +549,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   String token = '';
   void generateTocken() async {
     await Firebase.initializeApp();
-    token = await FirebaseMessaging().getToken();
+    token = await FirebaseMessaging.instance.getToken();
   }
 
   Color getColor() {

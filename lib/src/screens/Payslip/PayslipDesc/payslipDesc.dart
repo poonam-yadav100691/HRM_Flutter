@@ -78,7 +78,7 @@ class _PayslipDescState extends State<PayslipDesc> {
         ],
       ),
       body: Body(data: payslipDetailID, payslipList: payslipList),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

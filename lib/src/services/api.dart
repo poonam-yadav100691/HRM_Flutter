@@ -47,7 +47,7 @@ class ApiService {
     }
 
     final response = await http.get(
-      url,
+      Uri.parse(url),
       headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
     );
 

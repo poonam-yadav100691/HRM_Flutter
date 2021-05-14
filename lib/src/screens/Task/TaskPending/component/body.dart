@@ -67,7 +67,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       "taskID": taskPenList[index].taskID,
       "CompleteStatus": "true"
     };
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
@@ -186,7 +186,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.DeleteTask;
     Map body = {"Tokenkey": token, "taskID": index, "lang": '2'};
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse---44432222 : $jsonResponse");
 

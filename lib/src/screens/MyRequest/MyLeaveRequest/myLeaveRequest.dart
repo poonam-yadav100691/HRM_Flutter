@@ -26,7 +26,7 @@ class MyLeaveRequest extends StatelessWidget {
             }),
       ),
       body: Body(leaveList: data),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

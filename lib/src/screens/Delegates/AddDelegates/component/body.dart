@@ -67,7 +67,7 @@ class _BodyState extends State<Body> {
     final uri = Services.DelegatePerson;
 
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("js.." + jsonResponse.toString());
       Delegates resPerson = new Delegates.fromJson(jsonResponse);
@@ -356,7 +356,7 @@ class _BodyState extends State<Body> {
 
                     print(body);
 
-                    http.post(uri, body: body).then((response) {
+                    http.post(Uri.parse(uri), body: body).then((response) {
                       var jsonResponse = jsonDecode(response.body);
                       // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
 

@@ -65,7 +65,7 @@ class _BodyState extends State<Body> {
 
     Map body1 = bodyFinal;
 
-    http.post(uri, body: body1).then((response) {
+    http.post(Uri.parse(uri), body: body1).then((response) {
       var jsonResponse = jsonDecode(response.body);
 
       if (jsonResponse["StatusCode"] == 200) {
@@ -124,12 +124,11 @@ class _BodyState extends State<Body> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: FormBuilderTextField(
-                                    attribute: 'newsContent',
+                                    name: 'newsContent',
+
                                     minLines: 1,
                                     maxLines: 5,
-                                    validators: [
-                                      FormBuilderValidators.required()
-                                    ],
+
                                     keyboardType: TextInputType.multiline,
                                     decoration: InputDecoration(
                                       hintText: getTranslated(

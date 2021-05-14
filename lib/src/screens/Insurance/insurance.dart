@@ -70,7 +70,7 @@ class _InsuranceState extends State<Insurance> {
         ],
       ),
       body: Body(),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

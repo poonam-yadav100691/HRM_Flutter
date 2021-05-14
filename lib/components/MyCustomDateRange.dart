@@ -41,7 +41,7 @@ class _MyCustomDateRangeState extends State<MyCustomDateRange> {
           firstDate: DateTime.now().subtract(Duration(days: 356)),
           lastDate: DateTime.now().add(Duration(days: 356)),
           format: DateFormat('dd MMM yyyy'),
-          attribute: widget.attrName,
+          name: widget.attrName,
           decoration: new InputDecoration(
             fillColor: Colors.white,
             border: _focusNode.hasFocus

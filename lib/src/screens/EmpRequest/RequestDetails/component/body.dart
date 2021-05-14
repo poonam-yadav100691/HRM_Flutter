@@ -67,7 +67,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final uri = Services.EmpRequestDetails;
     Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
 
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("R2 : $jsonResponse");
       EmpReqDetails getLevReqDetails = new EmpReqDetails.fromJson(jsonResponse);
@@ -321,7 +321,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
                                         print('$body');
                                         http
-                                            .post(uri, body: body)
+                                            .post(Uri.parse(uri), body: body)
                                             .then((response) {
                                           var jsonResponse =
                                               jsonDecode(response.body);
@@ -398,7 +398,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
                                       print('$body');
                                       http
-                                          .post(uri, body: body)
+                                          .post(Uri.parse(uri), body: body)
                                           .then((response) {
                                         var jsonResponse =
                                             jsonDecode(response.body);

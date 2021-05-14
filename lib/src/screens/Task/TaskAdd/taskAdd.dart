@@ -73,7 +73,7 @@ class _TaskAddState extends State<TaskAdd> {
         ],
       ),
       body: Body(),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }

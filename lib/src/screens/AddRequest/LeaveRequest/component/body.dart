@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
+import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
@@ -9,6 +10,8 @@ import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetLeaveType.dar
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetResponsiblePerson.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
@@ -531,7 +534,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final uri = Services.GetLeaveType;
     print(uri);
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) async {
+    http.post(  Uri.parse(uri) , body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...kk.." + jsonResponse.toString());
       GetLeaveType leave = new GetLeaveType.fromJson(jsonResponse);
@@ -588,7 +591,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     };
 
     print('$body');
-    http.post(uri, body: body).then((response) async {
+    http.post(  Uri.parse(uri) , body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
@@ -647,7 +650,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetResponsiblePer;
     Map body = {"Tokenkey": token, "lang": '2'};
-    http.post(uri, body: body).then((response) async {
+    http.post(  Uri.parse(uri) , body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...resPerson.." + jsonResponse.toString());
       GetResponsiblePerson resPerson =

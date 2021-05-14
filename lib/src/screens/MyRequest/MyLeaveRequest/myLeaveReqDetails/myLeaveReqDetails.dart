@@ -74,7 +74,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.MyLevReqDetails;
     Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       GetLevReqDetails getLevReqDetails =
           new GetLevReqDetails.fromJson(jsonResponse);
@@ -108,7 +108,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.CancelMyrequest;
     Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
-    http.post(uri, body: body).then((response) {
+    http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse---44432222 : $jsonResponse");
 

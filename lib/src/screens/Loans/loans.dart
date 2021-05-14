@@ -73,7 +73,7 @@ class _LoansState extends State<Loans> {
         ],
       ),
       body: Body(),
-      resizeToAvoidBottomPadding: true,
+
     );
   }
 }
