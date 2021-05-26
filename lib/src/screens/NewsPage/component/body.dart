@@ -21,7 +21,7 @@ class _BodyState extends State<Body> {
   bool isLoading = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  List<ResultObject> newsLists = new List();
+  List<ResultObject> newsLists = [];
   bool invisible = true;
   int userID;
 
@@ -44,7 +44,7 @@ class _BodyState extends State<Body> {
 
       if (jsonResponse["StatusCode"] == 200) {
         setState(() {
-          newsLists = newsList.resultObject;
+          newsLists = newsList.resultObject??[];
 
           userID = globalMyLocalPrefes.getInt(AppConstant.USER_ID.toString());
           isLoading = false;
@@ -110,7 +110,7 @@ class _BodyState extends State<Body> {
         backgroundColor: Colors.white,
         // resizeToAvoidBottomPadding: true,
         body: Background(
-            child: ListView.builder(
+            child:newsLists.isEmpty?Center(child: Text('No Data Found'),): ListView.builder(
                 itemCount: newsLists.length,
                 padding: EdgeInsets.only(top: 8),
                 scrollDirection: Axis.vertical,

@@ -117,7 +117,7 @@ class _MyAppState extends State<MyApp> {
   final FirebaseMessaging firebaseMessaging=FirebaseMessaging.instance;
   setLocale(Locale locale) async{
 
-    if(_locale=='en_US'){
+    if(_locale.languageCode=='en'){
       await  globalMyLocalPrefes.setString(AppConstant.LANG, '2');
     }else{
       await  globalMyLocalPrefes.setString(AppConstant.LANG, '1');

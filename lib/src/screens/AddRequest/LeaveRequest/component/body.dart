@@ -588,6 +588,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final uri = Services.GetLeaveType;
     print(uri);
     Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    print("value" + body.toString());
     http.post(  Uri.parse(uri) , body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...kk.." + jsonResponse.toString());
