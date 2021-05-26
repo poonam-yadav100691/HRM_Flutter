@@ -95,6 +95,7 @@ class RequestItemObject {
   String endDate;
   String returnDate;
   String requestFor;
+  String RequestFor;
   String requestReason;
   String managerName;
   String LeaveName;
@@ -107,6 +108,7 @@ class RequestItemObject {
       this.strDate,
       this.endDate,
       this.LeaveName,
+      this.RequestFor,
       this.returnDate,
       this.requestFor,
       this.managerName,
@@ -120,6 +122,7 @@ class RequestItemObject {
     strDate = json['strDate'];
     LeaveName = json['LeaveName'];
     endDate = json['endDate'];
+    RequestFor = json['RequestFor'];
     managerName = json['managerName'];
     returnDate = json['returnDate'];
     requestFor = json['requestFor'];
@@ -134,6 +137,7 @@ class RequestItemObject {
     data['duration'] = this.duration;
     data['LeaveName'] = this.LeaveName;
     data['strDate'] = this.strDate;
+    data['RequestFor'] = this.RequestFor;
     data['managerName'] = this.managerName;
     data['endDate'] = this.endDate;
     data['returnDate'] = this.returnDate;

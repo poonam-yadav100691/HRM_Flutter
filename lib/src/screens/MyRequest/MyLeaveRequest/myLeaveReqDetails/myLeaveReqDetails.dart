@@ -175,8 +175,10 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                         ],
                       ),
                       child: Container(
+                        padding: EdgeInsets.all(16),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(bottom: 10.0),
@@ -297,20 +299,20 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Requested For: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestFor : "-"}'),
+                                  'Requested For: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemType : "-"}'),
                             ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Requested Type: ${requestItemObject.isNotEmpty ? requestItemObject[0].LeaveName : "-"}'),
-                            ),
+                            // SizedBox(
+                            //   width: size.width,
+                            //   height: 1.0,
+                            //   child: Container(
+                            //     color: Colors.grey[300],
+                            //   ),
+                            // ),
+                            // Padding(
+                            //   padding: const EdgeInsets.symmetric(vertical: 8),
+                            //   child: Text(
+                            //       'Requested Type: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemType : "-"}'),
+                            // ),
 
 
                           ],

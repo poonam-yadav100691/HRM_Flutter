@@ -171,13 +171,15 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                         ],
                       ),
                       child: Container(
+                        padding: EdgeInsets.all(16),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Column(
-                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                               Padding(
                               padding: const EdgeInsets.only(bottom: 10.0),

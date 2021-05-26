@@ -66,7 +66,7 @@ class _BodyState extends State<Body> {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.DelegatePerson;
 
-    Map body = {"Tokenkey": token, "lang": '2'};
+    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("js.." + jsonResponse.toString());

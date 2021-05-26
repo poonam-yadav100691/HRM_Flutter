@@ -186,7 +186,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.DeleteTask;
-    Map body = {"Tokenkey": token, "taskID": index, "lang": '2'};
+    Map body = {"Tokenkey": token, "taskID": index, "lang":globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse---44432222 : $jsonResponse");

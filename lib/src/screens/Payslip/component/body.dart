@@ -49,7 +49,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     payslipList.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.PayslipList;
-    Map body = {"Tokenkey": token, "lang": '2'};
+    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
     http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       PayslipList payslipLists = new PayslipList.fromJson(jsonResponse);

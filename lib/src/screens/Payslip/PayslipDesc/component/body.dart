@@ -60,7 +60,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     });
     payslipDetails.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
-    Map body = {"Tokenkey": token, "salaryID": id, "lang": '2'};
+    Map body = {"Tokenkey": token, "salaryID": id, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
     print(body);
 
     final uri1 = Services.PayslipDetails;
