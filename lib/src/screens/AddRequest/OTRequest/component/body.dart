@@ -70,6 +70,7 @@ class _BodyState extends State<Body> {
   DateTime selecteddate = DateTime.now();
   bool dateSelectedselect = false;
   DateTime selectedenddateTime = DateTime.now().add(Duration(minutes: 40));
+
   DateTime selectedstartdateTime = DateTime.now().add(Duration(minutes: 40));
 
   bool isLoading = true;
@@ -274,9 +275,11 @@ class _BodyState extends State<Body> {
 
                               Map body = {
                                 "tokenKey": token,
-                                "OTDate": startDate,
-                                "stTime": startTime,
-                                "endTime": endTime,
+                                "OTDate": startDate==null?'${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}':startDate,
+                                "stTime": startTime==null? DateFormat('kk:mm')
+                                  .format(selectedenddateTime):startTime,
+                                "endTime": endTime==null? DateFormat('kk:mm')
+                                    .format(selectedenddateTime):endTime,
                                 "otTitle": subjectController.text,
                                 "otReason": reasonController.text,
                               };

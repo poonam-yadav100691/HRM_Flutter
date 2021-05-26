@@ -247,6 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var formatter = new DateFormat('E, dd MMM yyyy');
     String formattedDate = formatter.format(now);
     if (image != null) {
+      print('image data $image');
       bytes = Base64Codec().decode(image);
     }
 

@@ -123,7 +123,7 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
     });
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.EmpRequest;
-    Map body = {"Tokenkey": token, "lang": '2'};
+    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2};
     http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       EmpRequestList myRequest = new EmpRequestList.fromJson(jsonResponse);

@@ -74,7 +74,7 @@ class CustomRouter {
       case requestDetailsRoute:
         return MaterialPageRoute(builder: (_) => RequestDetails());
       case calendarViewRoute:
-        return MaterialPageRoute(builder: (_) => CalendarView());
+        return MaterialPageRoute(builder: (_) => CalendarViewMain());
 
       case rulesRoute:
         return MaterialPageRoute(builder: (_) => RulesPage());

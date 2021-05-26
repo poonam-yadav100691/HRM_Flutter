@@ -19,6 +19,7 @@ class AppConstant {
   static final String EMAIL = "userEmail";
   static final String DEPARTMENT = "departname";
   static final String COMPANY = "company";
+  static final String LANG = "language";
 
   static final String REFRESHTOKEN = "refreshToken";
 

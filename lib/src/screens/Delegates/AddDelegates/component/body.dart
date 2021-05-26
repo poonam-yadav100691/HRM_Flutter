@@ -343,12 +343,12 @@ class _BodyState extends State<Body> {
 
                     String token =
                         globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
-                    int id = globalMyLocalPrefes.getInt(AppConstant.EMP_ID);
+                    String id = globalMyLocalPrefes.getString(AppConstant.EMP_ID);
                     String uri = Services.AddDelegate;
 
                     Map body = {
                       "tokenKey": token,
-                      "toEmp": '$id',
+                      "toEmp": '$delPerId',
                       "noted": resoneController.text,
                       "startDate": strDate.toString().substring(0, 10),
                       "endDate": endDate.toString().substring(0, 10)

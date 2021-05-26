@@ -1,5 +1,6 @@
 import 'package:HRMNew/routes/custome_router.dart';
 import 'package:HRMNew/routes/route_names.dart';
+import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -114,9 +115,16 @@ class _MyAppState extends State<MyApp> {
   FirebaseAnalyticsObserver(analytics: analytics);
 
   final FirebaseMessaging firebaseMessaging=FirebaseMessaging.instance;
-  setLocale(Locale locale) {
+  setLocale(Locale locale) async{
+
+    if(_locale=='en_US'){
+      await  globalMyLocalPrefes.setString(AppConstant.LANG, '2');
+    }else{
+      await  globalMyLocalPrefes.setString(AppConstant.LANG, '1');
+    }
     setState(() {
       print("&455&&& ${locale}");
+
       _locale = locale;
     });
   }

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyOTReqDetails extends StatefulWidget {
   final String levReqDetailID;
@@ -73,20 +74,23 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
     requestItemObject.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.MyLevReqDetails;
-    Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
+    Map body = {"Tokenkey": token, "requestID": reqID, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2};
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse---2 : $jsonResponse");
       GetLevReqDetails getLevReqDetails =
           new GetLevReqDetails.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
+
+
+
+          myReqTitleObj = getLevReqDetails.requestTitleObject;
+          approvedObject = getLevReqDetails.approvedObject;
+          requestItemObject = getLevReqDetails.requestItemObject;
+
         setState(() {
           isLoading = false;
         });
-
-        myReqTitleObj = getLevReqDetails.requestTitleObject;
-        approvedObject = getLevReqDetails.approvedObject;
-        requestItemObject = getLevReqDetails.requestItemObject;
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
@@ -108,7 +112,7 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
     });
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.CancelMyrequest;
-    Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
+    Map body = {"Tokenkey": token, "requestID": reqID, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2};
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse---44432222 : $jsonResponse");
@@ -151,7 +155,7 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
               SingleChildScrollView(
                 child: Column(
                   children: [
-                    Container(
+                  isLoading?LinearProgressIndicator(): Container(
                       // width: MediaQuery.of(context).size.width * 0.88,
                       margin: new EdgeInsets.all(10),
                       decoration: new BoxDecoration(
@@ -175,81 +179,194 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                               child: Column(
                                 // crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 5.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            myReqTitleObj[0].requestID != null
-                                                ? Text(
-                                                    "Request No. : " +
-                                                        myReqTitleObj[0]
-                                                            .requestID,
-                                                    style: new TextStyle(
-                                                        color: kRedColor,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  )
-                                                : Container(),
-                                          ],
-                                        ),
+                              Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  // Icon(Icons.arrow_back_ios),
+                                  Container(
+                                    padding: const EdgeInsets.only(left: 5.0),
+                                    child: ClipOval(
+                                      child: Image.asset(
+                                        "lib/assets/images/profile.jpg",
+                                        height: 47,
+                                        width: 47,
                                       ),
-
-                                      myReqTitleObj[0].statusText != null
-                                          ? Text(
-                                              myReqTitleObj[0].statusText,
-                                              style: new TextStyle(
-                                                  color: kRedColor,
-                                                  fontWeight: FontWeight.w500),
-                                            )
-                                          : Container(),
-
-                                      // totalDays.toString(),
-                                    ],
+                                    ),
                                   ),
-
-                                  myReqTitleObj[0].submitDate != null
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 5.0),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                'Date Of Request : ',
-                                                style: new TextStyle(),
-                                              ),
-                                              Text(
-                                                myReqTitleObj[0].submitDate,
-                                                style: new TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
+                                  Expanded(
+                                    child: Padding(
+                                      padding:
+                                      const EdgeInsets.only(left: 15.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(globalMyLocalPrefes.getString(AppConstant.USERNAME),
+                                              style: TextStyle(
+                                                  fontSize: 19.0,
+                                                  fontWeight: FontWeight.bold)),
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets.only(top: 8.0),
+                                            child: Text(
+                                                globalMyLocalPrefes.getString(AppConstant.DEPARTMENT),
+                                                style:
+                                                TextStyle(fontSize: 14.0)),
                                           ),
-                                        )
-                                      : Container(),
-                                  // : Container(),
-                                  myReqTitleObj[0].managerName != null
-                                      ? Row(
-                                          children: [
-                                            Text(
-                                              'Manager : ',
-                                              style: new TextStyle(),
-                                            ),
-                                            Text(
-                                              myReqTitleObj[0].managerName,
-                                              style: new TextStyle(
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ],
-                                        )
-                                      : Container(),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: Icon(Icons.phone),
+                                    ),
+                                    onTap: () => launch(
+                                        "tel://" + globalMyLocalPrefes.getString(AppConstant.PHONENO)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Request No.: ${myReqTitleObj[0].requestID}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Request Status: ${myReqTitleObj[0].statusText}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Manager: ${ myReqTitleObj.isNotEmpty ? myReqTitleObj[0].managerName : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Requested For: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].requestType : "-"}'),
+                            ),
+
+
+
+                            // Row(
+                            //         mainAxisAlignment:
+                            //             MainAxisAlignment.spaceBetween,
+                            //         children: [
+                            //           Padding(
+                            //             padding:
+                            //                 const EdgeInsets.only(bottom: 5.0),
+                            //             child: Row(
+                            //               mainAxisAlignment:
+                            //                   MainAxisAlignment.spaceBetween,
+                            //               children: [
+                            //                 myReqTitleObj[0].requestID != null
+                            //                     ? Text(
+                            //                         "Request No. : " +
+                            //                             myReqTitleObj[0]
+                            //                                 .requestID,
+                            //                         style: new TextStyle(
+                            //                             color: kRedColor,
+                            //                             fontWeight:
+                            //                                 FontWeight.w500),
+                            //                       )
+                            //                     : Container(),
+                            //               ],
+                            //             ),
+                            //           ),
+                            //
+                            //           myReqTitleObj[0].statusText != null
+                            //               ? Text(
+                            //                   myReqTitleObj[0].statusText,
+                            //                   style: new TextStyle(
+                            //                       color: kRedColor,
+                            //                       fontWeight: FontWeight.w500),
+                            //                 )
+                            //               : Container(),
+                            //
+                            //           // totalDays.toString(),
+                            //         ],
+                            //       ),
+                            //
+                            //       myReqTitleObj[0].submitDate != null
+                            //           ? Padding(
+                            //               padding: const EdgeInsets.only(
+                            //                   bottom: 5.0),
+                            //               child: Row(
+                            //                 children: [
+                            //                   Text(
+                            //                     'Date Of Request : ',
+                            //                     style: new TextStyle(),
+                            //                   ),
+                            //                   Text(
+                            //                     myReqTitleObj[0].submitDate,
+                            //                     style: new TextStyle(
+                            //                         fontWeight:
+                            //                             FontWeight.w500),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             )
+                            //           : Container(),
+                            //       // : Container(),
+                            //       myReqTitleObj[0].managerName != null
+                            //           ? Row(
+                            //               children: [
+                            //                 Text(
+                            //                   'Manager : ',
+                            //                   style: new TextStyle(),
+                            //                 ),
+                            //                 Text(
+                            //                   myReqTitleObj[0].managerName,
+                            //                   style: new TextStyle(
+                            //                       fontWeight: FontWeight.w500),
+                            //                 ),
+                            //               ],
+                            //             )
+                            //           : Container(),
                                 ],
                               ),
                             ),
@@ -257,7 +374,7 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                         ),
                       ),
                     ),
-                    Container(
+                    requestItemObject == null?Container():  Container(
                       width: size.width * .9,
                       margin: EdgeInsets.only(top: 10),
                       child: Text(

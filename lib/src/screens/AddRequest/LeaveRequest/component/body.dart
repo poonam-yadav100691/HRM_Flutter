@@ -88,13 +88,13 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  DateTime strDate, endDate;
-  void _onDateRangeSelect(DateTimeRange val) {
-    strDate =dateFormat.parse(val.start.toString()) ;
-    endDate = dateFormat.parse(val.end.toString());
+  DateTime strDate, endDate,endStartDate;
+  void _onDateRangeSelect() {
+    // strDate =dateFormat.parse(val.start.toString()) ;
+    // endDate = dateFormat.parse(val.end.toString());
     final difference = this.endDate.difference(strDate).inDays;
     setState(() {
-      totalDays = (difference==0)?selectedLeaveStartRadio==2?0.5:1:difference.toDouble();
+      totalDays = (difference==0)?selectedLeaveStartRadio==2?1:1:difference.toDouble();
     });
   }
 
@@ -243,10 +243,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                           firstDate: DateTime.now(),
                                           lastDate: DateTime(
                                               DateTime.now().year + 1));
-                                  if (pickedDate != null &&
-                                      pickedDate != selecteddate)
+                                  if (pickedDate != null )
                                     setState(() {
                                       selecteddate = dateFormat.parse(pickedDate.toString());
+
                                       dateSelectedselect = true;
                                     });
                                 },
@@ -265,23 +265,75 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                         ? 'Selected Date: ${selecteddate.day}/${selecteddate.month}/${selecteddate.year}'
                                         : 'Select Date')),
                               )
-                            : GestureDetector(
-                                onTap: () {
-                                  dateTimeRangePicker();
-                                },
-                                child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    padding: EdgeInsets.all(16),
-                                    margin: EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                        ),
-                                        shape: BoxShape.rectangle,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(8))),
-                                    child: Text('$selectedDateRange')),
+                            : Container(
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async{
+
+                                      final DateTime pickedDate =  await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                      firstDate: DateTime.now(),
+                                      lastDate:DateTime.now().add(Duration(days: 120)));
+                                      if (pickedDate != null)
+                                      setState(() {
+                                      strDate = dateFormat.parse(pickedDate.toString());
+                                      endStartDate=strDate;
+
+                                      });
+                                      // dateTimeRangePicker();
+                                    },
+                                    child: Container(
+                                        width: MediaQuery.of(context).size.width,
+                                        padding: EdgeInsets.all(16),
+                                        margin: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey,
+                                            ),
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8))),
+                                        child: strDate==null? Text('Select Start Date'):Text('${strDate.day}/${strDate.month}/${strDate.year}')),
+                                  ),
+
+                                  GestureDetector(
+                                    onTap: ()async {
+                                      // dateTimeRangePicker();
+                                      final DateTime pickedDate =  await showDatePicker(
+                                          context: context,
+                                          initialDate: endStartDate,
+                                      firstDate: endStartDate,
+                                      lastDate: DateTime(
+                                          endStartDate.year + 1));
+                                      if (pickedDate != null &&
+                                      pickedDate != selecteddate)
+                                      setState(() {
+                                      endDate = dateFormat.parse(pickedDate.toString());
+                                        selectedDateRange =
+                                        '${strDate.day}/${strDate.month}/${strDate.year}  To  ${endDate.day}/${endDate.month}/${endDate.year}';
+
+                                      });
+                                      _onDateRangeSelect();
+                                    },
+                                    child: Container(
+                                        width: MediaQuery.of(context).size.width,
+                                        padding: EdgeInsets.all(16),
+                                        margin: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey,
+                                            ),
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8))),
+                                        child:endDate==null? Text('Select End Date'):Text('${endDate.day}/${endDate.month}/${endDate.year}')),
+                                  ),
+
+                                ],
                               ),
+                            ),
 
                         selectedLeaveRadio == 2
                             ? Container()
@@ -303,8 +355,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                           onTap: () async {
                             final DateTime pickedDate = await showDatePicker(
                                 context: context,
-                                initialDate:dateFormat.parse( DateTime.now().toString()),
-                                firstDate: dateFormat.parse( DateTime.now().toString()),
+                                initialDate: selectedLeaveRadio == 1
+                                    ?endDate.add(Duration(days: 1)):  dateFormat.parse( DateTime.now().toString()),
+                                firstDate:selectedLeaveRadio == 1
+                                    ?endDate.add(Duration(days: 1)):  dateFormat.parse( DateTime.now().toString()),
                                 lastDate:dateFormat.parse( DateTime(DateTime.now().year + 1).toString()));
                             if (pickedDate != null && pickedDate != returndate)
                               setState(() {
@@ -533,7 +587,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetLeaveType;
     print(uri);
-    Map body = {"Tokenkey": token, "lang": '2'};
+    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2};
     http.post(  Uri.parse(uri) , body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...kk.." + jsonResponse.toString());
@@ -571,7 +625,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final uri = Services.AddNewLeave;
     Map body = {
       "TokenKey": token,
-      "lang": '2',
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2,
       "LeaveTypeId": leaveId,
       "strDate": selectedLeaveRadio == 2
           ? '${selecteddate.year}-${selecteddate.month}-${selecteddate.day}'
@@ -580,11 +634,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           ? '${selecteddate.year}-${selecteddate.month}-${selecteddate.day}'
           : '${endDate.year}-${endDate.month}-${endDate.day}',
       "ReturnDate": '${returndate.year}-${returndate.month}-${returndate.day}',
-      "TotalDays": totalDays == 0
-          ? selectedLeaveRadio == 2
+      "TotalDays":selectedLeaveRadio == 2
               ? '0.5'
-              : '1'
-          : totalDays.toString(),
+              : '$totalDays',
       "reasone": resoneController.text,
       "responsiblePersonID": respPerId,
       "LeaveFor": selectedLeaveRadio == 2 ? "half day" : "full day",
@@ -620,26 +672,26 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     });
   }
 
-  dateTimeRangePicker() async {
-    DateTimeRange picked = await showDateRangePicker(
-      initialEntryMode: DatePickerEntryMode.input,
-      context: context,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 1),
-      initialDateRange: DateTimeRange(
-        end: DateTime(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day + 13),
-        start: DateTime.now(),
-      ),
-    );
-
-    setState(() {
-      selectedDateRange =
-          '${picked.start.day}/${picked.start.month}/${picked.start.year}  To  ${picked.end.day}/${picked.end.month}/${picked.end.year}';
-    });
-
-    _onDateRangeSelect(picked);
-  }
+  // dateTimeRangePicker() async {
+  //   DateTimeRange picked = await showDateRangePicker(
+  //     initialEntryMode: DatePickerEntryMode.input,
+  //     context: context,
+  //     firstDate: DateTime.now(),
+  //     lastDate: DateTime(DateTime.now().year + 1),
+  //     initialDateRange: DateTimeRange(
+  //       end: DateTime(
+  //           DateTime.now().year, DateTime.now().month, DateTime.now().day + 13),
+  //       start: DateTime.now(),
+  //     ),
+  //   );
+  //
+  //   setState(() {
+  //     selectedDateRange =
+  //         '${picked.start.day}/${picked.start.month}/${picked.start.year}  To  ${picked.end.day}/${picked.end.month}/${picked.end.year}';
+  //   });
+  //
+  //   // _onDateRangeSelect(picked);
+  // }
 
   Future<void> getResponsiblePerson() async {
     setState(() {
@@ -649,7 +701,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     resPerLsit.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetResponsiblePer;
-    Map body = {"Tokenkey": token, "lang": '2'};
+    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2};
     http.post(  Uri.parse(uri) , body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...resPerson.." + jsonResponse.toString());

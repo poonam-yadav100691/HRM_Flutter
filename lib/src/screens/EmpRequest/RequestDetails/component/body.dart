@@ -65,7 +65,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
 
     final uri = Services.EmpRequestDetails;
-    Map body = {"Tokenkey": token, "requestID": reqID, "lang": '2'};
+    Map body = {"Tokenkey": token, "requestID": reqID, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2};
 
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
@@ -312,7 +312,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                         final uri = Services.RejectOT;
                                         Map body = {
                                           "TokenKey": token,
-                                          "lang": '2',
+                                          "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2,
                                           "requestID":
                                               myReqTitleObj[0].requestID,
                                           "rejectDescription":
@@ -385,12 +385,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                       final uri = Services.ApproveOT;
                                       Map body = {
                                         "TokenKey": token,
-                                        "lang": '2',
+                                        "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2,
                                         "requestID": myReqTitleObj[0].requestID,
                                         "approvedescription":
                                             resoneController.text ?? " ",
                                         "approveby": globalMyLocalPrefes
-                                            .getInt(AppConstant.EMP_ID)
+                                            .getString(AppConstant.EMP_ID)
                                             .toString(),
                                         "approvedescription":
                                             resoneController.text ?? " ",

@@ -127,6 +127,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
           print('token body $token');
           http.post(Uri.parse(uri), body: body).then((response) async {
+            print(response.body);
             if (response.statusCode == 200) {
               var jsonResponse = jsonDecode(response.body);
               print("Reponse---2 : $jsonResponse");
@@ -181,7 +182,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                   buttonText = 'RETRY';
                 });
                 _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
-                    "Something wnet wrong.. Please try again later."));
+                    "Something went wrong.. Please try again later."));
               }
             } else {
               print("response.statusCode.." + response.statusCode.toString());
