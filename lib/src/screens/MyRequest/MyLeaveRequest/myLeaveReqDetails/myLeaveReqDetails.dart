@@ -251,6 +251,18 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
+                                  'Request ID: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemID : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
                                   'Duration: ${requestItemObject.isNotEmpty ? requestItemObject[0].duration : "-"} days'),
                             ),
                             SizedBox(
@@ -272,6 +284,32 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 color: Colors.grey[300],
                               ),
                             ),
+
+                            // Padding(
+                            //   padding: const EdgeInsets.symmetric(vertical: 8),
+                            //   child: Text(
+                            //       'Period: ${requestItemObject.isNotEmpty ? requestItemObject[0].strDate : "-"}'),
+                            // ),
+                            // SizedBox(
+                            //   width: size.width,
+                            //   height: 1.0,
+                            //   child: Container(
+                            //     color: Colors.grey[300],
+                            //   ),
+                            // ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Return Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].returnDate : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
@@ -296,11 +334,76 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 color: Colors.grey[300],
                               ),
                             ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Submit Date: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].submitDate : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+
+
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
                                   'Requested For: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemType : "-"}'),
                             ),
+
+                            ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ):Container(),
+
+                            ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Aproved Date: ${approvedObject.isNotEmpty ? approvedObject[0].approvedDate : "-"}'),
+                            ):Container(),
+                            ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ):Container(),
+
+
+                            ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'ApprovedName Name: ${approvedObject.isNotEmpty ? approvedObject[0].approvedName : "-"}'),
+                            ):Container(),
+                            ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ):Container(),
+
+                            ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Comment: ${approvedObject.isNotEmpty ? approvedObject[0].comment : "-"}'),
+                            ):Container(),
+                            ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ):Container(),
+
                             // SizedBox(
                             //   width: size.width,
                             //   height: 1.0,

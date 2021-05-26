@@ -88,7 +88,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
-          width: 120,
+          width: 100,
           height: 1.0,
           color: Colors.black26.withOpacity(.2),
         ),
@@ -311,11 +311,11 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                       ],
                     ),
                     SizedBox(
-                      height: 40,
+                      height: 24,
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
+                    // SizedBox(
+                    //   height: 30,
+                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[

@@ -25,7 +25,7 @@ class MyLeaveRequest extends StatelessWidget {
               Navigator.pop(context);
             }),
       ),
-      body: Body(leaveList: data),
+      body:(data.isNotEmpty && data!=null)? Body(leaveList:data):Center(child: Text('No Data Dound'),),
 
     );
   }

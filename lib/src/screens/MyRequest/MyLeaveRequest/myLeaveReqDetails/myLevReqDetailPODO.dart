@@ -157,12 +157,14 @@ class RequestTitleObject {
   String statusText;
   String fileName;
   String attachedFile;
+  String SubmitDate;
 
   RequestTitleObject(
       {this.requestID,
       this.requestNo,
       this.requestType,
       this.managerName,
+      this.SubmitDate,
       this.submitDate,
       this.statusText,
       this.fileName,
@@ -172,6 +174,7 @@ class RequestTitleObject {
     requestID = json['RequestID'];
     requestNo = json['RequestNo'];
     requestType = json['RequestType'];
+    SubmitDate = json['SubmitDate'];
     managerName = json['managerName'];
     submitDate = json['SubmitDate'];
     statusText = json['statusText'];
@@ -185,6 +188,7 @@ class RequestTitleObject {
     data['RequestNo'] = this.requestNo;
     data['RequestType'] = this.requestType;
     data['managerName'] = this.managerName;
+    data['SubmitDate'] = this.SubmitDate;
     data['SubmitDate'] = this.submitDate;
     data['statusText'] = this.statusText;
     data['fileName'] = this.fileName;

@@ -23,7 +23,7 @@ class MyOTRequest extends StatelessWidget {
               Navigator.pop(context);
             }),
       ),
-      body: Body(this.data),
+      body:(data.isNotEmpty && data!=null)? Body(this.data):Center(child: Text('No Data Dound'),),
 
     );
   }
