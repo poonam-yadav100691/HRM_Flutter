@@ -83,11 +83,9 @@ class _CalendarViewMainState extends State<CalendarViewMain>
             DateTime(today.year, today.month, today.day, 9, 0, 0);
             final DateTime endTime = DateTime(
                 today.year, today.month, today.day, 18, 0, 0);
-
             meetings.add(Meeting(
                 element2.eventNoted, startTime, endTime, Colors.red, true));
           });
-
     });
 
 
