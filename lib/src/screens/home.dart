@@ -97,9 +97,12 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {
               // listOfPermission1 = _permissions;
               listOfPermission = _permissions;
+              username = globalMyLocalPrefes.getString(AppConstant.USERNAME);
+              department =
+                  globalMyLocalPrefes.getString(AppConstant.DEPARTMENT);
+              image = globalMyLocalPrefes.getString(AppConstant.IMAGE);
+              isLoading = false;
             });
-
-            getLeaveCounts();
           } else {
             print("ModelError: ${jsonResponse["ModelErrors"]}");
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
@@ -110,52 +113,27 @@ class _MyHomePageState extends State<MyHomePage> {
               _scaffoldKey.currentState.showSnackBar(
                   UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
             }
+
+            setState(() {
+              isLoading = false;
+            });
           }
         } else {
+          setState(() {
+            isLoading = false;
+          });
           print("response.statusCode.." + response.statusCode.toString());
           _scaffoldKey.currentState.showSnackBar(UIhelper.showSnackbars(
-              "Something wnet wrong.. Please try again later."));
+              "Something went wrong.. Please try again later."));
         }
       });
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       print("Error: $e");
       return (e);
     }
-  }
-
-  Future<void> getLeaveCounts() async {
-    balanceList.clear();
-    String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
-    final uri = Services.LeaveBalance;
-
-    setState(() {
-      isLoading = true;
-    });
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
-    http.post(Uri.parse(uri), body: body).then((response) {
-      var jsonResponse = jsonDecode(response.body);
-      print("j&&&&&&&&&&&&&&&&&&&&&&&" + jsonResponse.toString());
-      GetBalance balance = new GetBalance.fromJson(jsonResponse);
-      if (jsonResponse["StatusCode"] == 200) {
-        balanceList = balance.resultObject;
-        setState(() {
-          isLoading = false;
-          username = globalMyLocalPrefes.getString(AppConstant.USERNAME);
-          department = globalMyLocalPrefes.getString(AppConstant.DEPARTMENT);
-          image = globalMyLocalPrefes.getString(AppConstant.IMAGE);
-        });
-      } else {
-        print("ModelError: ${jsonResponse["ModelErrors"]}");
-        if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-          GetToken().getToken().then((value) {
-            getLeaveCounts();
-          });
-        } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-        }
-      }
-    });
   }
 
   void _changeLanguage(Language language) async {
@@ -247,7 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var formatter = new DateFormat('E, dd MMM yyyy');
     String formattedDate = formatter.format(now);
     if (image != null) {
-      print('image data $image');
+      print('image data ');
       bytes = Base64Codec().decode(image);
     }
 
