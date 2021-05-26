@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:HRMNew/components/TakePictureScreen.dart';
 import 'package:HRMNew/localization/localization_constants.dart';
@@ -31,7 +32,7 @@ class _BodyState extends State<Body> {
   StreamSubscription<Position> _positionStreamSubscription;
   bool _isCheckinDisabled, _isCheckoutDisabled, _showSubmitBtn;
   String result1;
-  File pickedFile;
+  PickedFile pickedFile;
   Position position;
 
   bool isChecking=globalMyLocalPrefes.getBool('isChecking')??false;
@@ -48,7 +49,7 @@ class _BodyState extends State<Body> {
 
 
   Image img;
-  File imageFile;
+  PickedFile imageFile;
   Future<void> _showMyDialog(serviceRequestText) async {
     return showDialog(
         context: context,
@@ -80,7 +81,7 @@ class _BodyState extends State<Body> {
       if (exit1) {
         //  await Navigator.pop(context);
 
-         await ImagePicker.platform.pickImage(
+        imageFile=  await ImagePicker().getImage(
             source: ImageSource.camera, imageQuality: 60);
         if (imageFile != null) {
           setState(() {
@@ -156,8 +157,10 @@ class _BodyState extends State<Body> {
 
 
 
-   base64Encode(pickedFile.readAsBytesSync());
-   var base64Image = base64Encode(pickedFile.readAsBytesSync());
+    Uint8List uint8list=await pickedFile.readAsBytes();
+
+
+   var base64Image = base64Encode(uint8list);
    print("Imageee::: ${base64Image}");
 
     Map body = {
