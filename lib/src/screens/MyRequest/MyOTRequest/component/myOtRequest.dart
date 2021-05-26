@@ -242,25 +242,31 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                                 color: Colors.grey[300],
                               ),
                             ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Request No.: ${myReqTitleObj[0].requestID}'),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Request ID.: ${myReqTitleObj[0].requestID}'),
+                                  ),
+                                  SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Request No.: ${myReqTitleObj[0].requestNo}'),
+                                  ),
+                                  SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
@@ -279,6 +285,7 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                               child: Text(
                                   'Manager: ${ myReqTitleObj.isNotEmpty ? myReqTitleObj[0].managerName : "-"}'),
                             ),
+
                             SizedBox(
                               width: size.width,
                               height: 1.0,
@@ -291,7 +298,38 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                               child: Text(
                                   'Requested For: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].requestType : "-"}'),
                             ),
+                                  SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Submit Date: ${myReqTitleObj[0].SubmitDate}'),
+                                  ),
+                                  SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
 
+                                  ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Comment: ${approvedObject.isNotEmpty ? approvedObject[0].comment : "-"}'),
+                                  ):Container(),
+                                  ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ):Container(),
 
 
                             // Row(

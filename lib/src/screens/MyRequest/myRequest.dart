@@ -72,23 +72,14 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height,
                               child: Center(child: CircularProgressIndicator()))
-                          : (leaveReqList ?? []).isNotEmpty
-                              ? MyLeaveRequest(data: leaveReqList)
-                              : Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height,
-                                  child: Center(child: Text('No Data Found'))),
+                          : MyLeaveRequest(data: leaveReqList ?? []),
+
                       isLoading
                           ? Container(
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height,
                               child: Center(child: CircularProgressIndicator()))
-                          : (otReqList ?? []).isNotEmpty
-                              ? MyOTRequest(otReqList)
-                              : Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height,
-                                  child: Center(child: Text('No Data Found'))),
+                             :MyOTRequest(otReqList ?? []),
                     ],
                   ),
                   bottomNavigationBar: new TabBar(
