@@ -52,7 +52,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.TaskList;
-    Map body = {"Tokenkey": token, "lang": '2'};
+    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       TaskList myRequest = new TaskList.fromJson(jsonResponse);

@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       isLoading = true;
     });
-    Map body = {"Tokenkey": token, "lang": '2'};
+    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("j&&&&&&&&&&&&&&&&&&&&&&&" + jsonResponse.toString());

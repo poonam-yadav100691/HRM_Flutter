@@ -587,7 +587,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetLeaveType;
     print(uri);
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2};
+    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
     http.post(  Uri.parse(uri) , body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...kk.." + jsonResponse.toString());
@@ -625,7 +625,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final uri = Services.AddNewLeave;
     Map body = {
       "TokenKey": token,
-      "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2",
       "LeaveTypeId": leaveId,
       "strDate": selectedLeaveRadio == 2
           ? '${selecteddate.year}-${selecteddate.month}-${selecteddate.day}'
@@ -701,7 +701,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     resPerLsit.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetResponsiblePer;
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2};
+    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
     http.post(  Uri.parse(uri) , body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...resPerson.." + jsonResponse.toString());

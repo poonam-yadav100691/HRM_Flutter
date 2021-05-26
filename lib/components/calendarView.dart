@@ -116,7 +116,7 @@ class _CalendarViewMainState extends State<CalendarViewMain>
 
     Map body = {
       "Tokenkey": token,
-      "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2",
       "yearView": dateParse.year.toString()
     };
     http.post(Uri.parse(uri), body: body).then((response) {

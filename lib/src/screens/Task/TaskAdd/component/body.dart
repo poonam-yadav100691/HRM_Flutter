@@ -66,7 +66,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetResponsiblePer;
     print(uri);
-    Map body = {"Tokenkey": token, "lang": '2'};
+    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("...resPerson.." + jsonResponse.toString());
@@ -113,7 +113,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       "taskDetail": data["reason"],
       "emp_id": respPerId,
       "Task_attachec_file": "sample string 5",
-      "lang": "2"
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"
     };
 
     print("j&&& $body");

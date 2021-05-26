@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -63,7 +64,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     final uri = Services.MarkCompTaskList;
     Map body = {
       "Tokenkey": token,
-      "lang": '2',
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2",
       "taskID": taskPenList[index].taskID,
       "CompleteStatus": "true"
     };

@@ -74,7 +74,7 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
     requestItemObject.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.MyLevReqDetails;
-    Map body = {"Tokenkey": token, "requestID": reqID, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2};
+    Map body = {"Tokenkey": token, "requestID": reqID, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse---2 : $jsonResponse");
@@ -112,7 +112,7 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
     });
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.CancelMyrequest;
-    Map body = {"Tokenkey": token, "requestID": reqID, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??2};
+    Map body = {"Tokenkey": token, "requestID": reqID, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse---44432222 : $jsonResponse");
