@@ -100,6 +100,7 @@ class MyApp extends StatefulWidget {
   static void setLocale(BuildContext context, Locale newLocale) {
     _MyAppState state = context.findAncestorStateOfType<_MyAppState>();
     state.setLocale(newLocale);
+
   }
 
 
@@ -115,18 +116,29 @@ class _MyAppState extends State<MyApp> {
   FirebaseAnalyticsObserver(analytics: analytics);
 
   final FirebaseMessaging firebaseMessaging=FirebaseMessaging.instance;
+
+
   setLocale(Locale locale) async{
 
-    if(_locale.languageCode=='en'){
-      await  globalMyLocalPrefes.setString(AppConstant.LANG, '2');
-    }else{
-      await  globalMyLocalPrefes.setString(AppConstant.LANG, '1');
-    }
-    setState(() {
-      print("&455&&& ${locale}");
+    if(_locale.languageCode.trim()=='en') {
+      await  globalMyLocalPrefes.setString(AppConstant.LANG, '2').then((value) {
+        setState(() {
+          print("&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
+          _locale = locale;
+        });
 
-      _locale = locale;
-    });
+      });
+
+
+    }else{
+      await  globalMyLocalPrefes.setString(AppConstant.LANG, '1').then((value) {
+        setState(() {
+          print("&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
+          _locale = locale;
+        });
+
+      });
+    }
   }
 
   @override
@@ -179,15 +191,27 @@ class _MyAppState extends State<MyApp> {
 
   initSharePref()async{
     globalMyLocalPrefes=await SharedPreferences.getInstance();
-
   }
 
   @override
-  void didChangeDependencies() {
-    getLocale().then((locale) {
-      setState(() {
-        this._locale = locale;
-      });
+  void didChangeDependencies()  {
+    getLocale().then((locale) async{
+      if(locale.languageCode.trim()=='en') {
+        await  globalMyLocalPrefes.setString(AppConstant.LANG, '2');
+        await  globalMyLocalPrefes.setString(AppConstant.LANG, '2');
+        setState(() {
+          print("&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
+          _locale = locale;
+        });
+      }else{
+        await  globalMyLocalPrefes.setString(AppConstant.LANG, '1');
+        await  globalMyLocalPrefes.setString(AppConstant.LANG, '1');
+        setState(() {
+          print("&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
+          _locale = locale;
+        });
+      }
+
     });
     super.didChangeDependencies();
   }
