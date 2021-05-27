@@ -14,6 +14,8 @@
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
         <activity
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:name=".MainActivity"
             android:usesCleartextTraffic="true"
             android:launchMode="singleTop"

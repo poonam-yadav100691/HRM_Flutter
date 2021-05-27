@@ -70,7 +70,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           enableVibration: true,
           playSound: true,
 
+
         ),
+
       ));
 }
 
@@ -149,40 +151,42 @@ class _MyAppState extends State<MyApp> {
 
 
 
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-    //   await Firebase.initializeApp();
-    //   print('Got a message whilst in the foreground!');
-    //   // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-    //   // If you have skipped STEP 3 then change app_icon to @mipmap/ic_launcher
-    //   var initializationSettingsAndroid =
-    //   new AndroidInitializationSettings('@mipmap/ic_launcher');
-    //   var initializationSettingsIOS = new IOSInitializationSettings();
-    //   var initializationSettings = new InitializationSettings(
-    //       android: initializationSettingsAndroid,
-    //       iOS: initializationSettingsIOS);
-    //   flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    //   flutterLocalNotificationsPlugin.initialize(initializationSettings,
-    //       onSelectNotification: onSelectNotification);
-    //
-    //   flutterLocalNotificationsPlugin.show(
-    //       1,
-    //       message.data['title'],
-    //       message.data['body'],
-    //
-    //       NotificationDetails(
-    //         android: AndroidNotificationDetails(
-    //           '1',
-    //           'general',
-    //           'This channel is used for important notifications.',
-    //           styleInformation: BigTextStyleInformation(''),
-    //           importance: Importance.high,
-    //           enableVibration: true,
-    //           playSound: true,
-    //
-    //         ),
-    //       ));
-    // });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      await Firebase.initializeApp();
+      print('Got a message whilst in the foreground!');
+      // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+      // If you have skipped STEP 3 then change app_icon to @mipmap/ic_launcher
+      var initializationSettingsAndroid =
+      new AndroidInitializationSettings('@mipmap/ic_launcher');
+      var initializationSettingsIOS = new IOSInitializationSettings();
+      var initializationSettings = new InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS);
+      flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+      flutterLocalNotificationsPlugin.initialize(initializationSettings,
+          onSelectNotification: onSelectNotification);
+
+      flutterLocalNotificationsPlugin.show(
+          1,
+          message.data['title'],
+          message.data['body'],
+
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              '1',
+              'general',
+              'This channel is used for important notifications.',
+              styleInformation: BigTextStyleInformation(''),
+              importance: Importance.high,
+              enableVibration: true,
+              playSound: true,
+
+            ),
+          ));
+    });
 
 
     super.initState();
