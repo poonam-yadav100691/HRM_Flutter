@@ -108,7 +108,7 @@ class _BodyState extends State<Body> {
                                   initialValue:
                                       '${DateTime.now().subtract(Duration(days: 150)).add(Duration(minutes: 40))}',
                                   firstDate:
-                                  DateTime.now().subtract(Duration(days: 150)).add(Duration(minutes: 40)),
+                                  DateTime.now(),
                                   lastDate:
                                       DateTime.now().add(Duration(days: 150)),
                                   dateLabelText:
