@@ -25,6 +25,8 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> with TickerProviderStateMixin {
   List<ResultObject> leaveList;
 
+  String lang;
+
   _BodyState(this.leaveList);
 
   void initState() {
@@ -34,15 +36,19 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   bool isLoading;
   String _username, firstName, lastName, username, department, image;
+
   Future<void> getLeaveCounts() async {
     balanceList.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
+    String lang = globalMyLocalPrefes.getString(AppConstant.LANG);
+    print("lang $lang");
     final uri = Services.LeaveBalance;
 
     setState(() {
       isLoading = true;
     });
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {"Tokenkey": token, "lang": lang};
+    print(body);
     http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("j&&&&&&&&&&&&&&&&&&&&&&&" + jsonResponse.toString());
@@ -113,38 +119,30 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       width: MediaQuery.of(context).size.width,
       child: Column(
         children: [
-
-          isLoading
-              ?LinearProgressIndicator():Container(),
+          isLoading ? LinearProgressIndicator() : Container(),
           AnimatedContainer(
-                  duration: Duration(milliseconds: 500),
-                  curve: Curves.easeInToLinear,
-                  height: isLoading
-                      ?0:size.height * 0.13,
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  decoration: BoxDecoration(
-                    // shape: BoxShape.circle,
-                    // BoxShape.circle or BoxShape.retangle
-                    color: leaveCardcolor,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey[800],
-                          blurRadius: 4.0,
-                          spreadRadius: 1),
-                    ],
-                  ),
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      for (var i = 0; i < balanceList.length; i++)
-                        _homeSlider(
-                            balanceList[i].leaveName,
-                            balanceList[i].leaveUse,
-                            balanceList[i].leaveTotal,
-                            _color[i])
-                    ],
-                  ),
-                ),
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInToLinear,
+            height: isLoading ? 0 : size.height * 0.13,
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            decoration: BoxDecoration(
+              // shape: BoxShape.circle,
+              // BoxShape.circle or BoxShape.retangle
+              color: leaveCardcolor,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey[800], blurRadius: 4.0, spreadRadius: 1),
+              ],
+            ),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                for (var i = 0; i < balanceList.length; i++)
+                  _homeSlider(balanceList[i].leaveName, balanceList[i].leaveUse,
+                      balanceList[i].leaveTotal, _color[i])
+              ],
+            ),
+          ),
           Expanded(
             child: Container(child: ListView(children: children)),
           ),

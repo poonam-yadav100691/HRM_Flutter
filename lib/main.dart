@@ -26,7 +26,7 @@ Future onSelectNotification(String payload) async {
 }
 
 const MethodChannel platform =
-MethodChannel('dexterx.dev/flutter_local_notifications_example');
+    MethodChannel('dexterx.dev/flutter_local_notifications_example');
 
 class ReceivedNotification {
   ReceivedNotification({
@@ -70,9 +70,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           enableVibration: true,
           playSound: true,
 
-
         ),
-
       ));
 }
 
