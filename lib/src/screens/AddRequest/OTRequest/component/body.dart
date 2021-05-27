@@ -123,7 +123,7 @@ class _BodyState extends State<Body> {
                                         "selectedstartdateTime:: $selectedstartdateTime");
 
                                     var formatter =
-                                        new DateFormat('dd-MM-yyyy');
+                                        new DateFormat('yyyy-MM-dd');
                                     startTime = DateFormat('kk:mm')
                                         .format(selectedstartdateTime);
                                     startDate =
@@ -275,18 +275,26 @@ class _BodyState extends State<Body> {
 
                               Map body = {
                                 "tokenKey": token,
-                                "OTDate": startDate==null?'${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}':startDate,
-                                "stTime": startTime==null? DateFormat('kk:mm')
-                                  .format(selectedenddateTime):startTime,
-                                "endTime": endTime==null? DateFormat('kk:mm')
-                                    .format(selectedenddateTime):endTime,
+                                "OTDate": startDate == null
+                                    ? '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}'
+                                    : startDate,
+                                "stTime": startTime == null
+                                    ? DateFormat('kk:mm')
+                                        .format(selectedenddateTime)
+                                    : startTime,
+                                "endTime": endTime == null
+                                    ? DateFormat('kk:mm')
+                                        .format(selectedenddateTime)
+                                    : endTime,
                                 "otTitle": subjectController.text,
                                 "otReason": reasonController.text,
                               };
 
                               print(body);
 
-                              http.post(  Uri.parse(uri) , body: body).then((response) {
+                              http
+                                  .post(Uri.parse(uri), body: body)
+                                  .then((response) {
                                 var jsonResponse = jsonDecode(response.body);
                                 // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
 

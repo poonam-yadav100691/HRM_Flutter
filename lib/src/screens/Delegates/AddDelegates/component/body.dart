@@ -66,7 +66,10 @@ class _BodyState extends State<Body> {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.DelegatePerson;
 
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("js.." + jsonResponse.toString());
@@ -343,7 +346,8 @@ class _BodyState extends State<Body> {
 
                     String token =
                         globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
-                    String id = globalMyLocalPrefes.getString(AppConstant.EMP_ID);
+                    String id =
+                        globalMyLocalPrefes.getString(AppConstant.EMP_ID);
                     String uri = Services.AddDelegate;
 
                     Map body = {
@@ -365,7 +369,9 @@ class _BodyState extends State<Body> {
                         setState(() {
                           isLoading = false;
                         });
-
+                        Toast.show("Delegates Added Successfully!!!", context,
+                            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+                        print("j&&& $jsonResponse");
                         print("j&&& $jsonResponse");
                         Navigator.pushReplacementNamed(context, delegateRoute);
                       } else {
