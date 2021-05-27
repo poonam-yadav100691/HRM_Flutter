@@ -348,6 +348,32 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                               ),
                             ),
 
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Start Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].strDate : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'End Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].endDate : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
 
 
                             Padding(
