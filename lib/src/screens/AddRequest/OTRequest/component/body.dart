@@ -106,9 +106,9 @@ class _BodyState extends State<Body> {
                                       labelText: getTranslated(
                                           context, "OTstartfrom")),
                                   initialValue:
-                                      '${DateTime.now().subtract(Duration(days: 150)).add(Duration(minutes: 40))}',
+                                      '${DateTime.now()}',
                                   firstDate:
-                                  DateTime.now(),
+                                  DateTime.now().subtract(Duration(days: 150)),
                                   lastDate:
                                       DateTime.now().add(Duration(days: 150)),
                                   dateLabelText:

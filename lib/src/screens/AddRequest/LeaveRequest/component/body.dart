@@ -238,8 +238,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   final DateTime pickedDate =
                                       await showDatePicker(
                                           context: context,
-                                          initialDate: DateTime.now().subtract(Duration(days: 150)),
-                                          firstDate: DateTime.now(),
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime.now().subtract(Duration(days: 150)),
                                           lastDate: DateTime(
                                               DateTime.now().year + 1));
                                   if (pickedDate != null )
@@ -272,8 +272,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
                                       final DateTime pickedDate =  await showDatePicker(
                                           context: context,
-                                          initialDate: DateTime.now().subtract(Duration(days: 150)),
-                                      firstDate:DateTime.now(),
+                                          initialDate: DateTime.now(),
+                                      firstDate:DateTime.now().subtract(Duration(days: 150)),
                                       lastDate:DateTime.now().add(Duration(days: 120)));
                                       if (pickedDate != null)
                                       setState(() {
