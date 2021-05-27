@@ -106,7 +106,7 @@ class _BodyState extends State<Body> {
                                       labelText: getTranslated(
                                           context, "OTstartfrom")),
                                   initialValue:
-                                      '${DateTime.now()}',
+                                      selectedstartdateTime.toString(),
                                   firstDate:
                                   DateTime.now().subtract(Duration(days: 150)),
                                   lastDate:
@@ -118,7 +118,9 @@ class _BodyState extends State<Body> {
                                     DateFormat dateFormat =
                                         DateFormat("yyyy-MM-dd HH:mm");
                                     DateTime dateTime = dateFormat.parse(val);
-                                    selectedstartdateTime = dateTime;
+
+
+
                                     print(
                                         "selectedstartdateTime:: $selectedstartdateTime");
 
@@ -131,6 +133,11 @@ class _BodyState extends State<Body> {
                                     print("date:: $startTime");
 
                                     print("date:: $startDate");
+
+                                    setState(() {
+                                      selectedstartdateTime = dateTime;
+                                    });
+
                                   },
                                   validator: (val) {
                                     print("Validate: $val");
@@ -156,11 +163,11 @@ class _BodyState extends State<Body> {
                                       labelText:
                                           getTranslated(context, "OTendson")),
                                   initialValue:
-                                      '${DateTime.now().add(Duration(minutes: 40))}',
+                                  selectedstartdateTime.toString(),
                                   firstDate:
-                                      DateTime.now().add(Duration(minutes: 40)),
+                                  selectedstartdateTime,
                                   lastDate:
-                                      DateTime.now().add(Duration(days: 8)),
+                                  selectedstartdateTime.add(Duration(days: 8)),
                                   dateLabelText:
                                       getTranslated(context, "OTendson"),
                                   style: Theme.of(context).textTheme.caption,

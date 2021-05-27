@@ -306,8 +306,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                       firstDate: endStartDate,
                                       lastDate: DateTime(
                                           endStartDate.year + 1));
-                                      if (pickedDate != null &&
-                                      pickedDate != selecteddate)
+                                      if (pickedDate != null)
                                       setState(() {
                                       endDate = dateFormat.parse(pickedDate.toString());
                                         selectedDateRange =
@@ -355,9 +354,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             final DateTime pickedDate = await showDatePicker(
                                 context: context,
                                 initialDate: selectedLeaveRadio == 1
-                                    ?endDate.add(Duration(days: 1)):  dateFormat.parse( DateTime.now().toString()),
+                                    ?endDate.add(Duration(days: 1)):  selecteddate,
                                 firstDate:selectedLeaveRadio == 1
-                                    ?endDate.add(Duration(days: 1)):  dateFormat.parse( DateTime.now().toString()),
+                                    ?endDate.add(Duration(days: 1)):  selecteddate,
                                 lastDate:dateFormat.parse( DateTime(DateTime.now().year + 1).toString()));
                             if (pickedDate != null && pickedDate != returndate)
                               setState(() {

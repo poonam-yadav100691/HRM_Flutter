@@ -123,7 +123,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           AnimatedContainer(
             duration: Duration(milliseconds: 500),
             curve: Curves.easeInToLinear,
-            height: isLoading ? 0 : size.height * 0.13,
+            height: isLoading ? 0 : 100,
             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             decoration: BoxDecoration(
               // shape: BoxShape.circle,
@@ -173,7 +173,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       padding: EdgeInsets.all(7),
       child: Container(
         width: 90,
-        height: 70,
+        height: 80,
         padding: EdgeInsets.only(left: 10, right: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -182,6 +182,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
                 "$leaveValues / $leaveTotal",
