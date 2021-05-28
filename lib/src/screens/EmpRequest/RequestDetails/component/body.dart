@@ -69,12 +69,17 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
-      print("R2 : $jsonResponse");
       EmpReqDetails getLevReqDetails = new EmpReqDetails.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
         myReqTitleObj = getLevReqDetails.requestTitleObject ?? [];
         approvedObject = getLevReqDetails.approvedObject ?? [];
         requestItemObject = getLevReqDetails.requestItemObject ?? [];
+
+        print("R2 : ${myReqTitleObj.first.toJson()}");
+        // print("R2 : ${approvedObject.first.toJson()}");
+        print("R2 : ${requestItemObject.first.toJson()}");
+
+
 
         setState(() {
           isLoading = false;
@@ -101,7 +106,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print("data ((((...$data");
 
     Size size = MediaQuery.of(context).size;
 
@@ -217,6 +221,72 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 color: Colors.grey[300],
                               ),
                             ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Request No: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].requestNo : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Request Date: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].dateRequest : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Start Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].strDate : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'End Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].endDate??"" : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Return Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].returnDate??"" : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
@@ -257,6 +327,31 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
                                   'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Request Reason: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestReason??"" : "-"}'),
+                            ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Response Name: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName??"" : "-"}'),
                             ),
                             SizedBox(
                               width: size.width,
@@ -332,6 +427,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                               isLoading = false;
                                             });
 
+                                            Toast.show(
+                                                jsonResponse['ModelErrors'],
+                                                context,
+                                                duration: Toast.LENGTH_LONG,
+                                                gravity: Toast.BOTTOM);
+
                                             print("j&&& $jsonResponse");
                                             Navigator.pop(context);
                                           } else {
@@ -376,6 +477,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   ),
                                   RaisedButton(
                                     onPressed: () async {
+                              if (resoneController.text != "") {
                                       setState(() {
                                         isLoading = true;
                                       });
@@ -407,6 +509,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                           setState(() {
                                             isLoading = false;
                                           });
+                                          Toast.show(
+                                              jsonResponse['ModelErrors'],
+                                              context,
+                                              duration: Toast.LENGTH_LONG,
+                                              gravity: Toast.BOTTOM);
 
                                           print("j&&& $jsonResponse");
                                           Navigator.pop(context);
@@ -430,6 +537,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                           }
                                         }
                                       });
+                                      } else {
+                                        setState(() {
+                                          errortext = "Please Enter Comment";
+                                        });
+                                      }
                                     },
                                     child: Text(
                                       'Approve',

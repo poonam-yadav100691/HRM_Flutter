@@ -121,7 +121,7 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
         setState(() {
           isLoading = false;
         });
-        Navigator.pushNamed(context, myRequestRoute);
+        Navigator.pushReplacementNamed(context, myRequestRoute);
       } else {
         setState(() {
           isLoading = false;

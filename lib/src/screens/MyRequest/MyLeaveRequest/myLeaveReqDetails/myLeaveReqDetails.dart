@@ -120,7 +120,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
         setState(() {
           isLoading = false;
         });
-        Navigator.pushNamed(context, myRequestRoute);
+        Navigator.pushReplacementNamed(context, myRequestRoute);
       } else {
         setState(() {
           isLoading = false;
@@ -153,352 +153,357 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
         appBar: AppBar(
           title: Text('Request Details'),
         ),
-        body: Background(
-          child: Column(
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      // width: MediaQuery.of(context).size.width * 0.88,
-                      margin: new EdgeInsets.all(10),
-                      decoration: new BoxDecoration(
-                        color: kWhiteColor,
-                        shape: BoxShape.rectangle,
-                        borderRadius: new BorderRadius.circular(8.0),
-                        boxShadow: <BoxShadow>[
-                          new BoxShadow(
-                            color: kGreyLightColor,
-                            blurRadius: 5.0,
-                            offset: new Offset(0.5, 0.5),
-                          ),
-                        ],
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  // Icon(Icons.arrow_back_ios),
-                                  Container(
-                                    padding: const EdgeInsets.only(left: 5.0),
-                                    child: ClipOval(
-                                      child: Image.asset(
-                                        "lib/assets/images/profile.jpg",
-                                        height: 47,
-                                         width: 47,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding:
-                                      const EdgeInsets.only(left: 15.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Text(globalMyLocalPrefes.getString(AppConstant.USERNAME),
-                                              style: TextStyle(
-                                                  fontSize: 19.0,
-                                                  fontWeight: FontWeight.bold)),
-                                          Padding(
-                                            padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                            child: Text(
-                                                globalMyLocalPrefes.getString(AppConstant.DEPARTMENT),
-                                                style:
-                                                TextStyle(fontSize: 14.0)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    child: Container(
-                                      padding: EdgeInsets.all(10),
-                                      child: Icon(Icons.phone),
-                                    ),
-                                    onTap: () => launch(
-                                        "tel://" + globalMyLocalPrefes.getString(AppConstant.PHONENO)),
-                                  ),
-                                ],
-                              ),
+        body: WillPopScope(
+          onWillPop: (){
+            Navigator.pushReplacementNamed(context, myRequestRoute);
+          },
+          child: Background(
+            child: Column(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        // width: MediaQuery.of(context).size.width * 0.88,
+                        margin: new EdgeInsets.all(10),
+                        decoration: new BoxDecoration(
+                          color: kWhiteColor,
+                          shape: BoxShape.rectangle,
+                          borderRadius: new BorderRadius.circular(8.0),
+                          boxShadow: <BoxShadow>[
+                            new BoxShadow(
+                              color: kGreyLightColor,
+                              blurRadius: 5.0,
+                              offset: new Offset(0.5, 0.5),
                             ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Request ID: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemID : "-"}'),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Duration: ${requestItemObject.isNotEmpty ? requestItemObject[0].duration : "-"} days'),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Request Status: ${requestItemObject.isNotEmpty ? myReqTitleObj[0].statusText : "-"}'),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-
-                            // Padding(
-                            //   padding: const EdgeInsets.symmetric(vertical: 8),
-                            //   child: Text(
-                            //       'Period: ${requestItemObject.isNotEmpty ? requestItemObject[0].strDate : "-"}'),
-                            // ),
-                            // SizedBox(
-                            //   width: size.width,
-                            //   height: 1.0,
-                            //   child: Container(
-                            //     color: Colors.grey[300],
-                            //   ),
-                            // ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Return Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].returnDate : "-"}'),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Reason: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestReason : "-"}'),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName : "-"}'),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Submit Date: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].submitDate : "-"}'),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Start Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].strDate : "-"}'),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'End Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].endDate : "-"}'),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-
-
-
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Requested For: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemType : "-"}'),
-                            ),
-
-                            ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ):Container(),
-
-                            ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Aproved Date: ${approvedObject.isNotEmpty ? approvedObject[0].approvedDate : "-"}'),
-                            ):Container(),
-                            ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ):Container(),
-
-
-                            ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'ApprovedName Name: ${approvedObject.isNotEmpty ? approvedObject[0].approvedName : "-"}'),
-                            ):Container(),
-                            ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ):Container(),
-
-                            ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Comment: ${approvedObject.isNotEmpty ? approvedObject[0].comment : "-"}'),
-                            ):Container(),
-                            ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ):Container(),
-
-                            // SizedBox(
-                            //   width: size.width,
-                            //   height: 1.0,
-                            //   child: Container(
-                            //     color: Colors.grey[300],
-                            //   ),
-                            // ),
-                            // Padding(
-                            //   padding: const EdgeInsets.symmetric(vertical: 8),
-                            //   child: Text(
-                            //       'Requested Type: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemType : "-"}'),
-                            // ),
-
-
                           ],
                         ),
-                      ),
-                    ),
-                    (myReqTitleObj[0].statusText != null &&
-                            myReqTitleObj[0].statusText != 'Pending')
-                        ? Container(
-                            width: size.width * .9,
-                            margin: EdgeInsets.only(top: 10),
-                            child: Text(
-                              "Previous Manager's Notes",
-                              textAlign: TextAlign.left,
-                              style: new TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                          )
-                        : Container(),
-                    Container(
-                        padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                        child: Column(
-                          children: isLoading
-                              ? <Widget>[LinearProgressIndicator()]
-                              : _getapprovedObjectUI(),
-                        )),
-                    Container(
-                        padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                        child: Column(
-                          children: isLoading
-                              ? <Widget>[LinearProgressIndicator()]
-                              : _getrequestItemObjectUI(),
-                        )),
-                    (myReqTitleObj[0].statusText != null &&
-                            myReqTitleObj[0].statusText == 'Pending')
-                        ? Container(
-                            padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
-                            child: Column(children: [
-                              getPermissionObject('My Request').app_edit == "1"
-                                  ? OutlineButton(
-                                      onPressed: () {
-                                        cancelMyRequest(
-                                            myReqTitleObj[0].requestID);
-                                      },
-                                      child: Text('Cancel Request',
-                                          style: TextStyle(color: Colors.red)),
-                                      borderSide: BorderSide(
-                                        color: Colors.red,
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    // Icon(Icons.arrow_back_ios),
+                                    Container(
+                                      padding: const EdgeInsets.only(left: 5.0),
+                                      child: ClipOval(
+                                        child: Image.asset(
+                                          "lib/assets/images/profile.jpg",
+                                          height: 47,
+                                           width: 47,
+                                        ),
                                       ),
-                                    )
-                                  : Container()
-                            ]))
-                        : Container(),
-                  ],
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding:
+                                        const EdgeInsets.only(left: 15.0),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(globalMyLocalPrefes.getString(AppConstant.USERNAME),
+                                                style: TextStyle(
+                                                    fontSize: 19.0,
+                                                    fontWeight: FontWeight.bold)),
+                                            Padding(
+                                              padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                              child: Text(
+                                                  globalMyLocalPrefes.getString(AppConstant.DEPARTMENT),
+                                                  style:
+                                                  TextStyle(fontSize: 14.0)),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: Icon(Icons.phone),
+                                      ),
+                                      onTap: () => launch(
+                                          "tel://" + globalMyLocalPrefes.getString(AppConstant.PHONENO)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'Request ID: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemID : "-"}'),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'Duration: ${requestItemObject.isNotEmpty ? requestItemObject[0].duration : "-"} days'),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'Request Status: ${requestItemObject.isNotEmpty ? myReqTitleObj[0].statusText : "-"}'),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 8),
+                              //   child: Text(
+                              //       'Period: ${requestItemObject.isNotEmpty ? requestItemObject[0].strDate : "-"}'),
+                              // ),
+                              // SizedBox(
+                              //   width: size.width,
+                              //   height: 1.0,
+                              //   child: Container(
+                              //     color: Colors.grey[300],
+                              //   ),
+                              // ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'Return Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].returnDate : "-"}'),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'Reason: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestReason : "-"}'),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName : "-"}'),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'Submit Date: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].submitDate : "-"}'),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'Start Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].strDate : "-"}'),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'End Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].endDate : "-"}'),
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+
+
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'Requested For: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemType : "-"}'),
+                              ),
+
+                              ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ):Container(),
+
+                              ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'Aproved Date: ${approvedObject.isNotEmpty ? approvedObject[0].approvedDate : "-"}'),
+                              ):Container(),
+                              ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ):Container(),
+
+
+                              ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'ApprovedName Name: ${approvedObject.isNotEmpty ? approvedObject[0].approvedName : "-"}'),
+                              ):Container(),
+                              ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ):Container(),
+
+                              ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                    'Comment: ${approvedObject.isNotEmpty ? approvedObject[0].comment : "-"}'),
+                              ):Container(),
+                              ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
+                                width: size.width,
+                                height: 1.0,
+                                child: Container(
+                                  color: Colors.grey[300],
+                                ),
+                              ):Container(),
+
+                              // SizedBox(
+                              //   width: size.width,
+                              //   height: 1.0,
+                              //   child: Container(
+                              //     color: Colors.grey[300],
+                              //   ),
+                              // ),
+                              // Padding(
+                              //   padding: const EdgeInsets.symmetric(vertical: 8),
+                              //   child: Text(
+                              //       'Requested Type: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemType : "-"}'),
+                              // ),
+
+
+                            ],
+                          ),
+                        ),
+                      ),
+                      (myReqTitleObj[0].statusText != null &&
+                              myReqTitleObj[0].statusText != 'Pending')
+                          ? Container(
+                              width: size.width * .9,
+                              margin: EdgeInsets.only(top: 10),
+                              child: Text(
+                                "Previous Manager's Notes",
+                                textAlign: TextAlign.left,
+                                style: new TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                            )
+                          : Container(),
+                      Container(
+                          padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                          child: Column(
+                            children: isLoading
+                                ? <Widget>[LinearProgressIndicator()]
+                                : _getapprovedObjectUI(),
+                          )),
+                      Container(
+                          padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                          child: Column(
+                            children: isLoading
+                                ? <Widget>[LinearProgressIndicator()]
+                                : _getrequestItemObjectUI(),
+                          )),
+                      (myReqTitleObj[0].statusText != null &&
+                              myReqTitleObj[0].statusText == 'Pending')
+                          ? Container(
+                              padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                              child: Column(children: [
+                                getPermissionObject('My Request').app_edit == "1"
+                                    ? OutlineButton(
+                                        onPressed: () {
+                                          cancelMyRequest(
+                                              myReqTitleObj[0].requestID);
+                                        },
+                                        child: Text('Cancel Request',
+                                            style: TextStyle(color: Colors.red)),
+                                        borderSide: BorderSide(
+                                          color: Colors.red,
+                                        ),
+                                      )
+                                    : Container()
+                              ]))
+                          : Container(),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );

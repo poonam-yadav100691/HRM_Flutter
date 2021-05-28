@@ -24,7 +24,7 @@ class _BodyState extends State<Body> {
           onTap: () {
             print("leaveList[i].requestID:: ${widget.leaveList[i].requestID}");
 
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => MyOTReqDetails(
