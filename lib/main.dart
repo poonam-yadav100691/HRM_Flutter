@@ -13,14 +13,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'localization/demo_localization.dart';
+
 SharedPreferences globalMyLocalPrefes;
 
-
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 Future onSelectNotification(String payload) async {
-  print('######${payload}');
+  print('######$payload');
   print('on note selected');
   // navigatorKey.currentState.pushNamed('/history');
 }
@@ -48,7 +48,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print("Handling a background message ${message}");
   var initializationSettingsAndroid =
-  new AndroidInitializationSettings('@mipmap/ic_launcher');
+      new AndroidInitializationSettings('@mipmap/ic_launcher');
   var initializationSettingsIOS = new IOSInitializationSettings();
   var initializationSettings = new InitializationSettings(
       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
@@ -64,18 +64,16 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           '1',
           'general',
           'This channel is used for important notifications.',
-          icon:  message.data['imageUrl'],
+          icon: message.data['imageUrl'],
           styleInformation: BigTextStyleInformation(''),
           importance: Importance.high,
           enableVibration: true,
           playSound: true,
-
         ),
       ));
 }
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -83,26 +81,22 @@ void main() async{
     alert: true,
     badge: true,
     sound: true,
-
   );
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  runApp(
-      MyApp());
+  runApp(MyApp());
 }
 
 FirebaseAnalytics analytics = FirebaseAnalytics();
 FirebaseAnalyticsObserver observer =
-FirebaseAnalyticsObserver(analytics: analytics);
+    FirebaseAnalyticsObserver(analytics: analytics);
 
 class MyApp extends StatefulWidget {
   const MyApp({Key key}) : super(key: key);
   static void setLocale(BuildContext context, Locale newLocale) {
     _MyAppState state = context.findAncestorStateOfType<_MyAppState>();
     state.setLocale(newLocale);
-
   }
-
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -113,30 +107,26 @@ class _MyAppState extends State<MyApp> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   static FirebaseAnalyticsObserver observer =
-  FirebaseAnalyticsObserver(analytics: analytics);
+      FirebaseAnalyticsObserver(analytics: analytics);
 
-  final FirebaseMessaging firebaseMessaging=FirebaseMessaging.instance;
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
-
-  setLocale(Locale locale) async{
-
-    if(_locale.languageCode.trim()=='en') {
-      await  globalMyLocalPrefes.setString(AppConstant.LANG, '2').then((value) {
+  setLocale(Locale locale) async {
+    if (_locale.languageCode.trim() == 'en') {
+      await globalMyLocalPrefes.setString(AppConstant.LANG, '2').then((value) {
         setState(() {
-          print("&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
+          print(
+              "&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
           _locale = locale;
         });
-
       });
-
-
-    }else{
-      await  globalMyLocalPrefes.setString(AppConstant.LANG, '1').then((value) {
+    } else {
+      await globalMyLocalPrefes.setString(AppConstant.LANG, '1').then((value) {
         setState(() {
-          print("&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
+          print(
+              "&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
           _locale = locale;
         });
-
       });
     }
   }
@@ -147,10 +137,7 @@ class _MyAppState extends State<MyApp> {
     initSharePref();
     analytics.logAppOpen();
 
-
-
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       await Firebase.initializeApp();
@@ -158,7 +145,7 @@ class _MyAppState extends State<MyApp> {
       // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
       // If you have skipped STEP 3 then change app_icon to @mipmap/ic_launcher
       var initializationSettingsAndroid =
-      new AndroidInitializationSettings('@mipmap/ic_launcher');
+          new AndroidInitializationSettings('@mipmap/ic_launcher');
       var initializationSettingsIOS = new IOSInitializationSettings();
       var initializationSettings = new InitializationSettings(
           android: initializationSettingsAndroid,
@@ -166,12 +153,11 @@ class _MyAppState extends State<MyApp> {
       flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
       flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: onSelectNotification);
-
+      print('####message message : $message');
       flutterLocalNotificationsPlugin.show(
           1,
           message.data['title'],
           message.data['body'],
-
           NotificationDetails(
             android: AndroidNotificationDetails(
               '1',
@@ -181,39 +167,37 @@ class _MyAppState extends State<MyApp> {
               importance: Importance.high,
               enableVibration: true,
               playSound: true,
-
             ),
           ));
     });
 
-
     super.initState();
   }
 
-
-  initSharePref()async{
-    globalMyLocalPrefes=await SharedPreferences.getInstance();
+  initSharePref() async {
+    globalMyLocalPrefes = await SharedPreferences.getInstance();
   }
 
   @override
-  void didChangeDependencies()  {
-    getLocale().then((locale) async{
-      if(locale.languageCode.trim()=='en') {
-        await  globalMyLocalPrefes.setString(AppConstant.LANG, '2');
-        await  globalMyLocalPrefes.setString(AppConstant.LANG, '2');
+  void didChangeDependencies() {
+    getLocale().then((locale) async {
+      if (locale.languageCode.trim() == 'en') {
+        await globalMyLocalPrefes.setString(AppConstant.LANG, '2');
+        await globalMyLocalPrefes.setString(AppConstant.LANG, '2');
         setState(() {
-          print("&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
+          print(
+              "&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
           _locale = locale;
         });
-      }else{
-        await  globalMyLocalPrefes.setString(AppConstant.LANG, '1');
-        await  globalMyLocalPrefes.setString(AppConstant.LANG, '1');
+      } else {
+        await globalMyLocalPrefes.setString(AppConstant.LANG, '1');
+        await globalMyLocalPrefes.setString(AppConstant.LANG, '1');
         setState(() {
-          print("&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
+          print(
+              "&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
           _locale = locale;
         });
       }
-
     });
     super.didChangeDependencies();
   }

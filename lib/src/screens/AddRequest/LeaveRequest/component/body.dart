@@ -38,11 +38,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   final TextEditingController rangeDateSelected = new TextEditingController();
   final TextEditingController leaveApplyFor = new TextEditingController();
 
-  List<ResultObject> leaveList = new List();
-  List<String> leaveTypeList = new List();
+  List<ResultObject> leaveList = [];
+  List<String> leaveTypeList = [];
 
-  List<ResResultObject> resPersonList = new List();
-  List<String> resPerLsit = new List();
+  List<ResResultObject> resPersonList = [];
+  List<String> resPerLsit = [];
 
   String leaveLable = "Leave";
   String leaveId;
