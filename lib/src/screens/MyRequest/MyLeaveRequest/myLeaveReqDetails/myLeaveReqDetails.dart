@@ -304,7 +304,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                    'Return Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].returnDate : "-"}'),
+                                    'Return Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].returnDate.split(" ")[0] : "-"}'),
                               ),
                               SizedBox(
                                 width: size.width,
@@ -342,7 +342,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                    'Submit Date: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].submitDate : "-"}'),
+                                    'Submit Date: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].submitDate.split(" ")[0] : "-"}'),
                               ),
                               SizedBox(
                                 width: size.width,
@@ -355,7 +355,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                    'Start Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].strDate : "-"}'),
+                                    'Start Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].strDate.split(" ")[0] : "-"}'),
                               ),
                               SizedBox(
                                 width: size.width,
@@ -368,7 +368,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                    'End Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].endDate : "-"}'),
+                                    'End Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0] : "-"}'),
                               ),
                               SizedBox(
                                 width: size.width,

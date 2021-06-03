@@ -22,7 +22,7 @@ class ApiService {
     this.token = authProvider.token;
   }
 
-  final String api = 'http://103.151.76.35:44375/api';
+  final String api = 'http://hrm.tkgroup.la:44375/api/';
 
   /*
   * Validates the response code from an API call.

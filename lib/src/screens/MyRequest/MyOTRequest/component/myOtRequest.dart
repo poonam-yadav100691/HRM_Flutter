@@ -308,7 +308,7 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 8),
                                     child: Text(
-                                        'Submit Date: ${myReqTitleObj[0].SubmitDate}'),
+                                        'Submit Date: ${myReqTitleObj[0].SubmitDate.split(" ")[0]}'),
                                   ),
                                   SizedBox(
                                     width: size.width,

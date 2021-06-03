@@ -76,8 +76,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         requestItemObject = getLevReqDetails.requestItemObject ?? [];
 
         print("R2 : ${myReqTitleObj.first.toJson()}");
-        // print("R2 : ${approvedObject.first.toJson()}");
-        print("R2 : ${requestItemObject.first.toJson()}");
+        print("R2 : ${approvedObject.isNotEmpty?approvedObject.first.toJson():""}");
+        print("R2 : ${requestItemObject.isNotEmpty?requestItemObject.first.toJson():""}");
 
 
 
@@ -227,18 +227,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               child: Text(
                                   'Request No: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].requestNo : "-"}'),
                             ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
+
 
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Request Date: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].dateRequest : "-"}'),
+                                  'Request Tyoe: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].requestType : "-"}'),
                             ),
                             SizedBox(
                               width: size.width,
@@ -251,7 +245,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Start Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].strDate : "-"}'),
+                                  'Request Date: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].dateRequest.split(" ")[0] : "-"}'),
                             ),
                             SizedBox(
                               width: size.width,
@@ -261,12 +255,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               ),
                             ),
 
-                            Padding(
+                            myReqTitleObj[0].requestType=='OT'?Container():   Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'End Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].endDate??"" : "-"}'),
+                                  'Start Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].strDate.split(" ")[0] : "-"}'),
                             ),
-                            SizedBox(
+                            myReqTitleObj[0].requestType=='OT'?Container():   SizedBox(
                               width: size.width,
                               height: 1.0,
                               child: Container(
@@ -274,12 +268,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               ),
                             ),
 
-                            Padding(
+                            myReqTitleObj[0].requestType=='OT'?Container():    Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Return Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].returnDate??"" : "-"}'),
+                                  'End Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0]??"" : "-"}'),
                             ),
-                            SizedBox(
+                            myReqTitleObj[0].requestType=='OT'?Container():   SizedBox(
                               width: size.width,
                               height: 1.0,
                               child: Container(
@@ -287,12 +281,25 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               ),
                             ),
 
-                            Padding(
+                            myReqTitleObj[0].requestType=='OT'?Container():    Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                  'Return Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].returnDate.split(" ")[0]??"" : "-"}'),
+                            ),
+                            myReqTitleObj[0].requestType=='OT'?Container():         SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
+
+                            myReqTitleObj[0].requestType=='OT'?Container():    Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
                                   'Duration: ${requestItemObject.isNotEmpty ? requestItemObject[0].duration : "-"} days'),
                             ),
-                            SizedBox(
+                            myReqTitleObj[0].requestType=='OT'?Container():     SizedBox(
                               width: size.width,
                               height: 1.0,
                               child: Container(
@@ -302,7 +309,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Request Status: ${requestItemObject.isNotEmpty ? myReqTitleObj[0].statusText : "-"}'),
+                                  'Request Status: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].statusText : "-"}'),
                             ),
                             SizedBox(
                               width: size.width,
@@ -323,12 +330,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 color: Colors.grey[300],
                               ),
                             ),
-                            Padding(
+                            myReqTitleObj[0].requestType=='OT'?Container():    Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
                                   'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName : "-"}'),
                             ),
-                            SizedBox(
+                            myReqTitleObj[0].requestType=='OT'?Container():     SizedBox(
                               width: size.width,
                               height: 1.0,
                               child: Container(
@@ -336,31 +343,31 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               ),
                             ),
 
-                            Padding(
+                            myReqTitleObj[0].requestType=='OT'?Container():     Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
                                   'Request Reason: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestReason??"" : "-"}'),
                             ),
-                            SizedBox(
+                            myReqTitleObj[0].requestType=='OT'?Container():       SizedBox(
                               width: size.width,
                               height: 1.0,
                               child: Container(
                                 color: Colors.grey[300],
                               ),
                             ),
-                            Padding(
+                            requestItemObject.isEmpty?Container():  Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
                                   'Response Name: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName??"" : "-"}'),
                             ),
-                            SizedBox(
+                            myReqTitleObj[0].requestType=='OT'?Container():    SizedBox(
                               width: size.width,
                               height: 1.0,
                               child: Container(
                                 color: Colors.grey[300],
                               ),
                             ),
-                            Padding(
+                            myReqTitleObj[0].requestType=='OT'?Container():     Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
                                   'Requested For: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestFor : "-"}'),
@@ -404,7 +411,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                         String token =
                                             globalMyLocalPrefes.getString(
                                                 AppConstant.ACCESS_TOKEN);
-                                        final uri = Services.RejectOT;
+                                        // final uri = Services.RejectOT;
+                                        final uri =myReqTitleObj[0].requestType=='OT'?Services.RejectOT:Services.RejectLeave;
                                         Map body = {
                                           "TokenKey": token,
                                           "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2",
@@ -484,7 +492,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
                                       String token = globalMyLocalPrefes
                                           .getString(AppConstant.ACCESS_TOKEN);
-                                      final uri = Services.ApproveOT;
+                                      final uri =myReqTitleObj[0].requestType=='OT'?Services.ApproveOT:Services.ApproveLeave;
                                       Map body = {
                                         "TokenKey": token,
                                         "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2",

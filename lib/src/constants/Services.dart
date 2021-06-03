@@ -1,6 +1,6 @@
 class Services {
 //  static final String BASE_URL = "http://52.172.206.238/LMSIO/api/"; //old UAT
-  static final String BASE_URL = "http://103.151.76.39:44375/api/"; //new UAT
+  static final String BASE_URL = "http://hrm.tkgroup.la:44375/api/"; //new UAT
 
   static final String LOGIN = BASE_URL + 'User/Login';
   static final String GetLeaveType = BASE_URL + 'User/LeaveType';
