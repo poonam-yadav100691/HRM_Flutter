@@ -9,6 +9,7 @@ class MyOTRequest extends StatelessWidget {
   List<ResultObject> data;
   @override
   Widget build(BuildContext context) {
+    print(data);
     return Scaffold(
       appBar: AppBar(
         title: Text(getTranslated(context, 'MyOTRequest')),
@@ -23,8 +24,11 @@ class MyOTRequest extends StatelessWidget {
               Navigator.pop(context);
             }),
       ),
-      body:(data.isNotEmpty && data!=null)? Body(this.data):Center(child: Text('No Data Dound'),),
-
+      body: (data.isNotEmpty)
+          ? Body(data)
+          : Center(
+              child: Text('No Data Dound'),
+            ),
     );
   }
 }

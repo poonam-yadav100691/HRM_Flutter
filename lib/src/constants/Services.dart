@@ -1,18 +1,15 @@
 class Services {
 //  static final String BASE_URL = "http://52.172.206.238/LMSIO/api/"; //old UAT
   static final String BASE_URL = "http://hrm.tkgroup.la:44375/api/"; //new UAT
-
   static final String LOGIN = BASE_URL + 'User/Login';
   static final String GetLeaveType = BASE_URL + 'User/LeaveType';
   static final String GetResponsiblePer = BASE_URL + 'User/ResponsiblePerson';
   static final String GetUserProfiles = BASE_URL + 'profile';
   static final String LeaveBalance = BASE_URL + 'User/LeaveBalance';
   static final String GetPermissions = BASE_URL + 'User/permission';
-
   static final String GetNewsList = BASE_URL + 'New/Newlist';
   static final String AddNews = BASE_URL + 'New/AddNews';
   static final String DelNews = BASE_URL + 'New/DeleteNews';
-
   static final String NewsDetail = BASE_URL + 'NewsItem';
   static final String PublicHolidays = BASE_URL + 'User/publicholidays';
   static final String MyRequest = BASE_URL + 'User/MyRequest';

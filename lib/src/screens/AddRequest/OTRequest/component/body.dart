@@ -118,12 +118,6 @@ class _BodyState extends State<Body> {
                                     DateFormat dateFormat =
                                         DateFormat("yyyy-MM-dd HH:mm");
                                     DateTime dateTime = dateFormat.parse(val);
-
-
-
-                                    print(
-                                        "selectedstartdateTime:: $selectedstartdateTime");
-
                                     var formatter =
                                         new DateFormat('yyyy-MM-dd');
                                     startTime = DateFormat('kk:mm')

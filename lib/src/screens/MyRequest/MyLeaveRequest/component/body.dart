@@ -89,7 +89,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           onTap: () {
             print("leaveList[i].requestID:: ${leaveList[i].requestID}");
 
-
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(

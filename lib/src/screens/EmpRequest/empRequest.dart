@@ -10,7 +10,6 @@ import 'package:HRMNew/src/screens/EmpRequest/EmpLeaveRequest/empLeaveRequest.da
 import 'package:HRMNew/src/screens/EmpRequest/EmpOTRequest/empOtRequest.dart';
 import 'package:HRMNew/src/screens/EmpRequest/empRequestPODO.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 class EmpRequest extends StatefulWidget {
@@ -24,9 +23,9 @@ class EmpRequest extends StatefulWidget {
 class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  List<ResultObject> empRequestList = new List();
-  List<ResultObject> empLeaveReqList = new List();
-  List<ResultObject> empOtReqList = new List();
+  List<ResultObject> empRequestList = [];
+  List<ResultObject> empLeaveReqList = [];
+  List<ResultObject> empOtReqList = [];
   AnimationController animationController;
   Animation<dynamic> animation;
   bool isLoading = false;

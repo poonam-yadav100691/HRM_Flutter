@@ -27,8 +27,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  List<ResultObject> insuHeader = new List();
-  List<ResultDetailsObject> insuDetails = new List();
+  List<ResultObject> insuHeader = [];
+  List<ResultDetailsObject> insuDetails = [];
   AnimationController animationController;
   Animation<dynamic> animation;
   bool isLoading = true;
@@ -45,7 +45,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     insuHeader.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.InsuranceHeader;
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
+    print(body);
+    print(uri);
     http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       InsuHeaderData insuranceHeaderLst =
@@ -56,31 +61,32 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         });
         insuHeader = insuranceHeaderLst.resultObject;
         print("DDDDDDD--->>>${insuHeader.toString()}");
-
-        final uri1 = Services.InsuranceDetail;
-        http.post(Uri.parse(uri1), body: body).then((response) async {
-          var jsonResponse = jsonDecode(response.body);
-          InsuranceDetails insuranceDetailsLst =
-              new InsuranceDetails.fromJson(jsonResponse);
-          if (jsonResponse["StatusCode"] == 200) {
-            setState(() {
-              isLoading = false;
-            });
-            insuDetails = insuranceDetailsLst.resultObject;
-            print("DD--->>>${insuDetails.toString()}");
-          } else {
-            if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-              print("ModelError: ${jsonResponse["ModelErrors"]}");
-              GetToken().getToken().then((value) {
-                _getInsurHeader();
+        if (insuHeader.length != 0) {
+          final uri1 = Services.InsuranceDetail;
+          http.post(Uri.parse(uri1), body: body).then((response) async {
+            var jsonResponse = jsonDecode(response.body);
+            InsuranceDetails insuranceDetailsLst =
+                new InsuranceDetails.fromJson(jsonResponse);
+            if (jsonResponse["StatusCode"] == 200) {
+              setState(() {
+                isLoading = false;
               });
+              insuDetails = insuranceDetailsLst.resultObject;
+              print("DD--->>>${insuDetails.toString()}");
             } else {
-              Toast.show(
-                  "Something went wrong, please try again later.", context,
-                  duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+              if (jsonResponse["ModelErrors"] == 'Unauthorized') {
+                print("ModelError: ${jsonResponse["ModelErrors"]}");
+                GetToken().getToken().then((value) {
+                  _getInsurHeader();
+                });
+              } else {
+                Toast.show(
+                    "Something went wrong, please try again later.", context,
+                    duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+              }
             }
-          }
-        });
+          });
+        } else {}
       } else {
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
           print("ModelError: ${jsonResponse["ModelErrors"]}");
@@ -102,82 +108,97 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       return Background(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Container(
-            child: Column(
-              children: <Widget>[
-                //1stBox
-                Container(
-                  // padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    decoration: new BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.grey[350],
-                        width: 1,
+          child: insuHeader.length < 0
+              ? Container(
+                  child: Column(
+                    children: <Widget>[
+                      //1stBox
+                      Container(
+                        // padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          decoration: new BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey[350],
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Insurance Bal : " +
+                                            insuHeader[0]
+                                                .insuranceBalance
+                                                .toString(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Insurance Limit : ' +
+                                            insuHeader[0]
+                                                .insuranceLimit
+                                                .toString(),
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Insurance Used : ' +
+                                            insuHeader[0]
+                                                .insuranceUsed
+                                                .toString(),
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Insurance Bal : " +
-                                      insuHeader[0].insuranceBalance.toString(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Insurance Limit : ' +
-                                      insuHeader[0].insuranceLimit.toString(),
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.normal),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Insurance Used : ' +
-                                      insuHeader[0].insuranceUsed.toString(),
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.normal),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+
+                      //2nd Box
+                      Container(child: insuranceDetailsList(context))
+                      //buttons
+                    ],
+                  ),
+                )
+              : Container(
+                  child: Center(
+                    child: Text("No Data!!"),
                   ),
                 ),
-
-                //2nd Box
-                Container(child: insuranceDetailsList(context))
-                //buttons
-              ],
-            ),
-          ),
         ),
       );
     } else {

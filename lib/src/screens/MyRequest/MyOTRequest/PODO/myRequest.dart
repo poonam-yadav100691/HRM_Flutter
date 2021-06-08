@@ -47,6 +47,7 @@ class ResultObject {
   String statusText;
   String fileName;
   String attachedFile;
+  String otdate;
 
   ResultObject(
       {this.requestID,
@@ -54,9 +55,10 @@ class ResultObject {
       this.requestType,
       this.submitDate,
       this.managerName,
-        this.statusText,
+      this.statusText,
       this.fileName,
-        this.attachedFile});
+      this.attachedFile,
+      this.otdate});
 
   ResultObject.fromJson(Map<String, dynamic> json) {
     requestID = json['RequestID'];
@@ -64,10 +66,10 @@ class ResultObject {
     requestType = json['RequestType'];
     managerName = json['managerName'];
     submitDate = json['SubmitDate'];
-    statusText=json["statusText"];
+    statusText = json["statusText"];
     fileName = json['fileName'];
     attachedFile = json['attachedFile'];
-
+    otdate = json['otdate'];
   }
 
   Map<String, dynamic> toJson() {
@@ -78,8 +80,10 @@ class ResultObject {
     data['managerName'] = this.managerName;
     data['SubmitDate'] = this.submitDate;
     data['RequestFor'] = this.fileName;
-    data['statusText']=this.statusText;
-    data['lang'] = this.attachedFile;
+    data['statusText'] = this.statusText;
+    data['attachedFile'] = this.attachedFile;
+    data['otdate'] = this.otdate;
+
     return data;
   }
 }

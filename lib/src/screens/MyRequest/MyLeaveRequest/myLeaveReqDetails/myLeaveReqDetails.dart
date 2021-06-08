@@ -75,7 +75,11 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
     requestItemObject.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.MyLevReqDetails;
-    Map body = {"Tokenkey": token, "requestID": reqID, "lang":globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "requestID": reqID,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse---2 : $jsonResponse");
@@ -110,7 +114,11 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
     });
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.CancelMyrequest;
-    Map body = {"Tokenkey": token, "requestID": reqID, "lang":globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "requestID": reqID,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
 
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
@@ -142,9 +150,8 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
 
   @override
   Widget build(BuildContext context) {
-
-
-   Uint8List bytes= Base64Codec().decode(globalMyLocalPrefes.getString(AppConstant.IMAGE));
+    Uint8List bytes =
+        Base64Codec().decode(globalMyLocalPrefes.getString(AppConstant.IMAGE));
 
     print("requestItemObject[0] :: $requestItemObject");
     Size size = MediaQuery.of(context).size;
@@ -154,9 +161,8 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
           title: Text('Request Details'),
         ),
         body: WillPopScope(
-          onWillPop: (){
-            Navigator.pushReplacementNamed(context, myRequestRoute);
-          },
+          onWillPop: () =>
+              Navigator.pushReplacementNamed(context, myRequestRoute),
           child: Background(
             child: Column(
               children: [
@@ -188,7 +194,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 padding: const EdgeInsets.only(bottom: 10.0),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     // Icon(Icons.arrow_back_ios),
                                     Container(
@@ -197,31 +203,35 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                         child: Image.asset(
                                           "lib/assets/images/profile.jpg",
                                           height: 47,
-                                           width: 47,
+                                          width: 47,
                                         ),
                                       ),
                                     ),
                                     Expanded(
                                       child: Padding(
                                         padding:
-                                        const EdgeInsets.only(left: 15.0),
+                                            const EdgeInsets.only(left: 15.0),
                                         child: Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Text(globalMyLocalPrefes.getString(AppConstant.USERNAME),
+                                            Text(
+                                                globalMyLocalPrefes.getString(
+                                                    AppConstant.USERNAME),
                                                 style: TextStyle(
                                                     fontSize: 19.0,
-                                                    fontWeight: FontWeight.bold)),
+                                                    fontWeight:
+                                                        FontWeight.bold)),
                                             Padding(
-                                              padding:
-                                              const EdgeInsets.only(top: 8.0),
+                                              padding: const EdgeInsets.only(
+                                                  top: 8.0),
                                               child: Text(
-                                                  globalMyLocalPrefes.getString(AppConstant.DEPARTMENT),
-                                                  style:
-                                                  TextStyle(fontSize: 14.0)),
+                                                  globalMyLocalPrefes.getString(
+                                                      AppConstant.DEPARTMENT),
+                                                  style: TextStyle(
+                                                      fontSize: 14.0)),
                                             ),
                                           ],
                                         ),
@@ -232,8 +242,9 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                         padding: EdgeInsets.all(10),
                                         child: Icon(Icons.phone),
                                       ),
-                                      onTap: () => launch(
-                                          "tel://" + globalMyLocalPrefes.getString(AppConstant.PHONENO)),
+                                      onTap: () => launch("tel://" +
+                                          globalMyLocalPrefes
+                                              .getString(AppConstant.PHONENO)),
                                     ),
                                   ],
                                 ),
@@ -253,7 +264,8 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
                                     'Request ID: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemID : "-"}'),
                               ),
@@ -265,7 +277,8 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
                                     'Duration: ${requestItemObject.isNotEmpty ? requestItemObject[0].duration : "-"} days'),
                               ),
@@ -277,7 +290,8 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
                                     'Request Status: ${requestItemObject.isNotEmpty ? myReqTitleObj[0].statusText : "-"}'),
                               ),
@@ -302,7 +316,8 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                               //   ),
                               // ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
                                     'Return Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].returnDate.split(" ")[0] : "-"}'),
                               ),
@@ -315,7 +330,8 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                               ),
 
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
                                     'Reason: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestReason : "-"}'),
                               ),
@@ -327,7 +343,8 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
                                     'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName : "-"}'),
                               ),
@@ -340,7 +357,8 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                               ),
 
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
                                     'Submit Date: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].submitDate.split(" ")[0] : "-"}'),
                               ),
@@ -353,9 +371,10 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                               ),
 
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                    'Start Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].strDate.split(" ")[0] : "-"}'),
+                                    'Start Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].strDate.split(" ")[0] : "-"}  To  ${myReqTitleObj.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0] : "-"}'),
                               ),
                               SizedBox(
                                 width: size.width,
@@ -365,74 +384,97 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 ),
                               ),
 
+                              // Padding(
+                              //   padding:
+                              //       const EdgeInsets.symmetric(vertical: 8),
+                              //   child: Text(
+                              //       'End Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0] : "-"}'),
+                              // ),
+                              // SizedBox(
+                              //   width: size.width,
+                              //   height: 1.0,
+                              //   child: Container(
+                              //     color: Colors.grey[300],
+                              //   ),
+                              // ),
+
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
-                                child: Text(
-                                    'End Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0] : "-"}'),
-                              ),
-                              SizedBox(
-                                width: size.width,
-                                height: 1.0,
-                                child: Container(
-                                  color: Colors.grey[300],
-                                ),
-                              ),
-
-
-
-                              Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
                                     'Requested For: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemType : "-"}'),
                               ),
 
-                              ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
-                                width: size.width,
-                                height: 1.0,
-                                child: Container(
-                                  color: Colors.grey[300],
-                                ),
-                              ):Container(),
+                              (approvedObject != null &&
+                                      approvedObject.isNotEmpty)
+                                  ? SizedBox(
+                                      width: size.width,
+                                      height: 1.0,
+                                      child: Container(
+                                        color: Colors.grey[300],
+                                      ),
+                                    )
+                                  : Container(),
 
-                              ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
-                                child: Text(
-                                    'Aproved Date: ${approvedObject.isNotEmpty ? approvedObject[0].approvedDate : "-"}'),
-                              ):Container(),
-                              ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
-                                width: size.width,
-                                height: 1.0,
-                                child: Container(
-                                  color: Colors.grey[300],
-                                ),
-                              ):Container(),
+                              (approvedObject != null &&
+                                      approvedObject.isNotEmpty)
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8),
+                                      child: Text(
+                                          'Aproved Date: ${approvedObject.isNotEmpty ? approvedObject[0].approvedDate : "-"}'),
+                                    )
+                                  : Container(),
+                              (approvedObject != null &&
+                                      approvedObject.isNotEmpty)
+                                  ? SizedBox(
+                                      width: size.width,
+                                      height: 1.0,
+                                      child: Container(
+                                        color: Colors.grey[300],
+                                      ),
+                                    )
+                                  : Container(),
 
+                              (approvedObject != null &&
+                                      approvedObject.isNotEmpty)
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8),
+                                      child: Text(
+                                          'ApprovedName Name: ${approvedObject.isNotEmpty ? approvedObject[0].approvedName : "-"}'),
+                                    )
+                                  : Container(),
+                              (approvedObject != null &&
+                                      approvedObject.isNotEmpty)
+                                  ? SizedBox(
+                                      width: size.width,
+                                      height: 1.0,
+                                      child: Container(
+                                        color: Colors.grey[300],
+                                      ),
+                                    )
+                                  : Container(),
 
-                              ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
-                                child: Text(
-                                    'ApprovedName Name: ${approvedObject.isNotEmpty ? approvedObject[0].approvedName : "-"}'),
-                              ):Container(),
-                              ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
-                                width: size.width,
-                                height: 1.0,
-                                child: Container(
-                                  color: Colors.grey[300],
-                                ),
-                              ):Container(),
-
-                              ( approvedObject!=null &&  approvedObject.isNotEmpty) ?  Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
-                                child: Text(
-                                    'Comment: ${approvedObject.isNotEmpty ? approvedObject[0].comment : "-"}'),
-                              ):Container(),
-                              ( approvedObject!=null &&  approvedObject.isNotEmpty)? SizedBox(
-                                width: size.width,
-                                height: 1.0,
-                                child: Container(
-                                  color: Colors.grey[300],
-                                ),
-                              ):Container(),
+                              (approvedObject != null &&
+                                      approvedObject.isNotEmpty)
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8),
+                                      child: Text(
+                                          'Comment: ${approvedObject.isNotEmpty ? approvedObject[0].comment : "-"}'),
+                                    )
+                                  : Container(),
+                              (approvedObject != null &&
+                                      approvedObject.isNotEmpty)
+                                  ? SizedBox(
+                                      width: size.width,
+                                      height: 1.0,
+                                      child: Container(
+                                        color: Colors.grey[300],
+                                      ),
+                                    )
+                                  : Container(),
 
                               // SizedBox(
                               //   width: size.width,
@@ -446,8 +488,6 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                               //   child: Text(
                               //       'Requested Type: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemType : "-"}'),
                               // ),
-
-
                             ],
                           ),
                         ),
@@ -482,16 +522,19 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                       (myReqTitleObj[0].statusText != null &&
                               myReqTitleObj[0].statusText == 'Pending')
                           ? Container(
-                              padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
+                              padding:
+                                  const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
                               child: Column(children: [
-                                getPermissionObject('My Request').app_edit == "1"
+                                getPermissionObject('My Request').app_edit ==
+                                        "1"
                                     ? OutlineButton(
                                         onPressed: () {
                                           cancelMyRequest(
                                               myReqTitleObj[0].requestID);
                                         },
                                         child: Text('Cancel Request',
-                                            style: TextStyle(color: Colors.red)),
+                                            style:
+                                                TextStyle(color: Colors.red)),
                                         borderSide: BorderSide(
                                           color: Colors.red,
                                         ),
@@ -670,12 +713,11 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                               ],
                             )
                           : Container(),
-                           Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 8),
-                                    child: Text(
-                                        'Requested For: ${(reqItmObj != null) ? (reqItmObj.requestFor) : "-"}'),
-                                  ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                            'Requested For: ${(reqItmObj != null) ? (reqItmObj.requestFor) : "-"}'),
+                      ),
                     ],
                   ),
                 ),
@@ -773,28 +815,4 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
       ),
     );
   }
-
-  // Widget _itemBuilder(label, textValue) {
-  //   return Container(
-  //     child: Column(
-  //       children: [
-  //         Padding(
-  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15),
-  //           child: Row(
-  //             children: [
-  //               Text(
-  //                 label,
-  //                 style: new TextStyle(fontWeight: FontWeight.w400),
-  //               ),
-  //               Text(
-  //                 textValue,
-  //                 style: new TextStyle(fontWeight: FontWeight.w500),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }

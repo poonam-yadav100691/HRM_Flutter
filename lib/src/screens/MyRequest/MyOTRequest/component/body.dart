@@ -14,9 +14,9 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   // List<ResultObject> leaveList;
-
   @override
   Widget build(BuildContext context) {
+    print("Leave ot reqt ${widget.leaveList}");
     final children = <Widget>[];
     for (var i = 0; i < widget.leaveList.length; i++) {
       children.add(

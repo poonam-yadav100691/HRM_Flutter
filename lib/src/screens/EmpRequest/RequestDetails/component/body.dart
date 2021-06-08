@@ -6,6 +6,7 @@ import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/empReqDetailPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import './background.dart';
@@ -25,9 +26,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   String data;
   final _formKey = GlobalKey<FormState>();
 
-  List<RequestTitleObject> myReqTitleObj = new List();
+  List<RequestTitleObject> myReqTitleObj = [];
   List<ApprovedObject> approvedObject = [];
-  List<RequestItemObject> requestItemObject = new List();
+  List<RequestItemObject> requestItemObject = [];
   bool isLoading = true;
 
   int totalDays;
@@ -50,7 +51,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   }
 
   int totalDayss;
-
   DateTime strDate, endDate;
 
   Future<void> _getEmpReqDetails(reqID) async {
@@ -65,7 +65,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
 
     final uri = Services.EmpRequestDetails;
-    Map body = {"Tokenkey": token, "requestID": reqID, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "requestID": reqID,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
 
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
@@ -76,10 +80,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         requestItemObject = getLevReqDetails.requestItemObject ?? [];
 
         print("R2 : ${myReqTitleObj.first.toJson()}");
-        print("R2 : ${approvedObject.isNotEmpty?approvedObject.first.toJson():""}");
-        print("R2 : ${requestItemObject.isNotEmpty?requestItemObject.first.toJson():""}");
-
-
+        print(
+            "R2 : ${approvedObject.isNotEmpty ? approvedObject.first.toJson() : ""}");
+        print(
+            "R2 : ${requestItemObject.isNotEmpty ? requestItemObject.first.toJson() : ""}");
 
         setState(() {
           isLoading = false;
@@ -102,25 +106,25 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     });
   }
 
+  DateTime tempDate;
   TextEditingController resoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.pushNamed(context, addRequestRoute);
-          // Add your onPressed code here!
-        },
-        elevation: 4,
-        child: Icon(
-          Icons.calendar_today,
-        ),
-        backgroundColor: Colors.pink,
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Navigator.pushNamed(context, addRequestRoute);
+      //     // Add your onPressed code here!
+      //   },
+      //   elevation: 4,
+      //   child: Icon(
+      //     Icons.calendar_today,
+      //   ),
+      //   backgroundColor: Colors.pink,
+      // ),
       appBar: AppBar(
         title: Text('Request Details'),
       ),
@@ -221,14 +225,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 color: Colors.grey[300],
                               ),
                             ),
-
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
                                   'Request No: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].requestNo : "-"}'),
                             ),
-
-
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
@@ -241,7 +242,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 color: Colors.grey[300],
                               ),
                             ),
-
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
@@ -254,58 +254,91 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 color: Colors.grey[300],
                               ),
                             ),
-
-                            myReqTitleObj[0].requestType=='OT'?Container():   Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Start Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].strDate.split(" ")[0] : "-"}'),
-                            ),
-                            myReqTitleObj[0].requestType=='OT'?Container():   SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-
-                            myReqTitleObj[0].requestType=='OT'?Container():    Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'End Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0]??"" : "-"}'),
-                            ),
-                            myReqTitleObj[0].requestType=='OT'?Container():   SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-
-                            myReqTitleObj[0].requestType=='OT'?Container():    Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Return Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].returnDate.split(" ")[0]??"" : "-"}'),
-                            ),
-                            myReqTitleObj[0].requestType=='OT'?Container():         SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-
-                            myReqTitleObj[0].requestType=='OT'?Container():    Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Duration: ${requestItemObject.isNotEmpty ? requestItemObject[0].duration : "-"} days'),
-                            ),
-                            myReqTitleObj[0].requestType=='OT'?Container():     SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
+                            myReqTitleObj[0].requestType != 'OT'
+                                ? Container()
+                                : Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'OT Date: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].otdate.split(" ")[0] : "-"}'),
+                                  ),
+                            myReqTitleObj[0].requestType != 'OT'
+                                ? Container()
+                                : SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Start Date:  ${requestItemObject.isNotEmpty ? requestItemObject[0].strDate.split(" ")[0] : "-"}  To  ${requestItemObject.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0] ?? "" : "-"}'),
+                                  ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                            // myReqTitleObj[0].requestType == 'OT'
+                            //     ? Container()
+                            //     : Padding(
+                            //         padding:
+                            //             const EdgeInsets.symmetric(vertical: 8),
+                            //         child: Text(
+                            //             'End Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0] ?? "" : "-"}'),
+                            //       ),
+                            // myReqTitleObj[0].requestType == 'OT'
+                            //     ? Container()
+                            //     : SizedBox(
+                            //         width: size.width,
+                            //         height: 1.0,
+                            //         child: Container(
+                            //           color: Colors.grey[300],
+                            //         ),
+                            //       ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Return Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].returnDate.split(" ")[0] ?? "" : "-"}'),
+                                  ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Duration: ${requestItemObject.isNotEmpty ? requestItemObject[0].duration : "-"} days'),
+                                  ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
@@ -330,48 +363,65 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                 color: Colors.grey[300],
                               ),
                             ),
-                            myReqTitleObj[0].requestType=='OT'?Container():    Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName : "-"}'),
-                            ),
-                            myReqTitleObj[0].requestType=='OT'?Container():     SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-
-                            myReqTitleObj[0].requestType=='OT'?Container():     Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Request Reason: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestReason??"" : "-"}'),
-                            ),
-                            myReqTitleObj[0].requestType=='OT'?Container():       SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            requestItemObject.isEmpty?Container():  Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Response Name: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName??"" : "-"}'),
-                            ),
-                            myReqTitleObj[0].requestType=='OT'?Container():    SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                            myReqTitleObj[0].requestType=='OT'?Container():     Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                  'Requested For: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestFor : "-"}'),
-                            ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName : "-"}'),
+                                  ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Request Reason: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestReason ?? "" : "-"}'),
+                                  ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                            requestItemObject.isEmpty
+                                ? Container()
+                                : Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Response Name: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName ?? "" : "-"}'),
+                                  ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : SizedBox(
+                                    width: size.width,
+                                    height: 1.0,
+                                    child: Container(
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                            myReqTitleObj[0].requestType == 'OT'
+                                ? Container()
+                                : Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                        'Requested For: ${requestItemObject.isNotEmpty ? requestItemObject[0].requestFor : "-"}'),
+                                  ),
                             Container(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: TextFormField(
@@ -412,10 +462,15 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                             globalMyLocalPrefes.getString(
                                                 AppConstant.ACCESS_TOKEN);
                                         // final uri = Services.RejectOT;
-                                        final uri =myReqTitleObj[0].requestType=='OT'?Services.RejectOT:Services.RejectLeave;
+                                        final uri =
+                                            myReqTitleObj[0].requestType == 'OT'
+                                                ? Services.RejectOT
+                                                : Services.RejectLeave;
                                         Map body = {
                                           "TokenKey": token,
-                                          "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2",
+                                          "lang": globalMyLocalPrefes.getString(
+                                                  AppConstant.LANG) ??
+                                              "2",
                                           "requestID":
                                               myReqTitleObj[0].requestID,
                                           "rejectDescription":
@@ -485,66 +540,75 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   ),
                                   RaisedButton(
                                     onPressed: () async {
-                              if (resoneController.text != "") {
-                                      setState(() {
-                                        isLoading = true;
-                                      });
+                                      if (resoneController.text != "") {
+                                        setState(() {
+                                          isLoading = true;
+                                        });
 
-                                      String token = globalMyLocalPrefes
-                                          .getString(AppConstant.ACCESS_TOKEN);
-                                      final uri =myReqTitleObj[0].requestType=='OT'?Services.ApproveOT:Services.ApproveLeave;
-                                      Map body = {
-                                        "TokenKey": token,
-                                        "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2",
-                                        "requestID": myReqTitleObj[0].requestID,
-                                        "approvedescription":
-                                            resoneController.text ?? " ",
-                                        "approveby": globalMyLocalPrefes
-                                            .getString(AppConstant.EMP_ID)
-                                            .toString(),
-                                        "approvedescription":
-                                            resoneController.text ?? " ",
-                                      };
+                                        String token =
+                                            globalMyLocalPrefes.getString(
+                                                AppConstant.ACCESS_TOKEN);
+                                        final uri =
+                                            myReqTitleObj[0].requestType == 'OT'
+                                                ? Services.ApproveOT
+                                                : Services.ApproveLeave;
+                                        Map body = {
+                                          "TokenKey": token,
+                                          "lang": globalMyLocalPrefes.getString(
+                                                  AppConstant.LANG) ??
+                                              "2",
+                                          "requestID":
+                                              myReqTitleObj[0].requestID,
+                                          "approvedescription":
+                                              resoneController.text ?? " ",
+                                          "approveby": globalMyLocalPrefes
+                                              .getString(AppConstant.EMP_ID)
+                                              .toString(),
+                                        };
 
-                                      print('$body');
-                                      http
-                                          .post(Uri.parse(uri), body: body)
-                                          .then((response) {
-                                        var jsonResponse =
-                                            jsonDecode(response.body);
-                                        // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
-                                        if (jsonResponse["StatusCode"] == 200) {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                          Toast.show(
-                                              jsonResponse['ModelErrors'],
-                                              context,
-                                              duration: Toast.LENGTH_LONG,
-                                              gravity: Toast.BOTTOM);
-
-                                          print("j&&& $jsonResponse");
-                                          Navigator.pop(context);
-                                        } else {
-                                          print(
-                                              "ModelError: ${jsonResponse["ModelErrors"]}");
-                                          if (jsonResponse["ModelErrors"] ==
-                                              'Unauthorized') {
-                                            GetToken().getToken().then((value) {
-                                              Toast.show("Please try again!!!",
-                                                  context,
-                                                  duration: Toast.LENGTH_LONG,
-                                                  gravity: Toast.BOTTOM);
+                                        print('$body');
+                                        http
+                                            .post(Uri.parse(uri), body: body)
+                                            .then((response) {
+                                          var jsonResponse =
+                                              jsonDecode(response.body);
+                                          // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
+                                          if (jsonResponse["StatusCode"] ==
+                                              200) {
+                                            setState(() {
+                                              isLoading = false;
                                             });
-                                          } else {
                                             Toast.show(
-                                                "Something went wrong, please try again later.",
+                                                jsonResponse['ModelErrors'],
                                                 context,
                                                 duration: Toast.LENGTH_LONG,
                                                 gravity: Toast.BOTTOM);
+
+                                            print("j&&& $jsonResponse");
+                                            Navigator.pop(context);
+                                          } else {
+                                            print(
+                                                "ModelError: ${jsonResponse["ModelErrors"]}");
+                                            if (jsonResponse["ModelErrors"] ==
+                                                'Unauthorized') {
+                                              GetToken()
+                                                  .getToken()
+                                                  .then((value) {
+                                                Toast.show(
+                                                    "Please try again!!!",
+                                                    context,
+                                                    duration: Toast.LENGTH_LONG,
+                                                    gravity: Toast.BOTTOM);
+                                              });
+                                            } else {
+                                              Toast.show(
+                                                  "Something went wrong, please try again later.",
+                                                  context,
+                                                  duration: Toast.LENGTH_LONG,
+                                                  gravity: Toast.BOTTOM);
+                                            }
                                           }
-                                        }
-                                      });
+                                        });
                                       } else {
                                         setState(() {
                                           errortext = "Please Enter Comment";
@@ -607,6 +671,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
 Widget planetCard(BuildContext context, name, remark, date) {
   Size size = MediaQuery.of(context).size;
+
+  DateTime tempDate = new DateFormat("dd/MM/yyyy HH:mm:ss").parse(date);
+  var inputDate = DateTime.parse(tempDate.toString());
+  var outputFormat = DateFormat('MMM d HH:mm');
+  var outputDate = outputFormat.format(inputDate);
+  print("inputDate $outputDate");
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Container(
@@ -675,7 +745,7 @@ Widget planetCard(BuildContext context, name, remark, date) {
                                         fontWeight: FontWeight.w600),
                                   ),
                                   Text(
-                                    date,
+                                    outputDate,
                                     style: new TextStyle(
                                         fontWeight: FontWeight.w500),
                                   ),
@@ -701,26 +771,26 @@ Widget planetCard(BuildContext context, name, remark, date) {
   );
 }
 
-Widget _itemBuilder(label, textValue) {
-  return Container(
-    child: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 15.0, bottom: 15),
-          child: Row(
-            children: [
-              Text(
-                label,
-                style: new TextStyle(fontWeight: FontWeight.w400),
-              ),
-              Text(
-                textValue,
-                style: new TextStyle(fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
+// Widget _itemBuilder(label, textValue) {
+//   return Container(
+//     child: Column(
+//       children: [
+//         Padding(
+//           padding: const EdgeInsets.only(top: 15.0, bottom: 15),
+//           child: Row(
+//             children: [
+//               Text(
+//                 label,
+//                 style: new TextStyle(fontWeight: FontWeight.w400),
+//               ),
+//               Text(
+//                 textValue,
+//                 style: new TextStyle(fontWeight: FontWeight.w500),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ],
+//     ),
+//   );
+// }

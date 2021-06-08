@@ -9,6 +9,7 @@ import 'package:HRMNew/src/constants/select_single_item_dialog.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetLeaveType.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetResponsiblePerson.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 import './background.dart';
@@ -37,7 +38,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   final TextEditingController leaveDateSelected = new TextEditingController();
   final TextEditingController rangeDateSelected = new TextEditingController();
   final TextEditingController leaveApplyFor = new TextEditingController();
-
+  final TextEditingController totalDaysController = new TextEditingController();
   List<ResultObject> leaveList = [];
   List<String> leaveTypeList = [];
 
@@ -51,10 +52,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   String respPerLable = "Leave";
   String respPerId;
 
-  DateFormat dateFormat =
-  DateFormat("yyyy-MM-dd");
+  DateFormat dateFormat = DateFormat("yyyy-MM-dd");
 
-  DateTime returndate ;
+  DateTime returndate;
 
   bool dateSelectedreturn = false;
 
@@ -65,9 +65,9 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     setState(() {});
   }
 
-  void getStartDate(){
-    selecteddate= dateFormat.parse(DateTime.now().toString());
-    returndate= dateFormat.parse(DateTime.now().toString());
+  void getStartDate() {
+    selecteddate = dateFormat.parse(DateTime.now().toString());
+    returndate = dateFormat.parse(DateTime.now().toString());
   }
 
   @override
@@ -76,6 +76,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     getTypeOfLeave();
     getResponsiblePerson();
     getStartDate();
+    totalDaysController.text = totalDays.toString();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1000), vsync: this);
     super.initState();
@@ -87,13 +88,18 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  DateTime strDate, endDate,endStartDate;
+  DateTime strDate, endDate, endStartDate;
   void _onDateRangeSelect() {
     // strDate =dateFormat.parse(val.start.toString()) ;
     // endDate = dateFormat.parse(val.end.toString());
     final difference = this.endDate.difference(strDate).inDays;
     setState(() {
-      totalDays = (difference==0)?selectedLeaveStartRadio==2?1:1:difference.toDouble();
+      totalDays = (difference == 0)
+          ? selectedLeaveStartRadio == 2
+              ? 1
+              : 1
+          : difference.toDouble();
+      totalDaysController.text = totalDays.toString();
     });
   }
 
@@ -238,13 +244,27 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   final DateTime pickedDate =
                                       await showDatePicker(
                                           context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime.now().subtract(Duration(days: 150)),
+                                          initialDate: DateTime.now().weekday ==
+                                                      6 ||
+                                                  DateTime.now().weekday == 7
+                                              ? DateTime(DateTime.now().year,
+                                                  DateTime.now().month, 1)
+                                              : DateTime.now(),
+                                          selectableDayPredicate:
+                                              (DateTime val) =>
+                                                  val.weekday == 6 ||
+                                                          val.weekday == 7
+                                                      ? false
+                                                      : true,
+                                          // initialDate: DateTime.now(),
+                                          firstDate: DateTime.now()
+                                              .subtract(Duration(days: 150)),
                                           lastDate: DateTime(
                                               DateTime.now().year + 1));
-                                  if (pickedDate != null )
+                                  if (pickedDate != null)
                                     setState(() {
-                                      selecteddate = dateFormat.parse(pickedDate.toString());
+                                      selecteddate = dateFormat
+                                          .parse(pickedDate.toString());
 
                                       dateSelectedselect = true;
                                     });
@@ -265,102 +285,185 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                         : 'Select Date')),
                               )
                             : Container(
-                              child: Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async{
-
-                                      final DateTime pickedDate =  await showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                      firstDate:DateTime.now().subtract(Duration(days: 150)),
-                                      lastDate:DateTime.now().add(Duration(days: 120)));
-                                      if (pickedDate != null)
-                                      setState(() {
-                                      strDate = dateFormat.parse(pickedDate.toString());
-                                      endStartDate=strDate;
-
-                                      });
-                                      // dateTimeRangePicker();
-                                    },
-                                    child: Container(
-                                        width: MediaQuery.of(context).size.width,
-                                        padding: EdgeInsets.all(16),
-                                        margin: EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.grey,
-                                            ),
-                                            shape: BoxShape.rectangle,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8))),
-                                        child: strDate==null? Text('Select Start Date'):Text('${strDate.day}/${strDate.month}/${strDate.year}')),
-                                  ),
-
-                                  GestureDetector(
-                                    onTap: ()async {
-                                      // dateTimeRangePicker();
-                                      final DateTime pickedDate =  await showDatePicker(
-                                          context: context,
-                                          initialDate: endStartDate,
-                                      firstDate: endStartDate,
-                                      lastDate: DateTime(
-                                          endStartDate.year + 1));
-                                      if (pickedDate != null)
-                                      setState(() {
-                                      endDate = dateFormat.parse(pickedDate.toString());
-                                        selectedDateRange =
-                                        '${strDate.day}/${strDate.month}/${strDate.year}  To  ${endDate.day}/${endDate.month}/${endDate.year}';
-
-                                      });
-                                      _onDateRangeSelect();
-                                    },
-                                    child: Container(
-                                        width: MediaQuery.of(context).size.width,
-                                        padding: EdgeInsets.all(16),
-                                        margin: EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.grey,
-                                            ),
-                                            shape: BoxShape.rectangle,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8))),
-                                        child:endDate==null? Text('Select End Date'):Text('${endDate.day}/${endDate.month}/${endDate.year}')),
-                                  ),
-
-                                ],
+                                child: Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () async {
+                                        final DateTime pickedDate = await showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now()
+                                                            .weekday ==
+                                                        6 ||
+                                                    DateTime.now().weekday == 7
+                                                ? DateTime(DateTime.now().year,
+                                                    DateTime.now().month, 1)
+                                                : DateTime.now(),
+                                            selectableDayPredicate:
+                                                (DateTime val) =>
+                                                    val.weekday == 6 ||
+                                                            val.weekday == 7
+                                                        ? false
+                                                        : true,
+                                            firstDate: DateTime.now()
+                                                .subtract(Duration(days: 150)),
+                                            lastDate: DateTime.now()
+                                                .add(Duration(days: 120)));
+                                        if (pickedDate != null)
+                                          setState(() {
+                                            strDate = dateFormat
+                                                .parse(pickedDate.toString());
+                                            endStartDate = strDate;
+                                          });
+                                        // dateTimeRangePicker();
+                                      },
+                                      child: Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          padding: EdgeInsets.all(16),
+                                          margin: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.grey,
+                                              ),
+                                              shape: BoxShape.rectangle,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8))),
+                                          child: strDate == null
+                                              ? Text('Select Start Date')
+                                              : Text(
+                                                  '${strDate.day}/${strDate.month}/${strDate.year}')),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        // dateTimeRangePicker();
+                                        final DateTime pickedDate =
+                                            await showDatePicker(
+                                                context: context,
+                                                // initialDate: endStartDate
+                                                //                 .weekday ==
+                                                //             6 ||
+                                                //         endStartDate.weekday ==
+                                                //             7
+                                                //     ? DateTime(
+                                                //         DateTime.now().year,
+                                                //         DateTime.now().month,
+                                                //         1)
+                                                //     : DateTime.now(),
+                                                selectableDayPredicate:
+                                                    (DateTime val) =>
+                                                        val.weekday == 6 ||
+                                                                val.weekday == 7
+                                                            ? false
+                                                            : true,
+                                                initialDate: endStartDate,
+                                                firstDate: endStartDate,
+                                                lastDate: DateTime(
+                                                    endStartDate.year + 1));
+                                        if (pickedDate != null)
+                                          setState(() {
+                                            endDate = dateFormat
+                                                .parse(pickedDate.toString());
+                                            selectedDateRange =
+                                                '${strDate.day}/${strDate.month}/${strDate.year}  To  ${endDate.day}/${endDate.month}/${endDate.year}';
+                                          });
+                                        _onDateRangeSelect();
+                                      },
+                                      child: Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          padding: EdgeInsets.all(16),
+                                          margin: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.grey,
+                                              ),
+                                              shape: BoxShape.rectangle,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8))),
+                                          child: endDate == null
+                                              ? Text('Select End Date')
+                                              : Text(
+                                                  '${endDate.day}/${endDate.month}/${endDate.year}')),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
 
                         selectedLeaveRadio == 2
                             ? Container()
                             : Container(
-                                width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.all(16),
-                                margin: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                    ),
-                                    shape: BoxShape.rectangle,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8))),
-                                child: Text(
-                                    'Applying for  ${totalDays.toString()} days')),
+                                padding: const EdgeInsets.all(9),
+                                child: TextFormField(
+                                  // initialValue: totalDays != null
+                                  //     ? totalDays.toString()
+                                  //     : null,
+                                  // "Applying for ${totalDays.toString()} days",
+                                  maxLength: 4,
+                                  decoration: new InputDecoration(
+                                    hintText:
+                                        'Applying for  ${totalDays.toString()} days',
+                                    labelText: 'Applying for total days',
+                                    fillColor: Colors.white,
+                                    border: _focusNode.hasFocus
+                                        ? OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5.0)),
+                                            borderSide: BorderSide(
+                                                color: leaveCardcolor))
+                                        : OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5.0)),
+                                            borderSide:
+                                                BorderSide(color: Colors.grey)),
+                                    filled: true,
+                                    contentPadding: EdgeInsets.only(
+                                        bottom: 10.0, left: 10.0, right: 10.0),
+                                  ),
+                                  controller: totalDaysController,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                  onSaved: (dynamic value) {
+                                    setState(() {
+                                      totalDays = double.parse(value);
+                                    });
+                                    // This optional block of code can be used to run
+                                    // code when the user saves the form.
+                                  },
+                                ),
+                              ),
+                        // Container(
+                        //     width: MediaQuery.of(context).size.width,
+                        //     padding: EdgeInsets.all(16),
+                        //     margin: EdgeInsets.all(8),
+                        //     decoration: BoxDecoration(
+                        //         border: Border.all(
+                        //           color: Colors.grey,
+                        //         ),
+                        //         shape: BoxShape.rectangle,
+                        //         borderRadius:
+                        //             BorderRadius.all(Radius.circular(8))),
+                        //     child: Text(
+                        //         'Applying for  ${totalDays.toString()} days'),
+                        //   ),
 
                         GestureDetector(
                           onTap: () async {
                             final DateTime pickedDate = await showDatePicker(
                                 context: context,
                                 initialDate: selectedLeaveRadio == 1
-                                    ?endDate.add(Duration(days: 1)):  selecteddate,
-                                firstDate:selectedLeaveRadio == 1
-                                    ?endDate.add(Duration(days: 1)):  selecteddate,
-                                lastDate:dateFormat.parse( DateTime(DateTime.now().year + 1).toString()));
+                                    ? endDate.add(Duration(days: 1))
+                                    : selecteddate,
+                                firstDate: selectedLeaveRadio == 1
+                                    ? endDate.add(Duration(days: 1))
+                                    : selecteddate,
+                                lastDate: dateFormat.parse(
+                                    DateTime(DateTime.now().year + 1)
+                                        .toString()));
                             if (pickedDate != null && pickedDate != returndate)
                               setState(() {
-                                returndate =dateFormat.parse(pickedDate.toString()) ;
+                                returndate =
+                                    dateFormat.parse(pickedDate.toString());
                                 dateSelectedreturn = true;
                               });
                           },
@@ -558,7 +661,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               ),
                               onPressed: () {
                                 if (_fbKey.currentState.saveAndValidate()) {
-                                  print(_fbKey.currentState.value);
+                                  // print(_fbKey.currentState.value);
+
                                   _placeRequests();
                                 }
                               }),
@@ -585,9 +689,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetLeaveType;
     print(uri);
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
     print("value" + body.toString());
-    http.post(  Uri.parse(uri) , body: body).then((response) async {
+    http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...kk.." + jsonResponse.toString());
       GetLeaveType leave = new GetLeaveType.fromJson(jsonResponse);
@@ -619,12 +726,13 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     setState(() {
       isLoading = true;
     });
+    print("xfghx ${totalDaysController.text.runtimeType}");
 
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.AddNewLeave;
     Map body = {
       "TokenKey": token,
-      "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2",
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2",
       "LeaveTypeId": leaveId,
       "strDate": selectedLeaveRadio == 2
           ? '${selecteddate.year}-${selecteddate.month}-${selecteddate.day}'
@@ -633,16 +741,15 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           ? '${selecteddate.year}-${selecteddate.month}-${selecteddate.day}'
           : '${endDate.year}-${endDate.month}-${endDate.day}',
       "ReturnDate": '${returndate.year}-${returndate.month}-${returndate.day}',
-      "TotalDays":selectedLeaveRadio == 2
-              ? '0.5'
-              : '$totalDays',
+      "TotalDays":
+          selectedLeaveRadio == 2 ? '0.5' : '${totalDaysController.text}',
       "reasone": resoneController.text,
       "responsiblePersonID": respPerId,
       "LeaveFor": selectedLeaveRadio == 2 ? "half day" : "full day",
     };
 
     print('$body');
-    http.post(  Uri.parse(uri) , body: body).then((response) async {
+    http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       // MyRequests myRequest = new MyRequests.fromJson(jsonResponse);
       if (jsonResponse["StatusCode"] == 200) {
@@ -700,8 +807,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     resPerLsit.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetResponsiblePer;
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
-    http.post(  Uri.parse(uri) , body: body).then((response) async {
+    Map body = {
+      "Tokenkey": token,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
+    http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("jsonResponse...resPerson.." + jsonResponse.toString());
       GetResponsiblePerson resPerson =
@@ -719,7 +829,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       } else {
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-         await GetToken().getToken().then((value) {
+          await GetToken().getToken().then((value) {
             getResponsiblePerson();
           });
         } else {

@@ -157,29 +157,29 @@ class RequestTitleObject {
   String statusText;
   String fileName;
   String attachedFile;
-  String SubmitDate;
+  String otdate;
 
   RequestTitleObject(
       {this.requestID,
       this.requestNo,
       this.requestType,
       this.managerName,
-      this.SubmitDate,
       this.submitDate,
       this.statusText,
       this.fileName,
-      this.attachedFile});
+      this.attachedFile,
+      this.otdate});
 
   RequestTitleObject.fromJson(Map<String, dynamic> json) {
     requestID = json['RequestID'];
     requestNo = json['RequestNo'];
     requestType = json['RequestType'];
-    SubmitDate = json['SubmitDate'];
     managerName = json['managerName'];
     submitDate = json['SubmitDate'];
     statusText = json['statusText'];
     fileName = json['fileName'];
     attachedFile = json['attachedFile'];
+    otdate = json['otdate'];
   }
 
   Map<String, dynamic> toJson() {
@@ -188,11 +188,12 @@ class RequestTitleObject {
     data['RequestNo'] = this.requestNo;
     data['RequestType'] = this.requestType;
     data['managerName'] = this.managerName;
-    data['SubmitDate'] = this.SubmitDate;
     data['SubmitDate'] = this.submitDate;
     data['statusText'] = this.statusText;
     data['fileName'] = this.fileName;
     data['attachedFile'] = this.attachedFile;
+    data['otdate'] = this.otdate;
+
     return data;
   }
 }

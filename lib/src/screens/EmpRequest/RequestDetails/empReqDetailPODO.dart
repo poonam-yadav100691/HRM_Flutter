@@ -74,7 +74,7 @@ class RequestTitleObject {
   String attachedFile;
   String statusText;
   String empPhoto;
-
+  String otdate;
   String empContact;
 
   RequestTitleObject(
@@ -88,7 +88,8 @@ class RequestTitleObject {
       this.attachedFile,
       this.statusText,
       this.empPhoto,
-      this.empContact});
+      this.empContact,
+      this.otdate});
 
   RequestTitleObject.fromJson(Map<String, dynamic> json) {
     requestID = json['requestID'];
@@ -102,6 +103,7 @@ class RequestTitleObject {
     statusText = json['statusText'];
     empPhoto = json['empPhoto'];
     empContact = json['empContact'];
+    otdate = json['otdate'];
   }
 
   Map<String, dynamic> toJson() {
@@ -117,6 +119,8 @@ class RequestTitleObject {
     data['statusText'] = this.statusText;
     data['empPhoto'] = this.empPhoto;
     data['empContact'] = this.empContact;
+    data['otdate'] = this.otdate;
+
     return data;
   }
 }

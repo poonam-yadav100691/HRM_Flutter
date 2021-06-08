@@ -180,7 +180,13 @@ class _BodyState extends State<Body> {
                   onTap: () async {
                     final DateTime pickedDate = await showDatePicker(
                         context: context,
-                        initialDate: DateTime.now(),
+                        initialDate: DateTime.now().weekday == 6 ||
+                                DateTime.now().weekday == 7
+                            ? DateTime(
+                                DateTime.now().year, DateTime.now().month, 1)
+                            : DateTime.now(),
+                        selectableDayPredicate: (DateTime val) =>
+                            val.weekday == 6 || val.weekday == 7 ? false : true,
                         firstDate: DateTime.now(),
                         lastDate: DateTime(DateTime.now().year + 1));
                     if (pickedDate != null && pickedDate != returndate)
