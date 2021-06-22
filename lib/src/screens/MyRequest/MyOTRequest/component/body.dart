@@ -66,6 +66,7 @@ class _BodyState extends State<Body> {
   }
 
   Widget planetCard(BuildContext context, ResultObject object) {
+    print("object.otdate ${object.otdate}");
     return Container(
       // width: MediaQuery.of(context).size.width * 0.88,
       margin: new EdgeInsets.only(left: 26.0),
@@ -95,7 +96,7 @@ class _BodyState extends State<Body> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${object.submitDate} ',
+                        'OT date ${object.otdate} ',
                         style: new TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Padding(

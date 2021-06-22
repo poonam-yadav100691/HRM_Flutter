@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:toast/toast.dart';
 
 List<Permission> listOfPermission = [];
 
@@ -29,7 +28,6 @@ Permission getPermissionObject(String type) {
       _permission = element;
     }
   });
-
   return _permission;
 }
 
@@ -45,7 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
   double _fabHeight;
   double _panelHeightOpen;
   double _panelHeightClosed = 95.0;
-  // SharedPreferences sharedPreferences;
   String _username, firstName, lastName, username, department, image;
   Uint8List bytes;
 
@@ -62,7 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
     Colors.purple[100],
   ];
 
-  List<ResultObject1> balanceList = new List();
+  List<ResultObject1> balanceList = [];
+
   @override
   void initState() {
     super.initState();
@@ -73,7 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
   // List<Permission> listOfPermission1 = [];
   Future _register() async {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
-
     try {
       final uri = Services.GetPermissions;
       Map body = {
@@ -85,17 +82,13 @@ class _MyHomePageState extends State<MyHomePage> {
           var jsonResponse = jsonDecode(response.body);
           print("permission" + jsonResponse.toString());
           if (jsonResponse["StatusCode"] == 200) {
-            // sharedPreferences.setString(
-            //     AppConstant.PERMISSIONS, jsonResponse['ResultObject']);
             final List parsed = jsonResponse['ResultObject'];
             List<Permission> _permissions = [];
-
             parsed.forEach((element) {
               _permissions.add(Permission.fromJson(element));
             });
 
             setState(() {
-              // listOfPermission1 = _permissions;
               listOfPermission = _permissions;
               username = globalMyLocalPrefes.getString(AppConstant.USERNAME);
               department =
@@ -104,10 +97,11 @@ class _MyHomePageState extends State<MyHomePage> {
               isLoading = false;
             });
           } else {
-            print("ModelError: ${jsonResponse["ModelErrors"]}");
+            print("Register: ${jsonResponse["ModelErrors"]}");
             if (jsonResponse["ModelErrors"] == 'Unauthorized') {
               await GetToken().getToken().then((value) {
-                _register();
+                print("Register GetToken: ");
+                retryFuture(_register, 2000);
               });
             } else {
               _scaffoldKey.currentState.showSnackBar(
@@ -224,8 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var now = new DateTime.now();
     var formatter = new DateFormat('E, dd MMM yyyy');
     String formattedDate = formatter.format(now);
-    if (image != null) {
-      print('image data ');
+    if (image != null && image != "") {
       bytes = Base64Codec().decode(image);
     }
 
@@ -274,6 +267,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                       padding: const EdgeInsets.only(left: 15.0),
                       child: new CircleAvatar(
+                        backgroundColor: Colors.transparent,
                         radius: 35,
                         child: bytes != null
                             ? ClipOval(
@@ -283,7 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ))
                             : ClipOval(
                                 child: Image.asset(
-                                  "lib/assets/images/profile.jpg",
+                                  "lib/assets/images/profile.png",
                                   height: 75,
                                   // width: 90,
                                 ),
@@ -486,7 +480,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _body() {
     Size size = MediaQuery.of(context).size;
 
-    print('size ${size.width}');
+    // print('size ${size.width}');
     return Container(
       height: size.height,
       child: Column(children: [
@@ -504,6 +498,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
+        SizedBox(
+          height: 40,
+        )
       ]),
     );
   }
@@ -639,4 +636,11 @@ class GetToken {
       }
     });
   }
+}
+
+retryFuture(future, delay) {
+  Future.delayed(Duration(milliseconds: delay), () {
+    print(delay);
+    future();
+  });
 }

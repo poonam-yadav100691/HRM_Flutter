@@ -8,7 +8,7 @@ import 'package:HRMNew/src/constants/select_single_item_dialog.dart';
 import 'package:HRMNew/src/screens/Delegates/AddDelegates/delegatePODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
@@ -91,8 +91,16 @@ class _BodyState extends State<Body> {
             getDelegatePerson();
           });
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          // Toast.show("Something went wrong, please try again later.", context,
+          //     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         }
       }
     });
@@ -375,8 +383,15 @@ class _BodyState extends State<Body> {
                         setState(() {
                           isLoading = false;
                         });
-                        Toast.show("Delegates Added Successfully!!!", context,
-                            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+                        Fluttertoast.showToast(
+                            msg: "Delegates Added Successfully!!!",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+
                         print("j&&& $jsonResponse");
                         print("j&&& $jsonResponse");
                         Navigator.pushReplacementNamed(context, delegateRoute);
@@ -384,17 +399,26 @@ class _BodyState extends State<Body> {
                         print("ModelError: ${jsonResponse["ModelErrors"]}");
                         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
                           GetToken().getToken().then((value) {
-                            Toast.show("Please try again!!!", context,
-                                duration: Toast.LENGTH_LONG,
-                                gravity: Toast.BOTTOM);
+                            Fluttertoast.showToast(
+                                msg: "Please try again!!!",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
                           });
                           // Future<String> token = getToken();
                         } else {
-                          Toast.show(
-                              "Something went wrong, please try again later.",
-                              context,
-                              duration: Toast.LENGTH_LONG,
-                              gravity: Toast.BOTTOM);
+                          Fluttertoast.showToast(
+                              msg:
+                                  "Something went wrong, please try again later!",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
                         }
                       }
                     });

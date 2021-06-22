@@ -7,7 +7,7 @@ import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/screens/NewsPage/component/PODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import './background.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -61,8 +61,15 @@ class _BodyState extends State<Body> {
           setState(() {
             isLoading = false;
           });
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+            msg: "Something went wrong, please try again later.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        
         }
       }
     });
@@ -95,8 +102,14 @@ class _BodyState extends State<Body> {
             _deleteNews(newsID);
           });
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+            msg: "Something went wrong, please try again later.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
         }
       }
     });

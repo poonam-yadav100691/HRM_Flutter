@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:HRMNew/main.dart';
+import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/screens/home.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
@@ -10,7 +12,6 @@ import 'package:HRMNew/src/screens/EmpRequest/EmpLeaveRequest/empLeaveRequest.da
 import 'package:HRMNew/src/screens/EmpRequest/EmpOTRequest/empOtRequest.dart';
 import 'package:HRMNew/src/screens/EmpRequest/empRequestPODO.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
 
 class EmpRequest extends StatefulWidget {
   // final TabController tabBar;
@@ -57,7 +58,9 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
                       icon: Icon(Icons.arrow_back_ios),
                       color: Colors.white,
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pushNamed(context, homeRoute);
+
+                        // Navigator.pop(context);
                       }),
                 ),
                 body: TabBarView(
@@ -122,7 +125,10 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
     });
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.EmpRequest;
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
     http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       EmpRequestList myRequest = new EmpRequestList.fromJson(jsonResponse);
@@ -150,8 +156,15 @@ class _EmpRequestState extends State<EmpRequest> with TickerProviderStateMixin {
           setState(() {
             isLoading = false;
           });
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+
           print("ModelError: ${jsonResponse["ModelErrors"]}");
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));

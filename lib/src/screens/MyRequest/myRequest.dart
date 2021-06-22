@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/src/screens/home.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -11,7 +12,6 @@ import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveRequest.dart'
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/myOtRequest.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
 
 class MyRequest extends StatefulWidget {
   // final TabController tabBar;
@@ -73,13 +73,12 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
                               height: MediaQuery.of(context).size.height,
                               child: Center(child: CircularProgressIndicator()))
                           : MyLeaveRequest(data: leaveReqList ?? []),
-
                       isLoading
                           ? Container(
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height,
                               child: Center(child: CircularProgressIndicator()))
-                             :MyOTRequest(otReqList ?? []),
+                          : MyOTRequest(otReqList ?? []),
                     ],
                   ),
                   bottomNavigationBar: new TabBar(
@@ -152,8 +151,14 @@ class _MyRequestState extends State<MyRequest> with TickerProviderStateMixin {
           setState(() {
             isLoading = false;
           });
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     });

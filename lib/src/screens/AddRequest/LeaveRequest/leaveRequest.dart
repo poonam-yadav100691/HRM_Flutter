@@ -23,7 +23,6 @@ class LeaveRequest extends StatelessWidget {
             }),
       ),
       body: Body(),
-
     );
   }
 }

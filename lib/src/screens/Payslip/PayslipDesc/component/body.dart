@@ -6,8 +6,8 @@ import 'package:HRMNew/src/screens/Payslip/PayslipDesc/component/payslipDetailsP
 import 'package:HRMNew/src/screens/Payslip/component/paySlipListPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:toast/toast.dart';
 import './background.dart';
 
 class Body extends StatefulWidget {
@@ -60,7 +60,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     });
     payslipDetails.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
-    Map body = {"Tokenkey": token, "salaryID": id, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "salaryID": id,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
     print(body);
 
     final uri1 = Services.PayslipDetails;
@@ -86,8 +90,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             _getpayslipDetails(id);
           });
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     });

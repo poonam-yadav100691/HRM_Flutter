@@ -19,6 +19,8 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> with TickerProviderStateMixin {
   List<ResultObject> empLeaveList;
 
+  Uint8List bytes;
+
   // var totalDays = 0;
 
   _BodyState(this.empLeaveList);
@@ -27,6 +29,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   AnimationController animationController;
   Animation<dynamic> animation;
   Widget build(BuildContext context) {
+    print("empLeaveList $empLeaveList");
     // List jsonResponse = jsonDecode(empLeaveList);
     final children = <Widget>[];
     if (empLeaveList != null) {
@@ -58,7 +61,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     var outputFormat = DateFormat('dd/MM/yy');
     var inputDate2 = inputFormat.parse(date); // <-- Incoming date
     var returnDate = outputFormat.format(inputDate2);
-    Uint8List bytes = base64Decode(empPhoto);
+    if (empPhoto != null && empPhoto != "") {
+      print("empPhoto1 $empPhoto");
+      bytes = base64Decode(empPhoto);
+    }
+
     Size size = MediaQuery.of(context).size;
     return InkWell(
       child: Container(
@@ -96,17 +103,19 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                   Expanded(
                     child: Row(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.only(left: 6.0),
-                          child: ClipOval(
-                            child: new Image.memory(
-                              bytes,
-                              height: 47,
-                              width: 47,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
+                        bytes != null
+                            ? Container(
+                                padding: const EdgeInsets.only(left: 6.0),
+                                child: ClipOval(
+                                  child: new Image.memory(
+                                    bytes,
+                                    height: 47,
+                                    width: 47,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              )
+                            : Container(),
                         Padding(
                           padding: const EdgeInsets.only(left: 12.0),
                           child: Column(

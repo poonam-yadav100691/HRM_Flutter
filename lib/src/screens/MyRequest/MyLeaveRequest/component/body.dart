@@ -9,7 +9,7 @@ import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveReqDetails/my
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import './background.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -68,8 +68,15 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             getLeaveCounts();
           });
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+           Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          
         }
       }
     });

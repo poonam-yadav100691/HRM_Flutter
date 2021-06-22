@@ -10,8 +10,8 @@ import 'package:HRMNew/src/screens/Task/TaskPending/component/PODO.dart';
 import 'package:HRMNew/src/screens/Task/TaskPending/taskPending.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:toast/toast.dart';
 
 import './background.dart';
 
@@ -52,7 +52,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
 
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.TaskList;
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       TaskList myRequest = new TaskList.fromJson(jsonResponse);
@@ -80,8 +83,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           setState(() {
             isLoading = false;
           });
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     });

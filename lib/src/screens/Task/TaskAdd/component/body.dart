@@ -11,7 +11,7 @@ import 'package:HRMNew/src/constants/select_single_item_dialog.dart';
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetResponsiblePerson.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
@@ -66,7 +66,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.GetResponsiblePer;
     print(uri);
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
     http.post(Uri.parse(uri), body: body).then((response) {
       var jsonResponse = jsonDecode(response.body);
       print("...resPerson.." + jsonResponse.toString());
@@ -90,8 +93,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             getResponsiblePerson();
           });
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     });
@@ -113,7 +122,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       "taskDetail": data["reason"],
       "emp_id": respPerId,
       "Task_attachec_file": "sample string 5",
-      "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
     };
 
     print("j&&& $body");
@@ -136,8 +145,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           setState(() {
             isLoading = false;
           });
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     }).catchError((onError) => {print("onError:: $onError")});

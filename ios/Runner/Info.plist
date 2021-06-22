@@ -13,8 +13,12 @@
 <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 <string>This app needs access to location when open and in the background.</string>
 
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Allow access to photo library</string>
+
 <key>NSCameraUsageDescription</key>
-<string>Explanation on why the camera access is needed.</string>
+<string>Allow access to camera to capture photos</string>
+
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

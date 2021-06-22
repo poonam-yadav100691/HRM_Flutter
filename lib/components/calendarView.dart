@@ -3,22 +3,20 @@ import 'package:HRMNew/main.dart';
 import 'package:HRMNew/models/calenderPodo.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
-import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
 
-// Example holidays
-final Map<DateTime, List> _holidays = {
-  DateTime(2020, 1, 1): ['New Year\'s Day'],
-  DateTime(2020, 1, 6): ['Epiphany'],
-  DateTime(2020, 2, 14): ['Valentine\'s Day'],
-  DateTime(2020, 4, 21): ['Easter Sunday'],
-  DateTime(2020, 4, 22): ['Easter Monday'],
-};
+// // Example holidays
+// final Map<DateTime, List> _holidays = {
+//   DateTime(2020, 1, 1): ['New Year\'s Day'],
+//   DateTime(2020, 1, 6): ['Epiphany'],
+//   DateTime(2020, 2, 14): ['Valentine\'s Day'],
+//   DateTime(2020, 4, 21): ['Easter Sunday'],
+//   DateTime(2020, 4, 22): ['Easter Monday'],
+// };
 
 class CalendarViewMain extends StatefulWidget {
   @override

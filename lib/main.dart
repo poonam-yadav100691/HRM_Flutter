@@ -46,7 +46,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
-  print("Handling a background message ${message}");
+  print("Handling a background message $message");
   var initializationSettingsAndroid =
       new AndroidInitializationSettings('@mipmap/ic_launcher');
   var initializationSettingsIOS = new IOSInitializationSettings();
@@ -115,16 +115,12 @@ class _MyAppState extends State<MyApp> {
     if (_locale.languageCode.trim() == 'en') {
       await globalMyLocalPrefes.setString(AppConstant.LANG, '2').then((value) {
         setState(() {
-          print(
-              "&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
           _locale = locale;
         });
       });
     } else {
       await globalMyLocalPrefes.setString(AppConstant.LANG, '1').then((value) {
         setState(() {
-          print(
-              "&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
           _locale = locale;
         });
       });
@@ -185,16 +181,12 @@ class _MyAppState extends State<MyApp> {
         await globalMyLocalPrefes.setString(AppConstant.LANG, '2');
         await globalMyLocalPrefes.setString(AppConstant.LANG, '2');
         setState(() {
-          print(
-              "&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
           _locale = locale;
         });
       } else {
         await globalMyLocalPrefes.setString(AppConstant.LANG, '1');
         await globalMyLocalPrefes.setString(AppConstant.LANG, '1');
         setState(() {
-          print(
-              "&455&&&  lang code ${locale.languageCode}  set code ${globalMyLocalPrefes.getString(AppConstant.LANG)}");
           _locale = locale;
         });
       }

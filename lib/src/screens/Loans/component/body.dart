@@ -7,7 +7,7 @@ import 'package:HRMNew/src/screens/Loans/component/loanDetailsPODO.dart';
 import 'package:HRMNew/src/screens/Loans/component/loanPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import './background.dart';
 import 'package:http/http.dart' as http;
 
@@ -55,7 +55,10 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     loanHeader.clear();
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.LoanHeader;
-    Map body = {"Tokenkey": token, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
     http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       LoanHeader insuranceHeaderLst = new LoanHeader.fromJson(jsonResponse);
@@ -72,8 +75,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             _getLoanHeader();
           });
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     });
@@ -86,7 +95,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     loanDetails.clear();
 
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
-    Map body = {"Tokenkey": token, "loanID": id, "lang": globalMyLocalPrefes.getString(AppConstant.LANG)??"2"};
+    Map body = {
+      "Tokenkey": token,
+      "loanID": id,
+      "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2"
+    };
 
     final uri1 = Services.LoanDetail;
     http.post(Uri.parse(uri1), body: body).then((response) async {
@@ -113,8 +126,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
             _getLoanDetails(id);
           });
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     });

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
@@ -10,8 +12,10 @@ import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetLeaveType.dar
 import 'package:HRMNew/src/screens/AddRequest/LeaveRequest/PODO/GetResponsiblePerson.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart'; // For Image Picker
+import 'package:path/path.dart' as Path;
 import 'package:intl/intl.dart';
-import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
@@ -92,22 +96,41 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   void _onDateRangeSelect() {
     // strDate =dateFormat.parse(val.start.toString()) ;
     // endDate = dateFormat.parse(val.end.toString());
-    final difference = this.endDate.difference(strDate).inDays;
+    // final difference = this.endDate.difference(strDate).inDays;
+    // print("difference:: $difference");
+    var totalDay = getDifferenceWithoutWeekends(strDate, endDate);
+    print(totalDay);
     setState(() {
-      totalDays = (difference == 0)
+      totalDays = (totalDay == 0)
           ? selectedLeaveStartRadio == 2
               ? 1
               : 1
-          : difference.toDouble();
+          : totalDay;
+      // : difference.toDouble() + 1;
+      print("total days: $totalDays");
       totalDaysController.text = totalDays.toString();
     });
+  }
+
+  double getDifferenceWithoutWeekends(DateTime startDate, DateTime endDate) {
+    double nbDays = 0;
+    DateTime currentDay = startDate;
+    while (currentDay.isBefore(endDate)) {
+      currentDay = currentDay.add(Duration(days: 1));
+      if (currentDay.weekday != DateTime.saturday &&
+          currentDay.weekday != DateTime.sunday) {
+        nbDays += 1;
+      }
+    }
+    return nbDays + 1;
   }
 
   String selectedDateRange = 'Select Date Range';
   int selectedLeaveRadio = 1;
   int selectedLeaveStartRadio = 1;
   DateTime returnDate;
-
+  String result1;
+  PickedFile pickedFile;
   @override
   Widget build(BuildContext context) {
     // String selectedDateRange = getTranslated(context, "SelectDateRange");
@@ -244,19 +267,19 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   final DateTime pickedDate =
                                       await showDatePicker(
                                           context: context,
-                                          initialDate: DateTime.now().weekday ==
-                                                      6 ||
-                                                  DateTime.now().weekday == 7
-                                              ? DateTime(DateTime.now().year,
-                                                  DateTime.now().month, 1)
-                                              : DateTime.now(),
-                                          selectableDayPredicate:
-                                              (DateTime val) =>
-                                                  val.weekday == 6 ||
-                                                          val.weekday == 7
-                                                      ? false
-                                                      : true,
-                                          // initialDate: DateTime.now(),
+                                          // initialDate: DateTime.now().weekday ==
+                                          //             6 ||
+                                          //         DateTime.now().weekday == 7
+                                          //     ? DateTime(DateTime.now().year,
+                                          //         DateTime.now().month, 1)
+                                          //     : DateTime.now(),
+                                          // selectableDayPredicate:
+                                          //     (DateTime val) =>
+                                          //         val.weekday == 6 ||
+                                          //                 val.weekday == 7
+                                          //             ? false
+                                          //             : true,
+                                          initialDate: DateTime.now(),
                                           firstDate: DateTime.now()
                                               .subtract(Duration(days: 150)),
                                           lastDate: DateTime(
@@ -289,25 +312,28 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   children: [
                                     GestureDetector(
                                       onTap: () async {
-                                        final DateTime pickedDate = await showDatePicker(
-                                            context: context,
-                                            initialDate: DateTime.now()
-                                                            .weekday ==
-                                                        6 ||
-                                                    DateTime.now().weekday == 7
-                                                ? DateTime(DateTime.now().year,
-                                                    DateTime.now().month, 1)
-                                                : DateTime.now(),
-                                            selectableDayPredicate:
-                                                (DateTime val) =>
-                                                    val.weekday == 6 ||
-                                                            val.weekday == 7
-                                                        ? false
-                                                        : true,
-                                            firstDate: DateTime.now()
-                                                .subtract(Duration(days: 150)),
-                                            lastDate: DateTime.now()
-                                                .add(Duration(days: 120)));
+                                        final DateTime pickedDate =
+                                            await showDatePicker(
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                // initialDate: DateTime.now()
+                                                //                 .weekday ==
+                                                //             6 ||
+                                                //         DateTime.now().weekday == 7
+                                                //     ? DateTime(DateTime.now().year,
+                                                //         DateTime.now().month, 1)
+                                                //     : DateTime.now(),
+                                                // selectableDayPredicate:
+                                                //     (DateTime val) =>
+                                                //         val.weekday == 6 ||
+                                                //                 val.weekday == 7
+                                                //             ? false
+                                                //             : true,
+                                                firstDate: DateTime.now()
+                                                    .subtract(
+                                                        Duration(days: 150)),
+                                                lastDate: DateTime.now()
+                                                    .add(Duration(days: 120)));
                                         if (pickedDate != null)
                                           setState(() {
                                             strDate = dateFormat
@@ -339,22 +365,12 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                         final DateTime pickedDate =
                                             await showDatePicker(
                                                 context: context,
-                                                // initialDate: endStartDate
-                                                //                 .weekday ==
-                                                //             6 ||
-                                                //         endStartDate.weekday ==
-                                                //             7
-                                                //     ? DateTime(
-                                                //         DateTime.now().year,
-                                                //         DateTime.now().month,
-                                                //         1)
-                                                //     : DateTime.now(),
-                                                selectableDayPredicate:
-                                                    (DateTime val) =>
-                                                        val.weekday == 6 ||
-                                                                val.weekday == 7
-                                                            ? false
-                                                            : true,
+                                                // selectableDayPredicate:
+                                                //     (DateTime val) =>
+                                                //         val.weekday == 6 ||
+                                                //                 val.weekday == 7
+                                                //             ? false
+                                                //             : true,
                                                 initialDate: endStartDate,
                                                 firstDate: endStartDate,
                                                 lastDate: DateTime(
@@ -394,10 +410,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             : Container(
                                 padding: const EdgeInsets.all(9),
                                 child: TextFormField(
-                                  // initialValue: totalDays != null
-                                  //     ? totalDays.toString()
-                                  //     : null,
-                                  // "Applying for ${totalDays.toString()} days",
                                   maxLength: 4,
                                   decoration: new InputDecoration(
                                     hintText:
@@ -420,9 +432,11 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                         bottom: 10.0, left: 10.0, right: 10.0),
                                   ),
                                   controller: totalDaysController,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
+                                  keyboardType: TextInputType.numberWithOptions(
+                                      decimal: true),
+                                  // inputFormatters: [
+                                  //   FilteringTextInputFormatter.digitsOnly
+                                  // ],
                                   onSaved: (dynamic value) {
                                     setState(() {
                                       totalDays = double.parse(value);
@@ -432,20 +446,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                   },
                                 ),
                               ),
-                        // Container(
-                        //     width: MediaQuery.of(context).size.width,
-                        //     padding: EdgeInsets.all(16),
-                        //     margin: EdgeInsets.all(8),
-                        //     decoration: BoxDecoration(
-                        //         border: Border.all(
-                        //           color: Colors.grey,
-                        //         ),
-                        //         shape: BoxShape.rectangle,
-                        //         borderRadius:
-                        //             BorderRadius.all(Radius.circular(8))),
-                        //     child: Text(
-                        //         'Applying for  ${totalDays.toString()} days'),
-                        //   ),
 
                         GestureDetector(
                           onTap: () async {
@@ -646,7 +646,35 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                             },
                           ),
                         ),
-
+                        Container(
+                          width: size.width * 0.9,
+                          margin: EdgeInsets.only(bottom: 10, top: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              result1 != null
+                                  ? Container(
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1.0,
+                                            color: Colors.grey[700]),
+                                      ),
+                                      child: Image.file(
+                                        File(result1),
+                                        height: 200,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Container(),
+                              RaisedButton(
+                                child: Text('Choose File'),
+                                onPressed: _showMyDialog,
+                                color: Colors.cyan,
+                              ),
+                            ],
+                          ),
+                        ),
                         // MyCustomFileUpload(),
                         Container(
                           width: size.width * 0.9,
@@ -662,7 +690,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               onPressed: () {
                                 if (_fbKey.currentState.saveAndValidate()) {
                                   // print(_fbKey.currentState.value);
-
                                   _placeRequests();
                                 }
                               }),
@@ -677,6 +704,108 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
     } else {
       return Container(child: Center(child: CircularProgressIndicator()));
     }
+  }
+
+  Image img;
+  PickedFile imageFile;
+  _imgFromCamera() async {
+    imageFile = await ImagePicker()
+        .getImage(source: ImageSource.camera, imageQuality: 60);
+    if (imageFile != null) {
+      setState(() {
+        result1 = imageFile.path;
+        pickedFile = imageFile;
+        // _showSubmitBtn = true;
+      });
+    }
+  }
+
+  _imgFromGallery() async {
+    imageFile = await ImagePicker()
+        .getImage(source: ImageSource.gallery, imageQuality: 60);
+    if (imageFile != null) {
+      setState(() {
+        result1 = imageFile.path;
+        pickedFile = imageFile;
+        // _showSubmitBtn = true;
+      });
+    }
+  }
+
+  Future<void> _showMyDialog() async {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+    // return showDialog(
+    //     context: context,
+    //     barrierDismissible: false,
+    //     builder: (_) {
+    //       return AlertDialog(
+    //         title: Text(getTranslated(context, 'TakePic')),
+    //         content: SingleChildScrollView(
+    //           child: ListBody(
+    //             children: <Widget>[
+    //               Text("Take photo of attachment!!!"),
+    //             ],
+    //           ),
+    //         ),
+    //         actions: [
+    //           FlatButton(
+    //             onPressed: () => Navigator.pop(context, false), // passing false
+    //             child: Text(getTranslated(context, 'Gallery')),
+    //           ),
+    //           FlatButton(
+    //             onPressed: () => Navigator.pop(context, true), // passing true
+    //             child: Text(getTranslated(context, 'Take Photo')),
+    //           ),
+    //         ],
+    //       );
+    //     }).then((exit1) async {
+    //   if (exit1 == null) return;
+
+    //   if (exit1) {
+    //     //  await Navigator.pop(context);
+
+    //     imageFile = await ImagePicker()
+    //         .getImage(source: ImageSource.camera, imageQuality: 60);
+    //     if (imageFile != null) {
+    //       setState(() {
+    //         result1 = imageFile.path;
+    //         pickedFile = imageFile;
+    //         // _showSubmitBtn = true;
+    //       });
+    //     }
+
+    //     // user pressed Yes button
+    //   } else {
+    //     Navigator.pushNamed(context, homeRoute);
+    //     // user pressed No button
+    //   }
+    // });
   }
 
   Future<void> getTypeOfLeave() async {
@@ -727,11 +856,19 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       isLoading = true;
     });
     print("xfghx ${totalDaysController.text.runtimeType}");
+    var base64Image;
+    if (pickedFile != null) {
+      Uint8List uint8list = await pickedFile.readAsBytes();
+      base64Image = base64Encode(uint8list);
+    } else {
+      base64Image = "null";
+    }
 
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.AddNewLeave;
     Map body = {
       "TokenKey": token,
+      "attachFile": base64Image,
       "lang": globalMyLocalPrefes.getString(AppConstant.LANG) ?? "2",
       "LeaveTypeId": leaveId,
       "strDate": selectedLeaveRadio == 2
@@ -756,8 +893,15 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
         setState(() {
           isLoading = false;
         });
-        Toast.show("Leave Request Added Successfully!!!", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        Fluttertoast.showToast(
+            msg: "Leave Request Added Successfully!!!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+
         print("j&&& $jsonResponse");
 
         Navigator.pushNamed(context, myRequestRoute);
@@ -769,35 +913,24 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           });
           // Future<String> token = getToken();
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          setState(() {
+            isLoading = false;
+          });
+          Fluttertoast.showToast(
+              msg: jsonResponse["ModelErrors"],
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
         }
       }
     });
   }
-
-  // dateTimeRangePicker() async {
-  //   DateTimeRange picked = await showDateRangePicker(
-  //     initialEntryMode: DatePickerEntryMode.input,
-  //     context: context,
-  //     firstDate: DateTime.now(),
-  //     lastDate: DateTime(DateTime.now().year + 1),
-  //     initialDateRange: DateTimeRange(
-  //       end: DateTime(
-  //           DateTime.now().year, DateTime.now().month, DateTime.now().day + 13),
-  //       start: DateTime.now(),
-  //     ),
-  //   );
-  //
-  //   setState(() {
-  //     selectedDateRange =
-  //         '${picked.start.day}/${picked.start.month}/${picked.start.year}  To  ${picked.end.day}/${picked.end.month}/${picked.end.year}';
-  //   });
-  //
-  //   // _onDateRangeSelect(picked);
-  // }
 
   Future<void> getResponsiblePerson() async {
     setState(() {

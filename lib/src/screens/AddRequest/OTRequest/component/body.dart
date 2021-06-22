@@ -8,8 +8,8 @@ import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
@@ -55,17 +55,17 @@ class _BodyState extends State<Body> {
 
   String date, startFrom, endOn;
 
-  ValueChanged _onDateTimeChanged(val) {
-    date = val.toString();
-  }
+  // ValueChanged _onDateTimeChanged(val) {
+  //   date = val.toString();
+  // }
 
-  ValueChanged _onstrDateChanged(val) {
-    startFrom = val.toString();
-  }
+  // ValueChanged _onstrDateChanged(val) {
+  //   startFrom = val.toString();
+  // }
 
-  ValueChanged _onendDateChanged(val) {
-    endOn = val.toString();
-  }
+  // ValueChanged _onendDateChanged(val) {
+  //   endOn = val.toString();
+  // }
 
   DateTime selecteddate = DateTime.now();
   bool dateSelectedselect = false;
@@ -74,6 +74,16 @@ class _BodyState extends State<Body> {
   DateTime selectedstartdateTime = DateTime.now().add(Duration(minutes: 40));
 
   bool isLoading = true;
+
+  int _radioValue = 1;
+
+  void _handleRadioValueChange(int value) {
+    setState(() {
+      _radioValue = value;
+    });
+    print(_radioValue);
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -92,6 +102,32 @@ class _BodyState extends State<Body> {
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              new Radio(
+                                value: 1,
+                                groupValue: _radioValue,
+                                onChanged: _handleRadioValueChange,
+                              ),
+                              new Text(
+                                'Payment',
+                                style: new TextStyle(fontSize: 16.0),
+                              ),
+                              new Radio(
+                                value: 2,
+                                groupValue: _radioValue,
+                                onChanged: _handleRadioValueChange,
+                              ),
+                              new Text(
+                                'Compensate Leave',
+                                style: new TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          ),
+
                           Container(
                             child: Padding(
                               padding: const EdgeInsets.all(8),
@@ -107,31 +143,32 @@ class _BodyState extends State<Body> {
                                           context, "OTstartfrom")),
                                   initialValue:
                                       selectedstartdateTime.toString(),
-                                  firstDate:
-                                  DateTime.now().subtract(Duration(days: 150)),
+                                  firstDate: DateTime.now()
+                                      .subtract(Duration(days: 150)),
                                   lastDate:
                                       DateTime.now().add(Duration(days: 150)),
                                   dateLabelText:
                                       getTranslated(context, "OTstartfrom"),
                                   style: Theme.of(context).textTheme.caption,
                                   onChanged: (val) {
+                                    print("val $val");
                                     DateFormat dateFormat =
                                         DateFormat("yyyy-MM-dd HH:mm");
                                     DateTime dateTime = dateFormat.parse(val);
+                                    setState(() {
+                                      selectedstartdateTime = dateTime;
+                                    });
                                     var formatter =
                                         new DateFormat('yyyy-MM-dd');
                                     startTime = DateFormat('kk:mm')
                                         .format(selectedstartdateTime);
                                     startDate =
                                         formatter.format(selectedstartdateTime);
+                                    print("date:: $selectedstartdateTime");
+
                                     print("date:: $startTime");
 
                                     print("date:: $startDate");
-
-                                    setState(() {
-                                      selectedstartdateTime = dateTime;
-                                    });
-
                                   },
                                   validator: (val) {
                                     print("Validate: $val");
@@ -157,11 +194,10 @@ class _BodyState extends State<Body> {
                                       labelText:
                                           getTranslated(context, "OTendson")),
                                   initialValue:
-                                  selectedstartdateTime.toString(),
-                                  firstDate:
-                                  selectedstartdateTime,
-                                  lastDate:
-                                  selectedstartdateTime.add(Duration(days: 8)),
+                                      selectedstartdateTime.toString(),
+                                  firstDate: selectedstartdateTime,
+                                  lastDate: selectedstartdateTime
+                                      .add(Duration(days: 8)),
                                   dateLabelText:
                                       getTranslated(context, "OTendson"),
                                   style: Theme.of(context).textTheme.caption,
@@ -289,6 +325,7 @@ class _BodyState extends State<Body> {
                                     : endTime,
                                 "otTitle": subjectController.text,
                                 "otReason": reasonController.text,
+                                "otType": _radioValue.toString()
                               };
 
                               print(body);
@@ -304,10 +341,15 @@ class _BodyState extends State<Body> {
                                   setState(() {
                                     isLoading = false;
                                   });
-                                  Toast.show("OT Request Added Successfully!!!",
-                                      context,
-                                      duration: Toast.LENGTH_LONG,
-                                      gravity: Toast.BOTTOM);
+                                  Fluttertoast.showToast(
+                                      msg: "OT Request Added Successfully!!!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+
                                   print("j&&& $jsonResponse");
                                   Navigator.pushNamed(context, myRequestRoute);
                                 } else {
@@ -316,17 +358,27 @@ class _BodyState extends State<Body> {
                                   if (jsonResponse["ModelErrors"] ==
                                       'Unauthorized') {
                                     GetToken().getToken().then((value) {
-                                      Toast.show("Please try again!!!", context,
-                                          duration: Toast.LENGTH_LONG,
-                                          gravity: Toast.BOTTOM);
+                                      Fluttertoast.showToast(
+                                          msg: "Please try again!!!",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.red,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
                                     });
                                     // Future<String> token = getToken();
                                   } else {
-                                    Toast.show(
-                                        "Something went wrong, please try again later.",
-                                        context,
-                                        duration: Toast.LENGTH_LONG,
-                                        gravity: Toast.BOTTOM);
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            "Something went wrong, please try again later.",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.red,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0);
+
                                     // currentState.showSnackBar(
                                     //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
                                   }

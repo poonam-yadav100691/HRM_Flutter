@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:HRMNew/components/TakePictureScreen.dart';
 import 'package:HRMNew/localization/localization_constants.dart';
 import 'package:HRMNew/main.dart';
@@ -11,9 +10,9 @@ import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
@@ -35,7 +34,7 @@ class _BodyState extends State<Body> {
   PickedFile pickedFile;
   Position position;
 
-  bool isChecking=globalMyLocalPrefes.getBool('isChecking')??false;
+  bool isChecking = globalMyLocalPrefes.getBool('isChecking') ?? false;
 
   bool isLoading = false;
 
@@ -46,7 +45,6 @@ class _BodyState extends State<Body> {
     _isCheckoutDisabled = !isChecking;
     _showSubmitBtn = false;
   }
-
 
   Image img;
   PickedFile imageFile;
@@ -81,8 +79,8 @@ class _BodyState extends State<Body> {
       if (exit1) {
         //  await Navigator.pop(context);
 
-        imageFile=  await ImagePicker().getImage(
-            source: ImageSource.camera, imageQuality: 60);
+        imageFile = await ImagePicker()
+            .getImage(source: ImageSource.camera, imageQuality: 60);
         if (imageFile != null) {
           setState(() {
             result1 = imageFile.path;
@@ -148,20 +146,17 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> submitAttendance(bool checkinout) async {
-   setState(() {
+    setState(() {
       isLoading = true;
     });
 
     String token = globalMyLocalPrefes.getString(AppConstant.ACCESS_TOKEN);
     final uri = Services.MyAttendance;
 
+    Uint8List uint8list = await pickedFile.readAsBytes();
 
-
-    Uint8List uint8list=await pickedFile.readAsBytes();
-
-
-   var base64Image = base64Encode(uint8list);
-   print("Imageee::: ${base64Image}");
+    var base64Image = base64Encode(uint8list);
+    print("Imageee::: ${base64Image}");
 
     Map body = {
       "TokenKey": token,
@@ -171,7 +166,7 @@ class _BodyState extends State<Body> {
       "checkInOut": checkinout ? "checkin" : "checkout",
       "picture": base64Image
     };
-    http.post(Uri.parse(uri), body: body).then((response) async{
+    http.post(Uri.parse(uri), body: body).then((response) async {
       var jsonResponse = jsonDecode(response.body);
       print("Reponse : $jsonResponse");
 
@@ -179,7 +174,7 @@ class _BodyState extends State<Body> {
         setState(() {
           isLoading = false;
         });
-       await globalMyLocalPrefes.setBool('isChecking',!isChecking);
+        await globalMyLocalPrefes.setBool('isChecking', !isChecking);
 
         Navigator.pushNamed(context, homeRoute);
       } else {
@@ -188,13 +183,18 @@ class _BodyState extends State<Body> {
         });
         print("ModelError: ${jsonResponse["ModelErrors"]}");
         if (jsonResponse["ModelErrors"] == 'Unauthorized') {
-           GetToken().getToken().then((value) {
-          submitAttendance(checkinout);
+          GetToken().getToken().then((value) {
+            submitAttendance(checkinout);
           });
-          
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
 
           // currentState.showSnackBar(
           //     UIhelper.showSnackbars(jsonResponse["ModelErrors"]));
@@ -224,7 +224,6 @@ class _BodyState extends State<Body> {
             padding: EdgeInsets.only(left: 15, right: 15),
             child: Text(getTranslated(context, 'attendanceTagline'),
                 style: TextStyle(color: Colors.grey[800]))),
-
         result1 != null
             ? Container(
                 height: 170,
@@ -232,7 +231,7 @@ class _BodyState extends State<Body> {
                     border: Border.all(width: 1.0, color: Colors.grey[700]),
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 child: Image.file(
-                 File(result1),
+                  File(result1),
                   fit: BoxFit.cover,
                 ),
               )
@@ -240,7 +239,6 @@ class _BodyState extends State<Body> {
         SizedBox(
           height: 50,
         ),
-
         _showSubmitBtn == true
             ? Container(
                 margin: const EdgeInsets.only(top: 20.0),
@@ -266,7 +264,6 @@ class _BodyState extends State<Body> {
                       style: TextStyle(fontSize: 25)),
                 ))
             : Container(),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -306,7 +303,6 @@ class _BodyState extends State<Body> {
                 : Container(),
           ],
         ),
-
         Expanded(
           child: ListView.builder(
             itemCount: _positionItems.length,

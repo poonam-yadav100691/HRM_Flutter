@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:HRMNew/main.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -8,9 +9,9 @@ import 'package:HRMNew/src/screens/Account/component/background.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveReqDetails/myLevReqDetailPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyOTReqDetails extends StatefulWidget {
@@ -32,11 +33,15 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
   bool isLoading = true;
 
   int totalDays;
-
+  String image;
+  Uint8List bytes;
   @override
   void initState() {
     super.initState();
     String levDetails = widget.levReqDetailID;
+    setState(() {
+      image = globalMyLocalPrefes.getString(AppConstant.IMAGE);
+    });
     _getReqDetails(levDetails);
   }
 
@@ -100,8 +105,14 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
           });
           // Future<String> token = getToken();
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     });
@@ -139,8 +150,14 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
 
           // Future<String> token = getToken();
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     });
@@ -148,6 +165,11 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
 
   @override
   Widget build(BuildContext context) {
+    if (image != null && image != "") {
+      setState(() {
+        bytes = Base64Codec().decode(image);
+      });
+    }
     Size size = MediaQuery.of(context).size;
     if (!isLoading) {
       return Scaffold(
@@ -199,16 +221,24 @@ class _MyOTReqDetailsState extends State<MyOTReqDetails> {
                                             children: <Widget>[
                                               // Icon(Icons.arrow_back_ios),
                                               Container(
-                                                padding: const EdgeInsets.only(
-                                                    left: 5.0),
-                                                child: ClipOval(
-                                                  child: Image.asset(
-                                                    "lib/assets/images/profile.jpg",
-                                                    height: 47,
-                                                    width: 47,
-                                                  ),
-                                                ),
-                                              ),
+                                                  child: new CircleAvatar(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                radius: 35,
+                                                child: bytes != null
+                                                    ? ClipOval(
+                                                        child: new Image.memory(
+                                                        bytes,
+                                                        height: 75,
+                                                      ))
+                                                    : ClipOval(
+                                                        child: Image.asset(
+                                                          "lib/assets/images/profile.png",
+                                                          height: 75,
+                                                          // width: 90,
+                                                        ),
+                                                      ),
+                                              )),
                                               Expanded(
                                                 child: Padding(
                                                   padding:

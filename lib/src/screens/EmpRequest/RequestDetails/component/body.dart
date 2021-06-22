@@ -6,8 +6,8 @@ import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/empReqDetailPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import './background.dart';
 import 'dart:async';
@@ -96,8 +96,14 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
           });
           // Future<String> token = getToken();
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
         setState(() {
           isLoading = false;
@@ -163,17 +169,21 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                     MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   // Icon(Icons.arrow_back_ios),
-                                  Container(
-                                    padding: const EdgeInsets.only(left: 5.0),
-                                    child: ClipOval(
-                                      child: Image.memory(
-                                        base64Decode(myReqTitleObj[0].empPhoto),
-                                        height: 47,
-                                        width: 47,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
+                                  myReqTitleObj[0].empPhoto != null
+                                      ? Container(
+                                          padding:
+                                              const EdgeInsets.only(left: 5.0),
+                                          child: ClipOval(
+                                            child: Image.memory(
+                                              base64Decode(
+                                                  myReqTitleObj[0].empPhoto),
+                                              height: 47,
+                                              width: 47,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
                                   Expanded(
                                     child: Padding(
                                       padding:
@@ -205,17 +215,23 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                       padding: EdgeInsets.all(10),
                                       child: Icon(Icons.phone),
                                     ),
-                                    onTap: () => launch(
-                                        "tel://" + myReqTitleObj[0].empContact),
+                                    onTap: () {
+                                      if (myReqTitleObj[0].empContact != null) {
+                                        launch("tel://" +
+                                            myReqTitleObj[0].empContact);
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg: "Please try again later.",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.red,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
+                                      }
+                                    },
                                   ),
                                 ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: size.width,
-                              height: 1.0,
-                              child: Container(
-                                color: Colors.grey[300],
                               ),
                             ),
                             SizedBox(
@@ -230,10 +246,17 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                               child: Text(
                                   'Request No: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].requestNo : "-"}'),
                             ),
+                            SizedBox(
+                              width: size.width,
+                              height: 1.0,
+                              child: Container(
+                                color: Colors.grey[300],
+                              ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Request Tyoe: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].requestType : "-"}'),
+                                  'Request Type: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].requestType : "-"}'),
                             ),
                             SizedBox(
                               width: size.width,
@@ -288,23 +311,6 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                       color: Colors.grey[300],
                                     ),
                                   ),
-                            // myReqTitleObj[0].requestType == 'OT'
-                            //     ? Container()
-                            //     : Padding(
-                            //         padding:
-                            //             const EdgeInsets.symmetric(vertical: 8),
-                            //         child: Text(
-                            //             'End Date: ${requestItemObject.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0] ?? "" : "-"}'),
-                            //       ),
-                            // myReqTitleObj[0].requestType == 'OT'
-                            //     ? Container()
-                            //     : SizedBox(
-                            //         width: size.width,
-                            //         height: 1.0,
-                            //         child: Container(
-                            //           color: Colors.grey[300],
-                            //         ),
-                            //       ),
                             myReqTitleObj[0].requestType == 'OT'
                                 ? Container()
                                 : Padding(
@@ -489,12 +495,15 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                             setState(() {
                                               isLoading = false;
                                             });
-
-                                            Toast.show(
-                                                jsonResponse['ModelErrors'],
-                                                context,
-                                                duration: Toast.LENGTH_LONG,
-                                                gravity: Toast.BOTTOM);
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    jsonResponse['ModelErrors'],
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.red,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
 
                                             print("j&&& $jsonResponse");
                                             Navigator.pop(context);
@@ -506,18 +515,28 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                               GetToken()
                                                   .getToken()
                                                   .then((value) {
-                                                Toast.show(
-                                                    "Please try again!!!",
-                                                    context,
-                                                    duration: Toast.LENGTH_LONG,
-                                                    gravity: Toast.BOTTOM);
+                                                Fluttertoast.showToast(
+                                                    msg: "Please try again!!!",
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor: Colors.red,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0);
                                               });
                                             } else {
-                                              Toast.show(
-                                                  "Something went wrong, please try again later.",
-                                                  context,
-                                                  duration: Toast.LENGTH_LONG,
-                                                  gravity: Toast.BOTTOM);
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "Something went wrong, please try again later.",
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.red,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
                                             }
                                           }
                                         });
@@ -578,11 +597,15 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                             setState(() {
                                               isLoading = false;
                                             });
-                                            Toast.show(
-                                                jsonResponse['ModelErrors'],
-                                                context,
-                                                duration: Toast.LENGTH_LONG,
-                                                gravity: Toast.BOTTOM);
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    jsonResponse['ModelErrors'],
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.red,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
 
                                             print("j&&& $jsonResponse");
                                             Navigator.pop(context);
@@ -594,18 +617,28 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                               GetToken()
                                                   .getToken()
                                                   .then((value) {
-                                                Toast.show(
-                                                    "Please try again!!!",
-                                                    context,
-                                                    duration: Toast.LENGTH_LONG,
-                                                    gravity: Toast.BOTTOM);
+                                                Fluttertoast.showToast(
+                                                    msg: "Please try again!!!",
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor: Colors.red,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0);
                                               });
                                             } else {
-                                              Toast.show(
-                                                  "Something went wrong, please try again later.",
-                                                  context,
-                                                  duration: Toast.LENGTH_LONG,
-                                                  gravity: Toast.BOTTOM);
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "Something went wrong, please try again later.",
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.red,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
                                             }
                                           }
                                         });

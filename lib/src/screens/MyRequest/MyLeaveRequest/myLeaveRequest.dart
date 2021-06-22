@@ -1,4 +1,5 @@
 import 'package:HRMNew/localization/localization_constants.dart';
+import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/component/body.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyOTRequest/PODO/myRequest.dart';
@@ -22,11 +23,15 @@ class MyLeaveRequest extends StatelessWidget {
             icon: Icon(Icons.arrow_back_ios),
             color: Colors.white,
             onPressed: () {
-              Navigator.pop(context);
+              print("baaakiiiiiiiiiiiiiiii");
+              Navigator.pushNamed(context, homeRoute);
             }),
       ),
-      body:(data.isNotEmpty && data!=null)? Body(leaveList:data):Center(child: Text('No Data Dound'),),
-
+      body: (data.isNotEmpty && data != null)
+          ? Body(leaveList: data)
+          : Center(
+              child: Text('No Data Dound'),
+            ),
     );
   }
 }

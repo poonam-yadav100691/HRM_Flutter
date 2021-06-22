@@ -9,8 +9,8 @@ import 'package:HRMNew/src/constants/colors.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:HRMNew/utils/UIhelper.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:toast/toast.dart';
 import './background.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:http/http.dart' as http;
@@ -95,8 +95,15 @@ class _BodyState extends State<Body> {
         setState(() {
           isLoading = false;
         });
-        Toast.show(getTranslated(context, "AddNewsSuccessfully"), context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        Fluttertoast.showToast(
+            msg: getTranslated(context, "AddNewsSuccessfully"),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+
         Navigator.pushNamed(context, newsList);
       } else {
         setState(() {

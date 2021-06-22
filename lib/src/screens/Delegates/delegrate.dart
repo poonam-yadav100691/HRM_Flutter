@@ -14,20 +14,30 @@ class Delegate extends StatelessWidget {
         shadowColor: Colors.transparent,
         centerTitle: true,
         backgroundColor: leaveCardcolor,
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.pushNamed(context, homeRoute);
+
+              // Navigator.pop(context);
+            }),
       ),
       body: Body(),
-      floatingActionButton: getPermissionObject('Delegates').app_add=="1"?FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.pushReplacementNamed(context, addDelegateRoute);
-          // Add your onPressed code here!
-        },
-        elevation: 4,
-        label: Text(getTranslated(context, 'Delegates')),
-        icon: Icon(
-          Icons.add,
-        ),
-        backgroundColor: Colors.pink,
-      ):null,
+      floatingActionButton: getPermissionObject('Delegates').app_add == "1"
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, addDelegateRoute);
+                // Add your onPressed code here!
+              },
+              elevation: 4,
+              label: Text(getTranslated(context, 'Delegates')),
+              icon: Icon(
+                Icons.add,
+              ),
+              backgroundColor: Colors.pink,
+            )
+          : null,
     );
   }
 }

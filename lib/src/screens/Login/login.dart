@@ -13,10 +13,8 @@ import 'package:HRMNew/utils/UIhelper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
@@ -125,7 +123,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             "Device_token": token,
           };
 
-          print('token body $token');
+          print('token body $body');
           http.post(Uri.parse(uri), body: body).then((response) async {
             print(response.body);
             if (response.statusCode == 200) {
@@ -146,7 +144,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 await globalMyLocalPrefes.setString(
                     AppConstant.USERNAME, login.eng_fullname);
                 await globalMyLocalPrefes.setString(
-                    AppConstant.IMAGE, login.emp_photo??"");
+                    AppConstant.IMAGE, login.emp_photo ?? "");
                 await globalMyLocalPrefes.setString(
                     AppConstant.PHONENO, login.emp_mobile);
                 await globalMyLocalPrefes.setString(
@@ -200,8 +198,14 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         }
       } else {
         Navigator.pop(context);
-        Toast.show("Please check internet connection", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        Fluttertoast.showToast(
+            msg: "Please check internet connection.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     });
   }
@@ -245,8 +249,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                   style: TextStyle(
                                       fontFamily: "Poppins-Bold",
                                       color: leaveCardcolor,
-                                      fontSize:
-                                          40,
+                                      fontSize: 40,
                                       letterSpacing: .6,
                                       fontWeight: FontWeight.bold)),
                               Text("Human Resource Management System",
@@ -254,8 +257,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                   style: TextStyle(
                                       fontFamily: "Poppins-Bold",
                                       color: leaveCardcolor1,
-                                      fontSize:
-                                          24,
+                                      fontSize: 24,
                                       letterSpacing: 0.2,
                                       fontWeight: FontWeight.bold)),
                             ],
@@ -305,7 +307,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                         Text("Other Options",
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                fontSize: 16.0,
+                                fontSize: 14.0,
                                 fontFamily: "Poppins-Medium")),
                         horizontalLine()
                       ],
@@ -373,7 +375,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                       fontFamily: "Poppins-Bold",
                       letterSpacing: .6)),
               SizedBox(
-                height:30,
+                height: 30,
               ),
               Container(
                 height: 55,

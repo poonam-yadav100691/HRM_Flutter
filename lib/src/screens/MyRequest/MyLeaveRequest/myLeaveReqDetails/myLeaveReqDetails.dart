@@ -9,9 +9,9 @@ import 'package:HRMNew/src/screens/Account/component/background.dart';
 import 'package:HRMNew/src/screens/MyRequest/MyLeaveRequest/myLeaveReqDetails/myLevReqDetailPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyLeaveReqDetails extends StatefulWidget {
@@ -33,12 +33,16 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
   bool isLoading = true;
 
   int totalDays;
-
+  String image;
+  Uint8List bytes;
   @override
   void initState() {
     super.initState();
     String levDetails = widget.levReqDetailID;
     // _loadUserInfo();
+    setState(() {
+      image = globalMyLocalPrefes.getString(AppConstant.IMAGE);
+    });
     _getReqDetails(levDetails);
   }
 
@@ -101,8 +105,14 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
           });
           // Future<String> token = getToken();
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     });
@@ -141,8 +151,14 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
 
           // Future<String> token = getToken();
         } else {
-          Toast.show("Something went wrong, please try again later.", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          Fluttertoast.showToast(
+              msg: "Something went wrong, please try again later.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     });
@@ -150,8 +166,11 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
 
   @override
   Widget build(BuildContext context) {
-    Uint8List bytes =
-        Base64Codec().decode(globalMyLocalPrefes.getString(AppConstant.IMAGE));
+    if (image != null && image != "") {
+      setState(() {
+        bytes = Base64Codec().decode(image);
+      });
+    }
 
     print("requestItemObject[0] :: $requestItemObject");
     Size size = MediaQuery.of(context).size;
@@ -161,8 +180,11 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
           title: Text('Request Details'),
         ),
         body: WillPopScope(
-          onWillPop: () =>
-              Navigator.pushReplacementNamed(context, myRequestRoute),
+          onWillPop: () {
+            var result =
+                Navigator.pushReplacementNamed(context, myRequestRoute);
+            return result;
+          },
           child: Background(
             child: Column(
               children: [
@@ -198,15 +220,23 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                   children: <Widget>[
                                     // Icon(Icons.arrow_back_ios),
                                     Container(
-                                      padding: const EdgeInsets.only(left: 5.0),
-                                      child: ClipOval(
-                                        child: Image.asset(
-                                          "lib/assets/images/profile.jpg",
-                                          height: 47,
-                                          width: 47,
-                                        ),
-                                      ),
-                                    ),
+                                        child: new CircleAvatar(
+                                      backgroundColor: Colors.transparent,
+                                      radius: 35,
+                                      child: bytes != null
+                                          ? ClipOval(
+                                              child: new Image.memory(
+                                              bytes,
+                                              height: 75,
+                                            ))
+                                          : ClipOval(
+                                              child: Image.asset(
+                                                "lib/assets/images/profile.png",
+                                                height: 75,
+                                                // width: 90,
+                                              ),
+                                            ),
+                                    )),
                                     Expanded(
                                       child: Padding(
                                         padding:
@@ -267,7 +297,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                    'Request ID: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemID : "-"}'),
+                                    'Request ID: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].requestID : "-"}'),
                               ),
                               SizedBox(
                                 width: size.width,
@@ -293,7 +323,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                    'Request Status: ${requestItemObject.isNotEmpty ? myReqTitleObj[0].statusText : "-"}'),
+                                    'Request Status: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].statusText : "-"}'),
                               ),
                               SizedBox(
                                 width: size.width,
@@ -302,19 +332,6 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                   color: Colors.grey[300],
                                 ),
                               ),
-
-                              // Padding(
-                              //   padding: const EdgeInsets.symmetric(vertical: 8),
-                              //   child: Text(
-                              //       'Period: ${requestItemObject.isNotEmpty ? requestItemObject[0].strDate : "-"}'),
-                              // ),
-                              // SizedBox(
-                              //   width: size.width,
-                              //   height: 1.0,
-                              //   child: Container(
-                              //     color: Colors.grey[300],
-                              //   ),
-                              // ),
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
@@ -328,7 +345,6 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                   color: Colors.grey[300],
                                 ),
                               ),
-
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
@@ -346,7 +362,7 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                    'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName : "-"}'),
+                                    'Manager: ${myReqTitleObj.isNotEmpty ? myReqTitleObj[0].managerName : "-"}'),
                               ),
                               SizedBox(
                                 width: size.width,
@@ -355,7 +371,6 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                   color: Colors.grey[300],
                                 ),
                               ),
-
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
@@ -369,12 +384,11 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                   color: Colors.grey[300],
                                 ),
                               ),
-
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
-                                    'Start Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].strDate.split(" ")[0] : "-"}  To  ${myReqTitleObj.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0] : "-"}'),
+                                    'Dates From ${requestItemObject.isNotEmpty ? requestItemObject[0].strDate.split(" ")[0] : "-"}  To  ${requestItemObject.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0] : "-"}'),
                               ),
                               SizedBox(
                                 width: size.width,
@@ -383,28 +397,12 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                   color: Colors.grey[300],
                                 ),
                               ),
-
-                              // Padding(
-                              //   padding:
-                              //       const EdgeInsets.symmetric(vertical: 8),
-                              //   child: Text(
-                              //       'End Date ${myReqTitleObj.isNotEmpty ? requestItemObject[0].endDate.split(" ")[0] : "-"}'),
-                              // ),
-                              // SizedBox(
-                              //   width: size.width,
-                              //   height: 1.0,
-                              //   child: Container(
-                              //     color: Colors.grey[300],
-                              //   ),
-                              // ),
-
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
                                 child: Text(
                                     'Requested For: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemType : "-"}'),
                               ),
-
                               (approvedObject != null &&
                                       approvedObject.isNotEmpty)
                                   ? SizedBox(
@@ -415,7 +413,6 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                       ),
                                     )
                                   : Container(),
-
                               (approvedObject != null &&
                                       approvedObject.isNotEmpty)
                                   ? Padding(
@@ -435,7 +432,6 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                       ),
                                     )
                                   : Container(),
-
                               (approvedObject != null &&
                                       approvedObject.isNotEmpty)
                                   ? Padding(
@@ -455,7 +451,6 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                       ),
                                     )
                                   : Container(),
-
                               (approvedObject != null &&
                                       approvedObject.isNotEmpty)
                                   ? Padding(
@@ -475,19 +470,6 @@ class _MyLeaveReqDetailsState extends State<MyLeaveReqDetails> {
                                       ),
                                     )
                                   : Container(),
-
-                              // SizedBox(
-                              //   width: size.width,
-                              //   height: 1.0,
-                              //   child: Container(
-                              //     color: Colors.grey[300],
-                              //   ),
-                              // ),
-                              // Padding(
-                              //   padding: const EdgeInsets.symmetric(vertical: 8),
-                              //   child: Text(
-                              //       'Requested Type: ${requestItemObject.isNotEmpty ? requestItemObject[0].itemType : "-"}'),
-                              // ),
                             ],
                           ),
                         ),
