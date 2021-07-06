@@ -409,65 +409,63 @@ class _MyHomePageState extends State<MyHomePage> {
       },
       child: Container(
         child: Column(children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[400],
-                  spreadRadius: 3,
-                  blurRadius: 5,
-                  offset: Offset(0, 1), // changes position of shadow
+          new Stack(children: <Widget>[
+            Container(
+              alignment: AlignmentDirectional(0.0, 0.0),
+              padding:
+                  const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
+              child: new Stack(children: <Widget>[
+                Container(
+                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey[900],
+                        // spreadRadius: 3,
+                        // blurRadius: 5,
+                        // offset: Offset(0, 1), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Image.asset(
+                    img,
+                    fit: BoxFit.contain,
+                    height: 55,
+                  ),
                 ),
-              ],
+              ]),
             ),
-            alignment: AlignmentDirectional(0.0, 0.0),
-            padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                countTxt == null
-                    ? Container()
-                    : Container(
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: Container(
-                            child: Center(
-                                child: Text(countTxt,
-                                    style: TextStyle(color: Colors.white))),
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.red,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.red[400], spreadRadius: 1),
-                              ],
-                            ),
+            new Positioned(
+              // draw a red marble
+              top: 0.0,
+              right: 0.0,
+              child: countTxt == null
+                  ? Container()
+                  : Container(
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          child: Center(
+                              child: Text(countTxt,
+                                  style: TextStyle(color: Colors.white))),
+                          width: 25,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.red,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.red[400], spreadRadius: 1),
+                            ],
                           ),
                         ),
                       ),
-                countTxt == null
-                    ? Padding(padding: EdgeInsets.only(bottom: 18))
-                    : Padding(padding: EdgeInsets.only(bottom: 0)),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: Image.asset(
-                      img,
-                      fit: BoxFit.contain,
-                      height: 45,
                     ),
-                  ),
-                ),
-                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10))
-              ],
-            ),
-          ),
-          Padding(padding: EdgeInsets.only(top: 5)),
+            )
+          ]),
+          Padding(padding: EdgeInsets.only(top: 6)),
           Text(
             getTranslated(context, title),
             style: TextStyle(fontSize: 13, color: Colors.grey),
@@ -486,13 +484,13 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(children: [
         SingleChildScrollView(
           child: Container(
-            margin: EdgeInsets.all(8),
+            margin: EdgeInsets.all(15),
             height: size.height - (size.height * .30),
             child: GridView.count(
               primary: false,
               padding: const EdgeInsets.all(6),
-              crossAxisSpacing: size.width < 350 ? 10 : 20,
-              mainAxisSpacing: size.width < 350 ? 10 : 20,
+              crossAxisSpacing: size.width < 350 ? 6 : 10,
+              mainAxisSpacing: size.width < 350 ? 6 : 15,
               crossAxisCount: size.width < 350 ? 2 : 3,
               children: getChildren(),
             ),

@@ -1,8 +1,10 @@
 import 'package:HRMNew/components/approvalAction.dart';
 import 'package:HRMNew/main.dart';
+import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
 import 'package:HRMNew/src/constants/Services.dart';
 import 'package:HRMNew/src/constants/colors.dart';
+import 'package:HRMNew/src/screens/EmpRequest/EmpLeaveRequest/empLeaveRequest.dart';
 import 'package:HRMNew/src/screens/EmpRequest/RequestDetails/empReqDetailPODO.dart';
 import 'package:HRMNew/src/screens/home.dart';
 import 'package:flutter/material.dart';
@@ -506,7 +508,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                                 fontSize: 16.0);
 
                                             print("j&&& $jsonResponse");
-                                            Navigator.pop(context);
+                                            Navigator.pushNamed(
+                                                context, empRequestRoute);
                                           } else {
                                             print(
                                                 "ModelError: ${jsonResponse["ModelErrors"]}");
@@ -608,7 +611,8 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                                 fontSize: 16.0);
 
                                             print("j&&& $jsonResponse");
-                                            Navigator.pop(context);
+                                            Navigator.pushNamed(
+                                                context, empRequestRoute);
                                           } else {
                                             print(
                                                 "ModelError: ${jsonResponse["ModelErrors"]}");

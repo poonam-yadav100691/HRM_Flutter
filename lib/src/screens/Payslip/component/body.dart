@@ -182,7 +182,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     if (!isLoading) {
       return Background(
-        child: payslipList.length > 0
+        child: (payslipList != null && payslipList.length > 0)
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: payslipList.map((p) {

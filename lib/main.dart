@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:HRMNew/routes/custome_router.dart';
 import 'package:HRMNew/routes/route_names.dart';
 import 'package:HRMNew/src/constants/AppConstant.dart';
@@ -8,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:HRMNew/localization/localization_constants.dart';
@@ -19,27 +22,68 @@ SharedPreferences globalMyLocalPrefes;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-Future onSelectNotification(String payload) async {
-  print('######$payload');
-  print('on note selected');
-  // navigatorKey.currentState.pushNamed('/history');
-}
-
 const MethodChannel platform =
     MethodChannel('dexterx.dev/flutter_local_notifications_example');
 
 class ReceivedNotification {
-  ReceivedNotification({
-    @required this.id,
-    @required this.title,
-    @required this.body,
-    @required this.payload,
-  });
+  String screen;
+  String ids;
+  String clickAtion;
+  String body;
+  String title;
+  String message;
+  String status;
 
-  final int id;
-  final String title;
-  final String body;
-  final String payload;
+  ReceivedNotification(
+      {this.screen,
+      this.ids,
+      this.clickAtion,
+      this.body,
+      this.title,
+      this.message,
+      this.status});
+
+  ReceivedNotification.fromJson(Map<String, dynamic> json) {
+    screen = json['screen'];
+    ids = json['ids'];
+    clickAtion = json['click_ation'];
+    body = json['body'];
+    title = json['title'];
+    message = json['message'];
+    status = json['status'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['screen'] = this.screen;
+    data['ids'] = this.ids;
+    data['click_ation'] = this.clickAtion;
+    data['body'] = this.body;
+    data['title'] = this.title;
+    data['message'] = this.message;
+    data['status'] = this.status;
+    return data;
+  }
+}
+
+void _addBadge() {
+  FlutterAppBadger.updateBadgeCount(1);
+}
+
+void _removeBadge() {
+  FlutterAppBadger.removeBadge();
+}
+
+Future onSelectNotification(String payload) async {
+  print("Payload: $payload");
+  _removeBadge();
+  ReceivedNotification noti =
+      ReceivedNotification.fromJson(jsonDecode(payload));
+  print("notiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+  print(noti);
+  print('on note selected ${noti.ids}');
+  // new MaterialPageRoute(
+  //     builder: (context) => new RequestDetails(levReqDetailID: body["ids"]));
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -52,9 +96,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   var initializationSettingsIOS = new IOSInitializationSettings();
   var initializationSettings = new InitializationSettings(
       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-  flutterLocalNotificationsPlugin.initialize(initializationSettings,
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
       onSelectNotification: onSelectNotification);
-
+  _addBadge();
   flutterLocalNotificationsPlugin.show(
       1,
       message.data['title'],
@@ -70,7 +114,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           enableVibration: true,
           playSound: true,
         ),
-      ));
+      ),
+      payload: message.data.toString());
 }
 
 void main() async {
@@ -131,6 +176,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     initSharePref();
+    initPlatformState();
     analytics.logAppOpen();
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -147,27 +193,61 @@ class _MyAppState extends State<MyApp> {
           android: initializationSettingsAndroid,
           iOS: initializationSettingsIOS);
       flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-      flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      await flutterLocalNotificationsPlugin.initialize(initializationSettings,
           onSelectNotification: onSelectNotification);
       print('####message message : $message');
+      _addBadge();
       flutterLocalNotificationsPlugin.show(
-          1,
-          message.data['title'],
-          message.data['body'],
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              '1',
-              'general',
-              'This channel is used for important notifications.',
-              styleInformation: BigTextStyleInformation(''),
-              importance: Importance.high,
-              enableVibration: true,
-              playSound: true,
-            ),
-          ));
+        1,
+        message.data['title'],
+        message.data['body'],
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            '1',
+            'general',
+            'This channel is used for important notifications.',
+            styleInformation: BigTextStyleInformation(''),
+            importance: Importance.high,
+            enableVibration: true,
+            playSound: true,
+          ),
+        ),
+        payload: message.data.toString(),
+      );
     });
 
     super.initState();
+  }
+
+  initPlatformState() async {
+    String appBadgeSupported;
+    try {
+      bool res = await FlutterAppBadger.isAppBadgeSupported();
+      if (res) {
+        appBadgeSupported = 'Supported';
+        print("supported");
+      } else {
+        print("not supported");
+        appBadgeSupported = 'Not supported';
+      }
+    } on PlatformException {
+      print("Failed to get badge support.");
+
+      appBadgeSupported = 'Failed to get badge support.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+  }
+
+  void _addBadge() {
+    FlutterAppBadger.updateBadgeCount(1);
+  }
+
+  void _removeBadge() {
+    FlutterAppBadger.removeBadge();
   }
 
   initSharePref() async {
