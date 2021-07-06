@@ -142,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
+          primary: true,
           automaticallyImplyLeading: false,
           title: Text(
             getTranslated(context, 'TKGroupHRMS'),
@@ -441,7 +442,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // draw a red marble
               top: 0.0,
               right: 0.0,
-              child: countTxt == null
+              child: (countTxt == null || countTxt == '0')
                   ? Container()
                   : Container(
                       child: Align(
