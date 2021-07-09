@@ -157,6 +157,8 @@ class RequestItemObject {
   String requestFor;
   String requestReason;
   String responseName;
+  String managerName;
+  String entryDate;
 
   RequestItemObject(
       {this.itemID,
@@ -167,7 +169,9 @@ class RequestItemObject {
       this.returnDate,
       this.requestFor,
       this.requestReason,
-      this.responseName});
+      this.responseName,
+      this.entryDate,
+      this.managerName});
 
   RequestItemObject.fromJson(Map<String, dynamic> json) {
     itemID = json['itemID'];
@@ -179,6 +183,8 @@ class RequestItemObject {
     requestFor = json['RequestFor'];
     requestReason = json['requestReason'];
     responseName = json['responseName'];
+    managerName = json['managerName'];
+    entryDate = json['entryDate'];
   }
 
   Map<String, dynamic> toJson() {
@@ -192,6 +198,8 @@ class RequestItemObject {
     data['RequestFor'] = this.requestFor;
     data['requestReason'] = this.requestReason;
     data['responseName'] = this.responseName;
+    data['managerName'] = this.managerName;
+    data['entryDate'] = this.entryDate;
     return data;
   }
 }

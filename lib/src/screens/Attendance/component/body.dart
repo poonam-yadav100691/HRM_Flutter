@@ -135,6 +135,8 @@ class _BodyState extends State<Body> {
         //     'Location permissions are denied (actual value: $permission).');
       }
     }
+ 
+
 
     position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);

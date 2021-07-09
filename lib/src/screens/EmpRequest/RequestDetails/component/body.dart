@@ -377,7 +377,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 8),
                                     child: Text(
-                                        'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].responseName : "-"}'),
+                                        'Manager: ${requestItemObject.isNotEmpty ? requestItemObject[0].managerName : "-"}'),
                                   ),
                             myReqTitleObj[0].requestType == 'OT'
                                 ? Container()

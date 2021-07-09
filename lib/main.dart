@@ -276,6 +276,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays([]);
     if (this._locale == null) {
       return Container(
         child: Center(
@@ -285,33 +286,33 @@ class _MyAppState extends State<MyApp> {
       );
     } else {
       return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Auth',
-        theme: ThemeData(
-          primaryColor: leaveCardcolor,
-          scaffoldBackgroundColor: Colors.white,
-        ),
-        locale: _locale,
-        supportedLocales: [Locale("en", "US"), Locale("lo", "")],
-        localizationsDelegates: [
-          DemoLocalization.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        navigatorObservers: <NavigatorObserver>[observer],
-        localeResolutionCallback: (locale, supportedLocales) {
-          for (var supportedLocale in supportedLocales) {
-            if (supportedLocale.languageCode == locale.languageCode &&
-                supportedLocale.countryCode == locale.countryCode) {
-              return supportedLocale;
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Auth',
+          theme: ThemeData(
+            primaryColor: leaveCardcolor,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          locale: _locale,
+          supportedLocales: [Locale("en", "US"), Locale("lo", "")],
+          localizationsDelegates: [
+            DemoLocalization.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          navigatorObservers: <NavigatorObserver>[observer],
+          localeResolutionCallback: (locale, supportedLocales) {
+            for (var supportedLocale in supportedLocales) {
+              if (supportedLocale.languageCode == locale.languageCode &&
+                  supportedLocale.countryCode == locale.countryCode) {
+                return supportedLocale;
+              }
             }
-          }
-          return supportedLocales.first;
-        },
-        onGenerateRoute: CustomRouter.generatedRoute,
-        initialRoute:landingRoute
-      );
+            return supportedLocales.first;
+          },
+          onGenerateRoute: CustomRouter.generatedRoute,
+          initialRoute: landingRoute);
     }
   }
 }
